@@ -179,9 +179,3 @@ Here are **homepage sections** you could create:
 12. Multiple image galleries
 13. Video trailers integration
 14. Advanced sorting options
-
----
-
-This gives you a **comprehensive anime catalogue** with all the essential discovery features while keeping the API simple and focused! 🚀
-
-**Which of these "Top Lists" sound most appealing for your homepage?**

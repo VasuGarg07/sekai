@@ -1,10 +1,12 @@
-export type AnimeType = "tv" | "movie" | "ova" | "special" | "ona" | "music";
 export type AnimeStatus = "airing" | "complete" | "upcoming";
+export type AnimeType = "tv" | "movie" | "ova" | "special" | "ona" | "music";
 export type AnimeSeason = "winter" | "spring" | "summer" | "fall";
+export type TitleType = "Default" | "Synonym" | "Japanese" | "English";
 
 export type Image = {
     image_url: string;
     large_image_url: string;
+    small_image_url: string;
 }
 
 export type YoutubeImage = Image & {
@@ -13,52 +15,61 @@ export type YoutubeImage = Image & {
 }
 
 export type Stat = {
-    mal_id: string;
+    mal_id: number;
     name: string;
 }
 
-export type AnimeCard = {
-    mal_id: number;
-    images: {
-        jpg: Image;
-        webp: Image;
-    }
-
+export type Title = {
+    type: TitleType;
     title: string;
-    title_english: string;
-    allTitles: string[];
-
-    type: AnimeType;
-    status: AnimeStatus;
-    airing: boolean;
-
-    episodes: number;
-    duration: string;
-    score: number;
-
-    synopsis: string;
-    season: AnimeSeason;
-    year: number;
-
-    genres: Stat[];
 }
 
-export type AnimeDetails = AnimeCard & {
+export type AnimeDetails = {
+    // Quick Details
+    mal_id: number;
+    images: {
+        jpg: Image
+        webp: Image;
+    };
+    titles: Title[];
+    title: string;
+    title_english?: string | null;
+    title_japanese?: string | null;
+    type: string;
+    status: string;
+    airing: boolean;
+    episodes: number | null;
+    duration: string | null;
+    score: number | null;
+    synopsis: string | null;
+    season: AnimeSeason | null;
+    year: number | null;
+    genres: Stat[];
+    demographics?: Stat[];
+    themes?: Stat[];
+    explicit_genres?: Stat[];
+
+    // Expanded Details
     trailer: {
-        youtube_id: number;
+        youtube_id: string;
         url: string;
         embed_url: string;
         images: YoutubeImage;
-    }
+    } | null;
     source: string;
-    aired: string;
-    rating: string;
-    scored_by: number;
-    rank: number;
-    popularity: number;
+    aired: {
+        from: string | null;
+        to: string | null;
+        string: string;
+    };
+    rating: string | null;
+    scored_by: number | null;
+    rank: number | null;
+    popularity: number | null;
     favorites: number;
     producers: Stat[];
-}
+    studios: Stat[];
+};
 
 // -----------------------------------------------
 
@@ -75,19 +86,27 @@ export type Pagination = {
 
 // -----------------------------------------------
 
-export type Genre = Stat & { count: number };
+export type Genre = {
+    mal_id: number;
+    name: string;
+    count: number;
+};
 
 // -----------------------------------------------
 
 export type Producer = {
-    mal_id: string;
+    mal_id: number;
     titles: string;
-    image: string;
-    established: Date;
-    about: string;
+    image: string | null;
+    established: string | null;
+    about: string | null;
     count: number;
     favorites: number;
 }
 
 // -----------------------------------------------
 
+export type AnimeListResponse = {
+    data: AnimeDetails[];
+    pagination?: Pagination;
+}

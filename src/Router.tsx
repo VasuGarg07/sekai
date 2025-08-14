@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router";
-import CurrentSeasonAnime from "./components/CurrentSeasonAnime";
 import Layout from "./home/Layout";
+import Homepage from "./pages/Homepage";
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <Layout />,
         children: [
-            { path: '', element: <CurrentSeasonAnime /> },
+            { index: true, element: <Homepage /> },
         ]
     }
 ])

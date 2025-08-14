@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { AnimeListResponse } from '../shared/interfaces';
-import jikanClient from '../shared/jikanClient';
+import apiClient from '../shared/apiClient';
 import { toastService } from '../shared/toastr';
 
 type UseAnimeListOptions = {
@@ -29,7 +29,7 @@ export const useAnimeList = ({
     const query = useQuery<AnimeListResponse, Error>({
         queryKey: queryKey ?? [path, searchParams],
         queryFn: async () => {
-            const { data } = await jikanClient.get(fullPath);
+            const { data } = await apiClient.get(fullPath);
             return data;
         },
         retry: false,

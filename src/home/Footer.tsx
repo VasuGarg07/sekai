@@ -63,11 +63,11 @@ const Footer = () => {
                         </div>
 
                         {/* Quick Links */}
-                        <div className="flex-shrink-0">
+                        <div className="flex-shrink-0 text-right">
                             <h3 className="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">
                                 Quick Links
                             </h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-x-6 gap-y-2">
+                            <div className="grid grid-cols-1 gap-x-6 gap-y-2">
                                 {navigationLinks.map((link, index) => (
                                     <a
                                         key={index}

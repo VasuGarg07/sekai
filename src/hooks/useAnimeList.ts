@@ -1,49 +1,84 @@
-import { useQuery } from '@tanstack/react-query';
-import type { AnimeListResponse } from '../shared/interfaces';
-import apiClient from '../shared/apiClient';
-import { toastService } from '../shared/toastr';
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "../shared/apiClient";
+import { formatDate } from "../shared/utilities";
 
-type UseAnimeListOptions = {
-    path: string;                           // e.g. '/top/anime'
-    params?: Record<string, any>;           // query params (converted to ?key=value)
-    queryKey?: string[];                    // optional override for cache key
-    toastOnError?: boolean;                 // toggle error toast
-};
+export interface AnimeListItem {
+  id: number;
+  image: string | null;
+  title_english: string | null;
+  title_romaji: string | null;
+  type: string | null;
+  duration: number | null;
+  score: number | null;
+  startDateText: string | null;
+  synopsis: string | null;
+  synonyms: string[];
+  status: string | null;
+  genres: string[];
+}
 
-type UseAnimeListReturn = {
-    isLoading: boolean;
-    response?: AnimeListResponse;
-    errorMessage?: string;
-    retry: () => void;
-};
-
-export const useAnimeList = ({
-    path,
-    params = {},
-    queryKey,
-    toastOnError = true,
-}: UseAnimeListOptions): UseAnimeListReturn => {
-    const searchParams = new URLSearchParams(params).toString();
-    const fullPath = searchParams ? `${path}?${searchParams}` : path;
-
-    const query = useQuery<AnimeListResponse, Error>({
-        queryKey: queryKey ?? [path, searchParams],
-        queryFn: async () => {
-            const { data } = await apiClient.get(fullPath);
-            return data;
-        },
-        retry: false,
-    });
-
-    if (query.isError && toastOnError) {
-        toastService.error(`Failed to load data: ${query.error.message}`);
-        console.error(query.error);
+const QUERY = /* GraphQL */ `
+  query ($page: Int, $perPage: Int, $sort: [MediaSort], $status: MediaStatus) {
+    Page(page: $page, perPage: $perPage) {
+      media(
+        type: ANIME
+        sort: $sort
+        status: $status
+      ) {
+        id
+        title { english romaji }
+        coverImage { large }
+        format
+        duration
+        averageScore
+        startDate { year month day }
+        description(asHtml: false)
+        synonyms
+        status
+        genres
+      }
     }
+  }
+`;
 
-    return {
-        isLoading: query.isLoading,
-        response: query.data,
-        errorMessage: query.isError ? query.error.message : undefined,
-        retry: query.refetch,
-    };
-};
+export function useAnimeList(
+  key: string,
+  sort: string[],
+  status?: string,
+  page: number = 1,
+  perPage: number = 30,
+) {
+  return useQuery<AnimeListItem[], Error>({
+    queryKey: ["animeList", key, sort.join('-'), status, perPage],
+    queryFn: async ({ signal }) => {
+      const data = await apiClient.post(
+        "",
+        { query: QUERY, variables: { page, perPage, sort, status } },
+        { signal }
+      );
+      const media = (data as any)?.Page?.media ?? [];
+      return media.map((m: any) => ({
+        id: m.id,
+        image: m.coverImage?.large ?? null,
+        title_english: m.title?.english ?? null,
+        title_romaji: m.title?.romaji ?? null,
+        type: m.format ?? null,
+        duration: m.duration ?? null,
+        score: m.averageScore ?? null,
+        startDateText: formatDate(
+          m.startDate?.year ?? null,
+          m.startDate?.month ?? null,
+          m.startDate?.day ?? null
+        ),
+        synopsis: typeof m.description === "string"
+          ? m.description.replace(/<[^>]+>/g, "").trim()
+          : null,
+        synonyms: m.synonyms ?? [],
+        status: m.status ?? null,
+        genres: m.genres ?? [],
+      })) as AnimeListItem[];
+    },
+    staleTime: 60 * 60 * 1000,
+    retry: false,
+  });
+}

@@ -1,11 +1,9 @@
+import { AlertCircle, Calendar, Loader2, Star } from 'lucide-react';
 import React from 'react';
-import { Loader2, AlertCircle, RefreshCw, Calendar, Star } from 'lucide-react';
 import { useAnimeList } from '../hooks/useAnimeList';
 
 const CurrentSeasonAnime: React.FC = () => {
-    const { isLoading, response, errorMessage, retry } = useAnimeList({
-        path: '/seasons/now'
-    });
+    const { data, isLoading, error } = useAnimeList('airingAnime', ["SCORE_DESC"], "RELEASING");
 
     if (isLoading) {
         return (
@@ -18,26 +16,19 @@ const CurrentSeasonAnime: React.FC = () => {
         );
     }
 
-    if (errorMessage) {
+    if (error) {
         return (
             <div className="bg-red-800 border border-red-200 p-6">
                 <div className="flex items-center mb-4">
                     <AlertCircle className="w-6 h-6 text-red-600 mr-3" />
                     <h3 className="text-lg font-semibold text-red-800">Error Loading Anime</h3>
                 </div>
-                <p className="text-red-700 mb-4">{errorMessage}</p>
-                <button
-                    onClick={retry}
-                    className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200"
-                >
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Try Again
-                </button>
+                <p className="text-red-700 mb-4">{error.message}</p>
             </div>
         );
     }
 
-    if (!response?.data || response.data.length === 0) {
+    if (!data || data.length === 0) {
         return (
             <div className="bg-yellow-800 border border-yellow-200 p-6">
                 <div className="flex items-center mb-4">
@@ -50,68 +41,56 @@ const CurrentSeasonAnime: React.FC = () => {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="bg-gray-900 border-gray-400 p-6">
-                <div className="flex items-center mb-6">
-                    <Calendar className="w-6 h-6 text-blue-600 mr-3" />
-                    <h2 className="text-2xl font-bold text-gray-900">Current Season Anime</h2>
-                    <span className="ml-auto bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                        {response.data.length} series
-                    </span>
-                </div>
+        <div className="bg-slate-900 px-6 py-4">
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-white">Current Season Anime</h2>
+                <span className="text-orange-100 bg-slate-600 px-2 py-1 rounded-md text-xs font-medium">
+                    View more →
+                </span>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                    {response.data.map((anime) => (
-                        <div key={anime.mal_id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-                            {anime.images?.jpg?.large_image_url && (
-                                <div className="aspect-[3/4] bg-gray-100">
-                                    <img
-                                        src={anime.images.jpg.image_url}
-                                        alt={anime.title}
-                                        className="w-full h-full object-cover"
-                                        loading="lazy"
-                                    />
-                                </div>
-                            )}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {data.map((anime) => (
+                    <div key={anime.id} className="bg-slate-800 rounded-sm overflow-hidden hover:shadow-lg">
+                        {anime.image && (
+                            <div className="aspect-[3/4]">
+                                <img
+                                    src={anime.image}
+                                    alt={anime.title_english ?? ''}
+                                    className="w-full h-full object-cover"
+                                    loading="lazy"
+                                />
+                            </div>
+                        )}
 
-                            <div className="p-4">
-                                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 text-sm leading-tight">
-                                    {anime.title}
-                                </h3>
+                        <div className="p-2">
+                            <h3 className="font-semibold text-white my-2 line-clamp-2 text-sm leading-tight">
+                                {anime.title_english ?? anime.title_romaji}
+                            </h3>
 
-                                <div className="space-y-2 text-xs text-gray-600">
-                                    {anime.score && (
+                            <div className="text-xs text-gray-300 flex flex-wrap gap-2">
+                                {anime.score && (
+                                    <>
                                         <div className="flex items-center">
                                             <Star className="w-3 h-3 text-yellow-500 mr-1" />
                                             <span className="font-medium">{anime.score}</span>
                                         </div>
-                                    )}
-
-                                    {anime.type && (
-                                        <div className="inline-block bg-gray-100 px-2 py-1 rounded text-xs font-medium">
-                                            {anime.type}
-                                        </div>
-                                    )}
-
-                                    {anime.status && (
-                                        <div className={`inline-block px-2 py-1 rounded text-xs font-medium ml-2 ${anime.status === 'Currently Airing'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-gray-100 text-gray-800'
-                                            }`}>
-                                            {anime.status}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {anime.synopsis && (
-                                    <p className="text-xs text-gray-600 mt-2 line-clamp-3">
-                                        {anime.synopsis}
-                                    </p>
+                                        <span>•</span>
+                                    </>
+                                )}
+                                {anime.type && (
+                                    <>
+                                        <div className="font-medium">{anime.type}</div>
+                                        <span>•</span>
+                                    </>
+                                )}
+                                {anime.status && (
+                                    <div className="font-medium">{anime.status}</div>
                                 )}
                             </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

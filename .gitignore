@@ -25,3 +25,5 @@ dist-ssr
 
 # Custom
 api-docs.json
+.firebaserc
+firebase.json

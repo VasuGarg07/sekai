@@ -1,6 +1,6 @@
 import { ShowcaseStrip } from "./ShowcaseStrip";
 
-export function AnimeShowcase() {
+export default function AnimeShowcase() {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-4 bg-slate-900">
             <ShowcaseStrip

@@ -1,8 +1,8 @@
-import { AlertCircle, Calendar, Loader2, Star } from 'lucide-react';
-import React from 'react';
+import { AlertCircle, Calendar, Loader2 } from 'lucide-react';
 import { useAnimeList } from '../hooks/useAnimeList';
+import AnimeGalleryCard from './AnimeGalleryCard';
 
-const CurrentSeasonAnime: React.FC = () => {
+export default function CurrentSeasonAnime() {
     const { data, isLoading, error } = useAnimeList('airingAnime', ["SCORE_DESC"], "RELEASING");
 
     if (isLoading) {
@@ -42,58 +42,16 @@ const CurrentSeasonAnime: React.FC = () => {
 
     return (
         <div className="bg-slate-900 px-6 py-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 max-w-6xl mx-auto">
                 <h2 className="text-2xl font-bold text-white">Current Season Anime</h2>
                 <span className="text-orange-100 bg-slate-600 px-2 py-1 rounded-md text-xs font-medium">
                     View more →
                 </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {data.map((anime) => (
-                    <div key={anime.id} className="bg-slate-800 rounded-sm overflow-hidden hover:shadow-lg">
-                        {anime.image && (
-                            <div className="aspect-[3/4]">
-                                <img
-                                    src={anime.image}
-                                    alt={anime.title_english ?? ''}
-                                    className="w-full h-full object-cover"
-                                    loading="lazy"
-                                />
-                            </div>
-                        )}
-
-                        <div className="p-2">
-                            <h3 className="font-semibold text-white my-2 line-clamp-2 text-sm leading-tight">
-                                {anime.title_english ?? anime.title_romaji}
-                            </h3>
-
-                            <div className="text-xs text-gray-300 flex flex-wrap gap-2">
-                                {anime.score && (
-                                    <>
-                                        <div className="flex items-center">
-                                            <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                            <span className="font-medium">{anime.score}</span>
-                                        </div>
-                                        <span>•</span>
-                                    </>
-                                )}
-                                {anime.type && (
-                                    <>
-                                        <div className="font-medium">{anime.type}</div>
-                                        <span>•</span>
-                                    </>
-                                )}
-                                {anime.status && (
-                                    <div className="font-medium">{anime.status}</div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                ))}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 max-w-6xl mx-auto">
+                {data.map((anime) => <AnimeGalleryCard key={anime.id} anime={anime} />)}
             </div>
         </div>
     );
 };
-
-export default CurrentSeasonAnime;

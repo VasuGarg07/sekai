@@ -68,7 +68,7 @@ GET /anime
 
 ---
 
-## 📅 **SEASONAL & TEMPORAL**
+## 📅 **SEASONAL & TEMPORAL --- FUTURE**
 
 ### **Current & Future Seasons** ✅
 ```typescript
@@ -91,11 +91,6 @@ GET /schedules?filter=monday        // 📅 Specific Day Schedule
 ### **Random Discovery** ✅
 ```typescript
 GET /random/anime                   // 🎲 Random Anime
-```
-
-### **Basic Recommendations** ✅
-```typescript
-GET /anime/{id}/recommendations     // 🤝 Similar Anime
 ```
 
 ---
@@ -123,7 +118,7 @@ GET /anime?producers={producer_id}  // 🎬 Anime by Studio
 GET /anime/{id}                     // 📖 Main Details
 GET /anime/{id}/pictures            // 🖼️ Screenshots/Images  
 GET /anime/{id}/videos              // 🎥 Trailers & PVs
-GET /anime/{id}/statistics          // 📊 Viewing Statistics (if useful)
+GET /anime/{id}/recommendations     // 🤝 Similar Anime
 ```
 
 ---
@@ -179,9 +174,3 @@ Here are **homepage sections** you could create:
 12. Multiple image galleries
 13. Video trailers integration
 14. Advanced sorting options
-
----
-
-This gives you a **comprehensive anime catalogue** with all the essential discovery features while keeping the API simple and focused! 🚀
-
-**Which of these "Top Lists" sound most appealing for your homepage?**

@@ -1,3 +1,4 @@
+import type { AnimeListItem } from "./interfaces";
 
 /** Helpers */
 export function getCurrentSeasonYear() {
@@ -28,4 +29,29 @@ export function formatDate(
         day: "numeric",
         year: "numeric",
     }).format(dt);
+}
+
+
+export function mapMediaToAnimeListItem(m: any): AnimeListItem {
+    return {
+        id: m.id,
+        image: m.coverImage?.large ?? null,
+        title_english: m.title?.english ?? null,
+        title_romaji: m.title?.romaji ?? null,
+        type: m.format ?? null,
+        duration: m.duration ?? null,
+        score: m.averageScore ?? null,
+        startDateText: formatDate(
+            m.startDate?.year ?? null,
+            m.startDate?.month ?? null,
+            m.startDate?.day ?? null
+        ),
+        synopsis:
+            typeof m.description === "string"
+                ? m.description.replace(/<[^>]+>/g, "").trim()
+                : null,
+        synonyms: m.synonyms ?? [],
+        status: m.status ?? null,
+        genres: m.genres ?? [],
+    };
 }

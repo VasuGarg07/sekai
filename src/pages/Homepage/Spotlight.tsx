@@ -1,7 +1,7 @@
 import { Calendar, CircleChevronLeft, CircleChevronRight, Clock, Monitor } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useAnimeSpotlight } from "../hooks/useAnimeSpotlight";
 import Fallback from '/default-banner.jpg';
+import { useAnimeSpotlight } from "../../hooks/useAnimeSpotlight";
 
 const AUTO_TRANSITION = 5000;
 

@@ -1,5 +1,5 @@
 import { Clock, Monitor } from "lucide-react";
-import type { AnimeListItem } from "../hooks/useAnimeList";
+import type { AnimeListItem } from "../shared/interfaces";
 
 interface ShowcaseItemProps {
     anime: AnimeListItem;

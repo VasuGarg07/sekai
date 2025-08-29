@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { AnimeListItem } from "../hooks/useAnimeList";
 import AnimePreviewCard from "./AnimePreviewCard";
+import type { AnimeListItem } from "../shared/interfaces";
 
 interface AnimeGalleryCardProps {
     anime: AnimeListItem;

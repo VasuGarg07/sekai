@@ -2,9 +2,11 @@ import { User } from 'lucide-react';
 import { useTheme } from '../stores/themeStore';
 import NavMenu from './NavMenu';
 import SearchBar from './SearchBar';
+import { useNavigate } from 'react-router';
 
 const Header = () => {
     const { isDark } = useTheme();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -19,15 +21,15 @@ const Header = () => {
                             <NavMenu />
 
                             {/* Logo */}
-                            <div className="flex items-center space-x-3">
-                                <div className="flex-shrink-0">
+                            <div className="flex items-center space-x-3" onClick={() => navigate('/')}>
+                                <div className="flex-shrink-0 hover:cursor-pointer">
                                     <img
                                         src={isDark ? "/logo_white.png" : "/logo.png"}
                                         alt="Sekai Logo"
                                         className="h-12 w-12 object-contain"
                                     />
                                 </div>
-                                <span className="text-xl font-bold text-slate-900 dark:text-white hidden sm:block">
+                                <span className="text-xl font-bold text-slate-900 dark:text-white hidden sm:block hover:cursor-pointer">
                                     Sekai
                                 </span>
                             </div>

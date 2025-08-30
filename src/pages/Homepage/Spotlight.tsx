@@ -72,7 +72,7 @@ const SpotlightSection: React.FC = () => {
             <button className="bg-orange-400 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-orange-500 transition text-sm sm:text-base">
               Add to Watchlist
             </button>
-            <button className="bg-gray-800 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-700 transition text-sm sm:text-base">
+            <button className="bg-gray-800 text-white hidden sm:block px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-700 transition text-base">
               Detail
             </button>
           </div>

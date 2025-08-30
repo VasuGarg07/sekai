@@ -32,3 +32,33 @@ export interface Pagination {
     lastPage: number;
     hasNextPage: boolean;
 }
+
+// -----------------------------
+
+export interface AnimeTag {
+    name: string;
+    description: string | null;
+    rank: number | null;
+    isGeneralSpoiler: boolean;
+    isMediaSpoiler: boolean;
+}
+
+export interface AnimeRelation {
+    relationType: string;
+    node: {
+        id: number;
+        title: { romaji: string | null; english: string | null };
+        coverImage: { large: string | null };
+        format: string | null;
+        status: string | null;
+    };
+}
+
+export interface AnimeDetail extends AnimeListItem {
+    bannerImage: string | null;
+    tags: AnimeTag[];
+    popularity: number | null;
+    favourites: number | null;
+    relations: AnimeRelation[];
+    recommendations: AnimeListItem[];
+}

@@ -2,6 +2,7 @@ import { useState, useDeferredValue, useMemo } from "react";
 import { Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAnimeSearch } from "../hooks/useAnimeSearch";
+import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 
 type Props = { className?: string };
 
@@ -12,11 +13,12 @@ const SearchBar = ({ className = "" }: Props) => {
 
     const shouldFetch = q.length >= 3;
     const { data: results = [], isLoading } = useAnimeSearch(q, shouldFetch);
+    const { goToAnime } = useAnimeNavigation();
 
     const navigate = useNavigate();
 
     const handleResultClick = (anilistId: number) => {
-        navigate(`/${anilistId}/view`);
+        goToAnime(anilistId)
         setQuery("");
     };
 

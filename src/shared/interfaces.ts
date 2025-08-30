@@ -48,14 +48,25 @@ export interface AnimeRelation {
     node: {
         id: number;
         title: { romaji: string | null; english: string | null };
-        coverImage: { large: string | null };
+        coverImage: {
+            extraLarge: string | null;
+            large: string | null;
+        };
         format: string | null;
         status: string | null;
     };
 }
 
 export interface AnimeDetail extends AnimeListItem {
+    coverImage: {
+        extraLarge: string | null;
+        large: string | null;
+    };
     bannerImage: string | null;
+    season: string | null;
+    seasonYear: number | null;
+    episodes: number | null;
+    countryOfOrigin: string | null;
     tags: AnimeTag[];
     popularity: number | null;
     favourites: number | null;

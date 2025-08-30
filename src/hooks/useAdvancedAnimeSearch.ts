@@ -86,7 +86,7 @@ export function useAdvancedAnimeSearch(
     season,
     year,
     country,
-    sort = ["SCORE_DESC"],
+    sort = [],
     page = 1,
     perPage = 30,
   } = options;

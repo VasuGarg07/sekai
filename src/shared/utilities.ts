@@ -31,7 +31,6 @@ export function formatDate(
     }).format(dt);
 }
 
-
 export function mapMediaToAnimeListItem(m: any): AnimeListItem {
     return {
         id: m.id,
@@ -57,11 +56,19 @@ export function mapMediaToAnimeListItem(m: any): AnimeListItem {
 }
 
 export function mapMediaToAnimeDetail(m: any): AnimeDetail {
-    const base = mapMediaToAnimeListItem(m); // reuse existing mapper
+    const base = mapMediaToAnimeListItem(m);
 
     return {
         ...base,
+        coverImage: {
+            extraLarge: m.coverImage?.extraLarge ?? null,
+            large: m.coverImage?.large ?? null,
+        },
         bannerImage: m.bannerImage ?? null,
+        season: m.season ?? null,
+        seasonYear: m.seasonYear ?? null,
+        episodes: m.episodes ?? null,
+        countryOfOrigin: m.countryOfOrigin ?? null,
         tags: (m.tags ?? []) as AnimeTag[],
         popularity: m.popularity ?? null,
         favourites: m.favourites ?? null,

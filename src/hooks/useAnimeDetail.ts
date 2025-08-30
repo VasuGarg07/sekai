@@ -37,16 +37,24 @@ const QUERY = /* GraphQL */ `
       popularity
       favourites
       relations {
-        relationType
-        node {
-          id
-          title { romaji english }
-          coverImage { large }
-          format
-          status
+        edges {
+          relationType
+          node {
+            id
+            title {
+              romaji
+              english
+            }
+            coverImage {
+              extraLarge
+              large
+            }
+            format
+            status
+          }
         }
       }
-      recommendations(perPage: 18, sort: RATING_DESC) {
+      recommendations(perPage: 24, sort: RATING_DESC) {
         edges {
           node {
             mediaRecommendation {
@@ -70,21 +78,21 @@ const QUERY = /* GraphQL */ `
 `;
 
 export function useAnimeDetail(id: number) {
-    return useQuery<AnimeDetail, Error>({
-        queryKey: ["animeDetail", id],
-        queryFn: async ({ signal }) => {
-            const data = await apiClient.post(
-                "",
-                { query: QUERY, variables: { id } },
-                { signal }
-            );
+  return useQuery<AnimeDetail, Error>({
+    queryKey: ["animeDetail", id],
+    queryFn: async ({ signal }) => {
+      const data = await apiClient.post(
+        "",
+        { query: QUERY, variables: { id } },
+        { signal }
+      );
 
-            const m = (data as any)?.Media;
-            if (!m) throw new Error("Anime not found");
+      const m = (data as any)?.Media;
+      if (!m) throw new Error("Anime not found");
 
-            return mapMediaToAnimeDetail(m);
-        },
-        staleTime: 30 * 60 * 1000,
-        retry: false,
-    });
+      return mapMediaToAnimeDetail(m);
+    },
+    staleTime: 30 * 60 * 1000,
+    retry: false,
+  });
 }

@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AnimePreviewCard from "./AnimePreviewCard";
 import type { AnimeListItem } from "../shared/interfaces";
+import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 
 interface AnimeGalleryCardProps {
     anime: AnimeListItem;
@@ -10,6 +11,7 @@ interface AnimeGalleryCardProps {
 export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const hoverTimeout = useRef<number | null>(null);
+    const { goToAnime } = useAnimeNavigation();
 
     const handleMouseEnter = () => {
         hoverTimeout.current = setTimeout(() => {
@@ -47,7 +49,8 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     return (
         <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             {anime.image && (
-                <div className="aspect-[4/5] relative">
+                <div className="aspect-[4/5] relative cursor-pointer"
+                    onClick={() => goToAnime(anime.id)}>
                     <img
                         src={anime.image}
                         alt={anime.title_english ?? ''}
@@ -72,7 +75,8 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
             )}
 
             <div className="py-2">
-                <h3 className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight">
+                <h3 className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight cursor-pointer"
+                    onClick={() => goToAnime(anime.id)}>
                     {anime.title_english ?? anime.title_romaji}
                 </h3>
 

@@ -2,11 +2,14 @@ import { Calendar, CircleChevronLeft, CircleChevronRight, Clock, Monitor } from 
 import { useEffect, useRef, useState } from "react";
 import Fallback from '/default-banner.jpg';
 import { useAnimeSpotlight } from "../../hooks/useAnimeSpotlight";
+import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 
 const AUTO_TRANSITION = 5000;
 
 const SpotlightSection: React.FC = () => {
   const { data: animeSpotlights = [], isLoading } = useAnimeSpotlight();
+  const { goToAnime } = useAnimeNavigation();
+
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<any>(null);
 
@@ -44,6 +47,7 @@ const SpotlightSection: React.FC = () => {
           src={anime.image ?? ''}
           alt={anime.title_english ?? anime.title_romaji ?? "Anime Banner"}
           className="h-48 lg:h-full aspect-2/3 opacity-100 rounded-lg lg:rounded-xl object-cover flex-shrink-0 mx-auto sm:mx-0"
+          onClick={() => goToAnime(anime.id)}
         />
         <div className="flex flex-col justify-center text-left flex-1 min-w-0">
           <span className="text-orange-400 font-semibold mb-1 sm:mb-2 text-sm">#{current + 1} Spotlight</span>
@@ -72,7 +76,8 @@ const SpotlightSection: React.FC = () => {
             <button className="bg-orange-400 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-orange-500 transition text-sm sm:text-base">
               Add to Watchlist
             </button>
-            <button className="bg-gray-800 text-white hidden sm:block px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-700 transition text-base">
+            <button className="bg-gray-800 text-white hidden sm:block px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-700 transition text-base"
+              onClick={() => goToAnime(anime.id)}>
               Detail
             </button>
           </div>

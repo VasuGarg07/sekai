@@ -17,7 +17,7 @@ const Footer = () => {
     return (
         <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
             {/* Main Footer Content */}
-            <div className="py-8 sm:py-12">
+            <div className="py-8">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
 
                     {/* Brand Section */}

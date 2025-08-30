@@ -24,3 +24,11 @@ export interface Filters {
     genreIn?: string[];
     genreNotIn?: string[];
 }
+
+export interface Pagination {
+    total: number;
+    perPage: number;
+    currentPage: number;
+    lastPage: number;
+    hasNextPage: boolean;
+}

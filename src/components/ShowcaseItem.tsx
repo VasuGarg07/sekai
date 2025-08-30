@@ -22,7 +22,7 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
                 <span className="font-medium text-white text-sm hover:text-orange-300 transition mb-1 line-clamp-2">
                     {anime.title_english ?? anime.title_romaji}
                 </span>
-                <div className="flex flex-wrap justify-start items-center gap-2 sm:gap-4 mb-3 sm:mb-4 text-xs">
+                <div className="flex flex-wrap justify-start items-center gap-2 sm:gap-4 text-xs">
                     <span className="flex items-center gap-1 text-white/80">
                         <Monitor size={14} className="sm:w-4 sm:h-4" />
                         {anime.type}

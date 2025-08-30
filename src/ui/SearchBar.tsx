@@ -20,14 +20,17 @@ const SearchBar = ({ className = "" }: Props) => {
         setQuery("");
     };
 
-    const handleFilterClick = () => navigate("/explore");
+    const handleFilterClick = () => {
+        setQuery("");
+        navigate("/explore");
+    }
     const handleViewAllResults = () => navigate(`/search?q=${encodeURIComponent(q)}`);
 
     return (
         <div className={`relative max-w-xl ${className}`}>
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-slate-400" />
+                    <Search className="h-4 w-4 text-slate-400" />
                 </div>
 
                 <input
@@ -35,7 +38,7 @@ const SearchBar = ({ className = "" }: Props) => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search anime..."
-                    className="block w-full pl-10 pr-24 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    className="block w-full pl-8 pr-10 sm:pr-20 py-2 text-xs bg-slate-100 dark:bg-slate-800 border border-transparent rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none"
                     autoComplete="off"
                     aria-label="Search anime"
                 />
@@ -46,7 +49,7 @@ const SearchBar = ({ className = "" }: Props) => {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                 >
                     <Filter size={16} />
-                    <span className="text-sm font-medium hidden sm:inline">FILTER</span>
+                    <span className="text-xs font-medium hidden sm:inline">FILTER</span>
                 </button>
             </div>
 

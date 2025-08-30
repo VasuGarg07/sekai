@@ -20,7 +20,7 @@ import {
   ArrowUpDown,
   Info,
 } from "lucide-react";
-import Tooltip from "../../home/Tooltip";
+import Tooltip from "../../ui/Tooltip";
 
 interface Props {
   onApply: (filters: Filters) => void;

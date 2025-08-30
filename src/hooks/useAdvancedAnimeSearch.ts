@@ -1,7 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import type { AnimeListItem } from "../shared/interfaces";
+import type { AnimeListItem, Pagination } from "../shared/interfaces";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
+
+export interface PagedResult {
+  items: AnimeListItem[];
+  pageInfo: Pagination;
+}
+
 
 const QUERY = /* GraphQL */ `
   query (
@@ -18,6 +24,13 @@ const QUERY = /* GraphQL */ `
     $sort: [MediaSort]
   ) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        total
+        perPage
+        currentPage
+        lastPage
+        hasNextPage
+      }
       media(
         type: ANIME
         search: $search
@@ -47,79 +60,85 @@ const QUERY = /* GraphQL */ `
 `;
 
 export interface AdvancedSearchOptions {
-    search?: string;
-    genreIn?: string[];
-    genreNotIn?: string[];
-    formatIn?: string[];
-    statusIn?: string[];
-    season?: string;
-    year?: number;
-    country?: string;
-    sort?: string[];
-    page?: number;
-    perPage?: number;
+  search?: string;
+  genreIn?: string[];
+  genreNotIn?: string[];
+  formatIn?: string[];
+  statusIn?: string[];
+  season?: string;
+  year?: number;
+  country?: string;
+  sort?: string[];
+  page?: number;
+  perPage?: number;
 }
 
 export function useAdvancedAnimeSearch(
-    key: string,
-    options: AdvancedSearchOptions,
+  key: string,
+  options: AdvancedSearchOptions,
 ) {
-    const {
-        search,
-        genreIn,
-        genreNotIn,
-        formatIn,
-        statusIn,
-        season,
-        year,
-        country,
-        sort = ["SCORE_DESC"],
-        page = 1,
-        perPage = 30,
-    } = options;
+  const {
+    search,
+    genreIn,
+    genreNotIn,
+    formatIn,
+    statusIn,
+    season,
+    year,
+    country,
+    sort = ["SCORE_DESC"],
+    page = 1,
+    perPage = 30,
+  } = options;
 
-    return useQuery<AnimeListItem[], Error>({
-        queryKey: [
-            "advancedAnimeSearch",
-            key,
+  return useQuery<PagedResult, Error>({
+    queryKey: [
+      "advancedAnimeSearch",
+      key,
+      search,
+      genreIn?.join(","),
+      genreNotIn?.join(","),
+      formatIn?.join(","),
+      statusIn?.join(","),
+      season,
+      year,
+      country,
+      sort.join("-"),
+      page,
+      perPage,
+    ],
+    queryFn: async ({ signal }) => {
+      const data = await apiClient.post(
+        "",
+        {
+          query: QUERY,
+          variables: {
+            page,
+            perPage,
             search,
-            genreIn?.join(","),
-            genreNotIn?.join(","),
-            formatIn?.join(","),
-            statusIn?.join(","),
+            genreIn,
+            genreNotIn,
+            formatIn,
+            statusIn,
             season,
             year,
             country,
-            sort.join("-"),
-            page,
-            perPage,
-        ],
-        queryFn: async ({ signal }) => {
-            const data = await apiClient.post(
-                "",
-                {
-                    query: QUERY,
-                    variables: {
-                        page,
-                        perPage,
-                        search,
-                        genreIn,
-                        genreNotIn,
-                        formatIn,
-                        statusIn,
-                        season,
-                        year,
-                        country,
-                        sort,
-                    },
-                },
-                { signal }
-            );
-
-            const media = (data as any)?.Page?.media ?? [];
-            return media.map(mapMediaToAnimeListItem);
+            sort,
+          },
         },
-        staleTime: 60 * 60 * 1000,
-        retry: false,
-    });
+        { signal }
+      );
+
+      const pageData = (data as any)?.Page;
+      const media = pageData?.media ?? [];
+      const pageInfo = pageData?.pageInfo ?? {};
+
+      return {
+        items: media.map(mapMediaToAnimeListItem),
+        pageInfo,
+      };
+    },
+    staleTime: 60 * 60 * 1000,
+    retry: false,
+  });
 }

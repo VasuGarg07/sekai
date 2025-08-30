@@ -1,14 +1,16 @@
+import { Link } from "react-router";
 import { useAnimeList } from "../hooks/useAnimeList";
 import { ShowcaseItem } from "./ShowcaseItem";
 
 interface AnimeListProps {
     title: string;
+    path: string;
     queryKey: string;
     sort: string[];
     status?: string;
 }
 
-export function ShowcaseStrip({ title, queryKey, sort, status }: AnimeListProps) {
+export function ShowcaseStrip({ title, path, queryKey, sort, status }: AnimeListProps) {
     const { data, isLoading, error } = useAnimeList(queryKey, sort, status, 1, 5);
 
     if (isLoading) return <div className="text-white">Loading {title}...</div>;
@@ -22,12 +24,12 @@ export function ShowcaseStrip({ title, queryKey, sort, status }: AnimeListProps)
                     <ShowcaseItem key={anime.id} anime={anime} />
                 ))}
             </div>
-            <a
-                href="#"
+            <Link
+                to={path}
                 className="mt-4 inline-block text-sm text-gray-300 hover:underline transition"
             >
                 View more →
-            </a>
+            </Link>
         </div>
     );
 }

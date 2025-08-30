@@ -1,19 +1,15 @@
 import {
-    // Building,
-    Calendar,
-    Clock,
     Film,
-    // Grid3X3,
-    TrendingUp
+    TrendingUp,
+    Trophy,
+    Tv2
 } from 'lucide-react';
 
 export const navigationLinks = [
-    { name: 'Recent', path: '/recent', icon: Clock },
-    { name: 'Top Anime', path: '/top', icon: TrendingUp },
-    { name: 'Seasonal', path: '/seasonal', icon: Calendar },
+    { name: 'TV Series', path: '/tv-series', icon: Tv2 },
     { name: 'Movies', path: '/movies', icon: Film },
-    // { name: 'Genres', path: '/genres', icon: Grid3X3 },
-    // { name: 'Studios', path: '/studios', icon: Building }
+    { name: 'Most Popular', path: '/popular', icon: Trophy },
+    { name: 'Top Airing', path: '/airing', icon: TrendingUp },
 ];
 
 export const FORMATS = [

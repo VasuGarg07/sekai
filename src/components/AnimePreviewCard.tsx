@@ -1,5 +1,5 @@
 import { Bookmark, Star } from "lucide-react";
-import type { AnimeListItem } from "../hooks/useAnimeList";
+import type { AnimeListItem } from "../shared/interfaces";
 
 interface AnimePreviewCardProps {
     anime: AnimeListItem;

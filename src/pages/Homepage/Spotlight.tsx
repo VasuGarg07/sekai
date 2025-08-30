@@ -1,7 +1,7 @@
 import { Calendar, CircleChevronLeft, CircleChevronRight, Clock, Monitor } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useAnimeSpotlight } from "../hooks/useAnimeSpotlight";
 import Fallback from '/default-banner.jpg';
+import { useAnimeSpotlight } from "../../hooks/useAnimeSpotlight";
 
 const AUTO_TRANSITION = 5000;
 
@@ -37,7 +37,7 @@ const SpotlightSection: React.FC = () => {
         className="absolute inset-0 h-full w-full object-cover opacity-100"
       />
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-gray-900/50 sm:to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/70 to-gray-900/50 sm:to-transparent" />
       {/* Content */}
       <div className="relative flex flex-row gap-4 sm:gap-6 lg:gap-8 items-center z-10 h-full p-4 sm:p-8 lg:p-16 max-w-6xl w-full">
         <img

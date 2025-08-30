@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
-import Layout from "./home/Layout";
-import Homepage from "./pages/Homepage";
+import Layout from "./ui/Layout";
+import Homepage from "./pages/Homepage/Homepage";
+import AdvancedSearch from "./pages/AdvancedSearch/AdvancedSearch";
 
 const router = createBrowserRouter([
     {
@@ -8,6 +9,7 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             { index: true, element: <Homepage /> },
+            { path: 'explore', element: <AdvancedSearch /> },
         ]
     }
 ])

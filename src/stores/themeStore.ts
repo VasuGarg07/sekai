@@ -11,13 +11,13 @@ interface ThemeStore {
 
 // Get initial theme (prevents flash)
 const getInitialTheme = (): Theme => {
-    if (typeof window === 'undefined') return 'light';
+    if (typeof window === 'undefined') return 'dark';
     const stored = localStorage.getItem('sekai-theme');
     if (stored) {
         const parsed = JSON.parse(stored);
-        return parsed.state?.theme || 'light';
+        return parsed.state?.theme || 'dark';
     }
-    return 'light';
+    return 'dark';
 };
 
 // Set initial theme immediately

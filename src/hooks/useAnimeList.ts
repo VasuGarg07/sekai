@@ -1,21 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import { formatDate } from "../shared/utilities";
-
-export interface AnimeListItem {
-  id: number;
-  image: string | null;
-  title_english: string | null;
-  title_romaji: string | null;
-  type: string | null;
-  duration: number | null;
-  score: number | null;
-  startDateText: string | null;
-  synopsis: string | null;
-  synonyms: string[];
-  status: string | null;
-  genres: string[];
-}
+import type { AnimeListItem } from "../shared/interfaces";
+import { mapMediaToAnimeListItem } from "../shared/utilities";
 
 const QUERY = /* GraphQL */ `
   query ($page: Int, $perPage: Int, $sort: [MediaSort], $status: MediaStatus) {
@@ -57,26 +43,7 @@ export function useAnimeList(
         { signal }
       );
       const media = (data as any)?.Page?.media ?? [];
-      return media.map((m: any) => ({
-        id: m.id,
-        image: m.coverImage?.large ?? null,
-        title_english: m.title?.english ?? null,
-        title_romaji: m.title?.romaji ?? null,
-        type: m.format ?? null,
-        duration: m.duration ?? null,
-        score: m.averageScore ?? null,
-        startDateText: formatDate(
-          m.startDate?.year ?? null,
-          m.startDate?.month ?? null,
-          m.startDate?.day ?? null
-        ),
-        synopsis: typeof m.description === "string"
-          ? m.description.replace(/<[^>]+>/g, "").trim()
-          : null,
-        synonyms: m.synonyms ?? [],
-        status: m.status ?? null,
-        genres: m.genres ?? [],
-      })) as AnimeListItem[];
+      return media.map(mapMediaToAnimeListItem)
     },
     staleTime: 60 * 60 * 1000,
     retry: false,

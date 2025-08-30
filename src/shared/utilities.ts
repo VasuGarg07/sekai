@@ -1,4 +1,4 @@
-import type { AnimeListItem } from "./interfaces";
+import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeTag } from "./interfaces";
 
 /** Helpers */
 export function getCurrentSeasonYear() {
@@ -31,7 +31,6 @@ export function formatDate(
     }).format(dt);
 }
 
-
 export function mapMediaToAnimeListItem(m: any): AnimeListItem {
     return {
         id: m.id,
@@ -53,5 +52,31 @@ export function mapMediaToAnimeListItem(m: any): AnimeListItem {
         synonyms: m.synonyms ?? [],
         status: m.status ?? null,
         genres: m.genres ?? [],
+    };
+}
+
+export function mapMediaToAnimeDetail(m: any): AnimeDetail {
+    const base = mapMediaToAnimeListItem(m);
+
+    return {
+        ...base,
+        coverImage: {
+            extraLarge: m.coverImage?.extraLarge ?? null,
+            large: m.coverImage?.large ?? null,
+        },
+        bannerImage: m.bannerImage ?? null,
+        season: m.season ?? null,
+        seasonYear: m.seasonYear ?? null,
+        episodes: m.episodes ?? null,
+        countryOfOrigin: m.countryOfOrigin ?? null,
+        tags: (m.tags ?? []) as AnimeTag[],
+        popularity: m.popularity ?? null,
+        favourites: m.favourites ?? null,
+        relations: (m.relations?.edges ?? []) as AnimeRelation[],
+        recommendations:
+            m.recommendations?.edges
+                ?.map((e: any) => e.node?.mediaRecommendation)
+                .filter(Boolean)
+                .map(mapMediaToAnimeListItem) ?? [],
     };
 }

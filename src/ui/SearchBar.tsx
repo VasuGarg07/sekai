@@ -40,7 +40,7 @@ const SearchBar = ({ className = "" }: Props) => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search anime..."
-                    className="block w-full pl-8 pr-10 sm:pr-20 py-2 text-xs bg-slate-100 dark:bg-slate-800 border border-transparent rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none"
+                    className="block w-full pl-8 pr-10 sm:pr-20 py-2 text-xs bg-slate-800 border border-transparent rounded-lg text-white placeholder-slate-400 focus:outline-none"
                     autoComplete="off"
                     aria-label="Search anime"
                 />
@@ -48,7 +48,7 @@ const SearchBar = ({ className = "" }: Props) => {
                 <button
                     type="button"
                     onClick={handleFilterClick}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-slate-400 hover:text-white transition-colors"
                 >
                     <Filter size={16} />
                     <span className="text-xs font-medium hidden sm:inline">FILTER</span>

@@ -3,9 +3,10 @@ import EmptyState from '../../components/EmptyState';
 import ErrorState from '../../components/ErrorState';
 import LoadingState from '../../components/LoadingState';
 import { useAnimeList } from '../../hooks/useAnimeList';
+import { Link } from "react-router";
 
 export default function CurrentSeasonAnime() {
-    const { data, isLoading, error } = useAnimeList('airingAnime', ["SCORE_DESC"], "RELEASING");
+    const { data, isLoading, error } = useAnimeList('airingAnime', ["UPDATED_AT_DESC"], "RELEASING");
 
     if (isLoading) {
         return (
@@ -23,7 +24,7 @@ export default function CurrentSeasonAnime() {
         )
     }
 
-    if (!data || data.length === 0) {
+    if (!data || data.items.length === 0) {
         return (
             <div className="bg-slate-900 py-8 px-4">
                 <EmptyState message='No anime data available for the current season' />
@@ -34,14 +35,16 @@ export default function CurrentSeasonAnime() {
     return (
         <div className="bg-slate-900 px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between mb-4 px-4">
-                <h2 className="text-2xl font-bold text-white">Current Season Anime</h2>
-                <span className="text-orange-100 bg-slate-600 px-2 py-1 rounded-md text-xs font-medium">
+                <h2 className="text-2xl font-bold text-white">Recently Released</h2>
+                <Link
+                    to='recents'
+                    className="text-orange-100 bg-slate-600 px-2 py-1 rounded-md text-xs font-medium">
                     View more →
-                </span>
+                </Link>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 px-4">
-                {data.map((anime) => <AnimeGalleryCard key={anime.id} anime={anime} />)}
+                {data.items.map((anime) => <AnimeGalleryCard key={anime.id} anime={anime} />)}
             </div>
         </div>
     );

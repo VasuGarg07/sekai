@@ -13,7 +13,7 @@ const Header = () => {
     return (
         <>
             {/* Header */}
-            <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 transition-colors duration-200">
+            <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 transition-colors duration-200">
                 <div className="flex items-center justify-center h-16 mx-auto px-4 lg:px-10 gap-2">
                     {/* Menu Button */}
                     <NavMenu />
@@ -27,7 +27,7 @@ const Header = () => {
                                 className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
                             />
                         </div>
-                        <span className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white hover:cursor-pointer">
+                        <span className="text-lg sm:text-xl font-bold text-white hover:cursor-pointer">
                             Sekai
                         </span>
                     </div>
@@ -37,7 +37,7 @@ const Header = () => {
                     {/* Search Button */}
                     <SearchBar className='grow hidden sm:block' />
 
-                    <button className="p-2 rounded-lg text-slate-600 dark:text-slate-400"
+                    <button className="p-2 rounded-lg text-slate-400 block sm:hidden"
                         onClick={handleFilterClick}>
                         <Search size={20} />
                     </button>
@@ -46,7 +46,7 @@ const Header = () => {
                     {/* <ToggleTheme /> */}
 
                     {/* User Menu */}
-                    <button className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-800">
                         <User size={20} />
                     </button>
                 </div>

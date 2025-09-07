@@ -6,7 +6,7 @@ const ToggleTheme = ({ className = '' }) => {
     return (
         <button
             onClick={toggleTheme}
-            className={`p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 active:scale-95 ${className}`}
+            className={`p-2 rounded-lg hover:bg-slate-800 transition-all duration-200 active:scale-95 ${className}`}
             aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
         >
             <span className="transition-transform duration-300 hover:rotate-12">

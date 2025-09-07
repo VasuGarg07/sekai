@@ -20,7 +20,7 @@ export function ShowcaseStrip({ title, path, queryKey, sort, status }: AnimeList
         <div className="bg-slate-900 p-4">
             <h2 className="text-xl font-semibold mb-4 text-orange-500">{title}</h2>
             <div className="flex flex-col">
-                {data?.map((anime) => (
+                {data?.items.map((anime) => (
                     <ShowcaseItem key={anime.id} anime={anime} />
                 ))}
             </div>

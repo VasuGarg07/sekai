@@ -27,3 +27,4 @@ dist-ssr
 api-docs.json
 .firebaserc
 firebase.json
+*firebase

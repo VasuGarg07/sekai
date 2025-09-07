@@ -15,7 +15,7 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
+        <footer className="bg-slate-900 border-t border-slate-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
             {/* Main Footer Content */}
             <div className="py-8">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
@@ -32,25 +32,25 @@ const Footer = () => {
                                 />
                             </div>
                             {/* Brand Name */}
-                            <span className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                            <span className="text-2xl sm:text-3xl font-bold text-white">
                                 Sekai
                             </span>
                         </div>
 
-                        <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
+                        <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
                             Your ultimate destination for anime discovery. Explore thousands of titles,
                             get personalized recommendations, and stay updated with the latest releases.
                         </p>
 
                         {/* Social Links */}
                         <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                            <span className="text-sm text-slate-500 dark:text-slate-400">Socials:</span>
+                            <span className="text-sm text-slate-400">Socials:</span>
                             <div className="flex space-x-3">
                                 {socialLinks.map((social, index) => (
                                     <a
                                         key={index}
                                         href={social.href}
-                                        className={`text-slate-400 ${social.color} transition-colors duration-200 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800`}
+                                        className={`text-slate-400 ${social.color} transition-colors duration-200 p-2 rounded-full bg-slate-800`}
                                         aria-label={social.label}
                                     >
                                         <social.icon size={18} />
@@ -62,7 +62,7 @@ const Footer = () => {
 
                     {/* Quick Links */}
                     <div className="flex-shrink-0 text-right">
-                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">
+                        <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
                             Quick Links
                         </h3>
                         <div className="grid grid-cols-1 gap-x-6 gap-y-2">
@@ -70,7 +70,7 @@ const Footer = () => {
                                 <a
                                     key={index}
                                     href={link.path}
-                                    className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 py-1"
+                                    className="text-sm text-slate-400 hover:hover:text-white transition-colors duration-200 py-1"
                                 >
                                     {link.name}
                                 </a>
@@ -81,19 +81,19 @@ const Footer = () => {
             </div>
 
             {/* Divider */}
-            <div className="border-t border-slate-200 dark:border-slate-800"></div>
+            <div className="border-t border-slate-800"></div>
 
             {/* Bottom Section */}
             <div className="flex flex-col space-y-4 sm:space-y-3 py-6">
 
                 {/* Copyright */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                    <p className="text-sm text-slate-400">
                         Copyright © Sekai {currentYear}. All Rights Reserved
                     </p>
 
                     {/* Made with love indicator */}
-                    <div className="flex items-center space-x-1 text-sm text-slate-500 dark:text-slate-500">
+                    <div className="flex items-center space-x-1 text-sm text-slate-500">
                         <span>Made with</span>
                         <Heart size={14} className="text-red-500 fill-current" />
                         <span>for anime fans</span>
@@ -101,7 +101,7 @@ const Footer = () => {
                 </div>
 
                 {/* Disclaimer */}
-                <p className="text-xs text-slate-500 dark:text-slate-500 leading-relaxed">
+                <p className="text-xs text-slate-500 leading-relaxed">
                     This site does not store any files on its server. All contents are provided by non-affiliated third parties.
                 </p>
             </div>

@@ -10,12 +10,12 @@ const Footer = () => {
 
     const socialLinks = [
         { icon: Twitter, label: 'Twitter', href: '#', color: 'hover:text-blue-400' },
-        { icon: Github, label: 'GitHub', href: '#', color: 'hover:text-slate-300' },
+        { icon: Github, label: 'GitHub', href: '#', color: 'hover:text-zinc-300' },
         { icon: Globe, label: 'Website', href: '#', color: 'hover:text-green-400' }
     ];
 
     return (
-        <footer className="bg-slate-900 border-t border-slate-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
+        <footer className="bg-zinc-950 border-t border-zinc-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
             {/* Main Footer Content */}
             <div className="py-8">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
@@ -37,20 +37,20 @@ const Footer = () => {
                             </span>
                         </div>
 
-                        <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                        <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
                             Your ultimate destination for anime discovery. Explore thousands of titles,
                             get personalized recommendations, and stay updated with the latest releases.
                         </p>
 
                         {/* Social Links */}
                         <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                            <span className="text-sm text-slate-400">Socials:</span>
+                            <span className="text-sm text-zinc-400">Socials:</span>
                             <div className="flex space-x-3">
                                 {socialLinks.map((social, index) => (
                                     <a
                                         key={index}
                                         href={social.href}
-                                        className={`text-slate-400 ${social.color} transition-colors duration-200 p-2 rounded-full bg-slate-800`}
+                                        className={`text-zinc-400 ${social.color} transition-colors duration-200 p-2 rounded-full bg-zinc-800`}
                                         aria-label={social.label}
                                     >
                                         <social.icon size={18} />
@@ -70,7 +70,7 @@ const Footer = () => {
                                 <a
                                     key={index}
                                     href={link.path}
-                                    className="text-sm text-slate-400 hover:hover:text-white transition-colors duration-200 py-1"
+                                    className="text-sm text-zinc-400 hover:hover:text-white transition-colors duration-200 py-1"
                                 >
                                     {link.name}
                                 </a>
@@ -81,19 +81,19 @@ const Footer = () => {
             </div>
 
             {/* Divider */}
-            <div className="border-t border-slate-800"></div>
+            <div className="border-t border-zinc-800"></div>
 
             {/* Bottom Section */}
             <div className="flex flex-col space-y-4 sm:space-y-3 py-6">
 
                 {/* Copyright */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-zinc-400">
                         Copyright © Sekai {currentYear}. All Rights Reserved
                     </p>
 
                     {/* Made with love indicator */}
-                    <div className="flex items-center space-x-1 text-sm text-slate-500">
+                    <div className="flex items-center space-x-1 text-sm text-zinc-500">
                         <span>Made with</span>
                         <Heart size={14} className="text-red-500 fill-current" />
                         <span>for anime fans</span>
@@ -101,7 +101,7 @@ const Footer = () => {
                 </div>
 
                 {/* Disclaimer */}
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <p className="text-xs text-zinc-500 leading-relaxed">
                     This site does not store any files on its server. All contents are provided by non-affiliated third parties.
                 </p>
             </div>

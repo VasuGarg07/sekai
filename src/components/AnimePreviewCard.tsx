@@ -7,7 +7,7 @@ interface AnimePreviewCardProps {
 
 export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
     return (
-        <div className="backdrop-blur-xl bg-slate-700/70 rounded-md shadow-2xl p-4 space-y-2 text-xs">
+        <div className="backdrop-blur-xl bg-zinc-700/70 rounded-md shadow-2xl p-4 space-y-2 text-xs">
             <h3 className="font-bold text-white text-sm line-clamp-2 leading-tight">
                 {anime.title_english ?? anime.title_romaji}
             </h3>
@@ -60,7 +60,7 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                             <a
                                 key={index}
                                 href={`/genre/${encodeURIComponent(genre)}`}
-                                className="text-white hover:text-orange-300 cursor-pointer"
+                                className="text-white hover:text-rose-300 cursor-pointer"
                             >
                                 {genre}
                                 {index < anime.genres.length - 1 && ", "}
@@ -70,7 +70,7 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                 )}
             </div>
 
-            <button className="flex mt-1 items-center gap-1 bg-orange-500 hover:bg-orange-500/80 hover:cursor-pointer text-white px-2 py-1 rounded-md font-medium">
+            <button className="flex mt-1 items-center gap-1 bg-rose-500 hover:bg-rose-500/80 hover:cursor-pointer text-white px-2 py-1 rounded-md font-medium">
                 <Bookmark className="w-3 h-3 fill-current" />
                 Add to Watchlist
             </button>

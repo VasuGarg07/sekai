@@ -62,7 +62,7 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
                     {isHovered && (
                         <div
                             ref={previewRef}
-                            className="absolute z-50 w-auto max-w-sm"
+                            className="absolute z-50 w-auto max-w-xs min-w-64"
                             style={{
                                 top: "50%",
                                 left: "50%",

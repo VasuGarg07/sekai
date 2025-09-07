@@ -1,7 +1,10 @@
+import { Flame, Heart, Star } from "lucide-react";
 import { useParams } from "react-router";
-import { Loader2, AlertCircle, Star, Heart, Flame } from "lucide-react";
-import { useAnimeDetail } from "../../hooks/useAnimeDetail";
 import AnimeGalleryCard from "../../components/AnimeGalleryCard";
+import EmptyState from "../../components/EmptyState";
+import ErrorState from "../../components/ErrorState";
+import LoadingState from "../../components/LoadingState";
+import { useAnimeDetail } from "../../hooks/useAnimeDetail";
 
 const AnimeDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -11,37 +14,38 @@ const AnimeDetail = () => {
 
     if (isNaN(animeId)) {
         return (
-            <div className="p-6 text-center text-red-400">
-                Invalid anime ID in URL.
+            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex justify-center items-center">
+                <ErrorState message="Invalid anime ID in URL." />
             </div>
         );
     }
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-64">
-                <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex justify-center items-center">
+                <LoadingState text="Loading anime..." />
             </div>
-        );
+        )
     }
 
     if (error) {
         return (
-            <div className="flex items-center justify-center min-h-64 text-red-400">
-                <AlertCircle className="w-6 h-6 mr-2" />
-                {error.message}
+            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex justify-center items-center">
+                <ErrorState message={error.message} />
             </div>
-        );
+        )
     }
 
     if (!data) {
         return (
-            <div className="p-6 text-center text-gray-400">Anime not found.</div>
-        );
+            <div className="bg-zinc-950 min-h-full py-8 px-4 flex justify-center items-center">
+                <EmptyState message="The title you're looking for is not available." />
+            </div>
+        )
     }
 
     return (
-        <div className="bg-slate-900 min-h-screen text-white">
+        <div className="bg-zinc-950 min-h-screen text-white">
             {/* Hero Section */}
             <div className="relative w-full min-h-[520px]">
                 {/* Banner Background */}
@@ -53,7 +57,7 @@ const AnimeDetail = () => {
                             className="w-full h-full object-cover blur-xs scale-105"
                         />
                         {/* gradient overlay for sleek look */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/70 to-slate-900/50" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-zinc-950/70 to-zinc-950/50" />
                     </div>
                 )}
 
@@ -65,7 +69,7 @@ const AnimeDetail = () => {
                             <img
                                 src={data.coverImage.extraLarge}
                                 alt={data.title_romaji ?? "Anime Cover"}
-                                className="w-48 md:w-64 rounded-2xl shadow-2xl ring-2 ring-slate-700"
+                                className="w-48 md:w-64 rounded-2xl shadow-2xl ring-2 ring-zinc-700"
                             />
                         )}
                     </div>
@@ -83,34 +87,34 @@ const AnimeDetail = () => {
                         {/* Meta badges */}
                         <div className="flex flex-wrap items-center gap-3 my-2">
                             {data.type && (
-                                <span className="px-3 py-1 bg-slate-800/70 rounded-full text-xs font-semibold text-orange-400 border border-orange-500/30">
+                                <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs font-semibold text-rose-400 border border-rose-500/30">
                                     {data.type}
                                 </span>
                             )}
                             {data.status && (
-                                <span className="px-3 py-1 bg-slate-800/70 rounded-full text-xs text-green-400 border border-green-500/30">
+                                <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-green-400 border border-green-500/30">
                                     {data.status}
                                 </span>
                             )}
                             {data.seasonYear && (
-                                <span className="px-3 py-1 bg-slate-800/70 rounded-full text-xs text-blue-400 border border-blue-500/30">
+                                <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-blue-400 border border-blue-500/30">
                                     {data.season
                                         ? `${data.season} ${data.seasonYear}`
                                         : data.seasonYear}
                                 </span>
                             )}
                             {data.episodes && (
-                                <span className="px-3 py-1 bg-slate-800/70 rounded-full text-xs text-purple-400 border border-purple-500/30">
+                                <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-purple-400 border border-purple-500/30">
                                     {data.episodes} EP
                                 </span>
                             )}
                             {data.duration && (
-                                <span className="px-3 py-1 bg-slate-800/70 rounded-full text-xs text-cyan-400 border border-cyan-500/30">
+                                <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-cyan-400 border border-cyan-500/30">
                                     {data.duration}m/ep
                                 </span>
                             )}
                             {data.countryOfOrigin && (
-                                <span className="px-3 py-1 bg-slate-800/70 rounded-full text-xs text-pink-400 border border-pink-500/30">
+                                <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-pink-400 border border-pink-500/30">
                                     {data.countryOfOrigin}
                                 </span>
                             )}
@@ -141,7 +145,7 @@ const AnimeDetail = () => {
                                 {data.genres.map((g) => (
                                     <span
                                         key={g}
-                                        className="px-3 py-1 bg-gradient-to-r from-orange-500/20 to-slate-800 border border-slate-700 rounded-full text-xs text-gray-200"
+                                        className="px-3 py-1 bg-gradient-to-r from-rose-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
                                     >
                                         {g}
                                     </span>
@@ -158,7 +162,7 @@ const AnimeDetail = () => {
 
                         {/* Add to List button */}
                         <div>
-                            <button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition">
+                            <button className="bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition">
                                 + Add to List
                             </button>
                         </div>
@@ -170,11 +174,11 @@ const AnimeDetail = () => {
             {data.relations.length > 0 && (
                 <div className="max-w-6xl mx-auto px-4 py-10">
                     <h2 className="text-2xl font-semibold mb-4">Relations</h2>
-                    <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-slate-600">
+                    <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-zinc-600">
                         {data.relations.map((rel) => (
                             <div
                                 key={rel.node.id}
-                                className="bg-slate-800 rounded-lg min-w-[140px] p-3 flex-shrink-0 text-center"
+                                className="bg-zinc-800 rounded-lg min-w-[140px] p-3 flex-shrink-0 text-center"
                             >
                                 {rel.node.coverImage?.extraLarge && (
                                     <img

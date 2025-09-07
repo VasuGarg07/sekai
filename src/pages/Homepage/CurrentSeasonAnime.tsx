@@ -10,7 +10,7 @@ export default function CurrentSeasonAnime() {
 
     if (isLoading) {
         return (
-            <div className="bg-slate-900 py-8 px-4">
+            <div className="bg-zinc-950 py-8 px-4">
                 <LoadingState text='Loading current season anime...' />
             </div>
         )
@@ -18,7 +18,7 @@ export default function CurrentSeasonAnime() {
 
     if (error) {
         return (
-            <div className="bg-slate-900 py-8 px-4">
+            <div className="bg-zinc-950 py-8 px-4">
                 <ErrorState message={error.message} />
             </div>
         )
@@ -26,19 +26,19 @@ export default function CurrentSeasonAnime() {
 
     if (!data || data.items.length === 0) {
         return (
-            <div className="bg-slate-900 py-8 px-4">
+            <div className="bg-zinc-950 py-8 px-4">
                 <EmptyState message='No anime data available for the current season' />
             </div>
         )
     }
 
     return (
-        <div className="bg-slate-900 px-4 sm:px-6 lg:px-8 py-4">
+        <div className="bg-zinc-950 px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between mb-4 px-4">
                 <h2 className="text-2xl font-bold text-white">Recently Released</h2>
                 <Link
                     to='recents'
-                    className="text-orange-100 bg-slate-600 px-2 py-1 rounded-md text-xs font-medium">
+                    className="text-rose-100 bg-zinc-600 px-2 py-1 rounded-md text-xs font-medium">
                     View more →
                 </Link>
             </div>

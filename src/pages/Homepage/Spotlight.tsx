@@ -50,7 +50,7 @@ const SpotlightSection: React.FC = () => {
           onClick={() => goToAnime(anime.id)}
         />
         <div className="flex flex-col justify-center text-left flex-1 min-w-0">
-          <span className="text-orange-400 font-semibold mb-1 sm:mb-2 text-sm">#{current + 1} Spotlight</span>
+          <span className="text-rose-400 font-semibold mb-1 sm:mb-2 text-sm">#{current + 1} Spotlight</span>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 sm:mb-4">{anime.title_english ?? anime.title_romaji}</h2>
           <div className="flex flex-wrap justify-start items-center gap-2 sm:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm">
             <span className="flex items-center gap-1 text-white/80">
@@ -67,13 +67,13 @@ const SpotlightSection: React.FC = () => {
               <Calendar size={14} className="sm:w-4 sm:h-4" />
               {anime.startDateText}
             </span>
-            {anime.isAdult && <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded">'18+'</span>}
+            {anime.isAdult && <span className="bg-rose-500 text-white text-xs px-2 py-1 rounded">'18+'</span>}
           </div>
           <div className="hidden md:block">
             <p className="text-white/90 mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 text-xs sm:text-sm">{anime.synopsis}</p>
           </div>
           <div className="flex flex-row gap-2 sm:gap-4">
-            <button className="bg-orange-400 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-orange-500 transition text-sm sm:text-base">
+            <button className="bg-rose-400 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-rose-500 transition text-sm sm:text-base">
               Add to Watchlist
             </button>
             <button className="bg-gray-800 text-white hidden sm:block px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-700 transition text-base"

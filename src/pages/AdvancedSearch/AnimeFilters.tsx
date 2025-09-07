@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   FORMATS,
   STATUSES,
@@ -22,11 +22,12 @@ import {
 } from "lucide-react";
 import Tooltip from "../../ui/Tooltip";
 
-interface Props {
+interface AnimeFiltersProps {
   onApply: (filters: Filters) => void;
+  setPage: Dispatch<SetStateAction<number>>
 }
 
-export default function AnimeFilters({ onApply }: Props) {
+export default function AnimeFilters({ onApply, setPage }: AnimeFiltersProps) {
   const { data: genres = [] } = useGenres();
   const currentYear = new Date().getFullYear();
   const [filters, setFilters] = useState<Filters>({ year: currentYear });
@@ -68,8 +69,12 @@ export default function AnimeFilters({ onApply }: Props) {
     });
   };
 
-  const applyFilters = () => onApply(filters);
+  const applyFilters = () => {
+    setPage(1);
+    onApply(filters);
+  }
   const resetFilters = () => {
+    setPage(1);
     setFilters({ year: currentYear });
     onApply({ year: currentYear });
   };
@@ -80,17 +85,17 @@ export default function AnimeFilters({ onApply }: Props) {
   ).reverse(); // show latest year first
 
   return (
-    <div className="bg-slate-800 rounded-xl p-6 shadow-md space-y-6">
+    <div className="bg-zinc-800 rounded-xl p-6 shadow-md space-y-6">
       {/* Search */}
       <div>
         <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-          <SearchIcon className="w-4 h-4 text-orange-400" />
+          <SearchIcon className="w-4 h-4 text-rose-400" />
           Search
         </h3>
         <input
           type="text"
           placeholder="Search by title..."
-          className="bg-slate-700 px-3 py-2 rounded-lg text-sm text-white w-full"
+          className="bg-zinc-700 px-3 py-2 rounded-lg text-sm text-white w-full"
           value={filters.search ?? ""}
           onChange={(e) => setFilters({ ...filters, search: e.target.value })}
         />
@@ -100,7 +105,7 @@ export default function AnimeFilters({ onApply }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-            <ListFilter className="w-4 h-4 text-orange-400" />
+            <ListFilter className="w-4 h-4 text-rose-400" />
             Type
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -110,8 +115,8 @@ export default function AnimeFilters({ onApply }: Props) {
                 type="button"
                 onClick={() => toggleFilter("formatIn", key)}
                 className={`px-3 py-1 rounded-full text-sm transition ${filters.formatIn?.includes(key)
-                  ? "bg-orange-500 text-white"
-                  : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+                  ? "bg-rose-500 text-white"
+                  : "bg-zinc-700 text-gray-300 hover:bg-zinc-600"
                   }`}
               >
                 {label}
@@ -122,7 +127,7 @@ export default function AnimeFilters({ onApply }: Props) {
 
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-            <Activity className="w-4 h-4 text-orange-400" />
+            <Activity className="w-4 h-4 text-rose-400" />
             Status
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -132,8 +137,8 @@ export default function AnimeFilters({ onApply }: Props) {
                 type="button"
                 onClick={() => toggleFilter("statusIn", key)}
                 className={`px-3 py-1 rounded-full text-sm transition ${filters.statusIn?.includes(key)
-                  ? "bg-orange-500 text-white"
-                  : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+                  ? "bg-rose-500 text-white"
+                  : "bg-zinc-700 text-gray-300 hover:bg-zinc-600"
                   }`}
               >
                 {label}
@@ -146,10 +151,10 @@ export default function AnimeFilters({ onApply }: Props) {
       {/* Genres */}
       <div>
         <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-          <Tags className="w-4 h-4 text-orange-400" />
+          <Tags className="w-4 h-4 text-rose-400" />
           Genres
           <Tooltip text="Click once to include, again to exclude, and once more to unselect.">
-            <Info className="w-4 h-4 text-gray-400 cursor-pointer hover:text-orange-400" />
+            <Info className="w-4 h-4 text-gray-400 cursor-pointer hover:text-rose-400" />
           </Tooltip>
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -166,7 +171,7 @@ export default function AnimeFilters({ onApply }: Props) {
                   ? "bg-green-600 text-white"
                   : excluded
                     ? "bg-red-600 text-white"
-                    : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+                    : "bg-zinc-700 text-gray-300 hover:bg-zinc-600"
                   }`}
               >
                 {g}
@@ -181,11 +186,11 @@ export default function AnimeFilters({ onApply }: Props) {
         {/* Season */}
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-orange-400" />
+            <Calendar className="w-4 h-4 text-rose-400" />
             Season
           </h3>
           <select
-            className="bg-slate-700 px-3 py-2 rounded-lg text-sm text-white w-full"
+            className="bg-zinc-700 px-3 py-2 rounded-lg text-sm text-white w-full"
             value={filters.season || ""}
             onChange={(e) =>
               setFilters({ ...filters, season: e.target.value || undefined })
@@ -203,11 +208,11 @@ export default function AnimeFilters({ onApply }: Props) {
         {/* Year */}
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-            <Clock className="w-4 h-4 text-orange-400" />
+            <Clock className="w-4 h-4 text-rose-400" />
             Year
           </h3>
           <select
-            className="bg-slate-700 px-3 py-2 rounded-lg text-sm text-white w-full"
+            className="bg-zinc-700 px-3 py-2 rounded-lg text-sm text-white w-full"
             value={filters.year ?? ""}
             onChange={(e) =>
               setFilters({
@@ -229,11 +234,11 @@ export default function AnimeFilters({ onApply }: Props) {
         {/* Country */}
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-            <Globe className="w-4 h-4 text-orange-400" />
+            <Globe className="w-4 h-4 text-rose-400" />
             Country
           </h3>
           <select
-            className="bg-slate-700 px-3 py-2 rounded-lg text-sm text-white w-full"
+            className="bg-zinc-700 px-3 py-2 rounded-lg text-sm text-white w-full"
             value={filters.country || ""}
             onChange={(e) =>
               setFilters({ ...filters, country: e.target.value || undefined })
@@ -251,11 +256,11 @@ export default function AnimeFilters({ onApply }: Props) {
         {/* Sort */}
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-400 uppercase flex items-center gap-2">
-            <ArrowUpDown className="w-4 h-4 text-orange-400" />
+            <ArrowUpDown className="w-4 h-4 text-rose-400" />
             Sort
           </h3>
           <select
-            className="bg-slate-700 px-3 py-2 rounded-lg text-sm text-white w-full"
+            className="bg-zinc-700 px-3 py-2 rounded-lg text-sm text-white w-full"
             value={filters.sort?.[0] || ""}
             onChange={(e) =>
               setFilters({
@@ -279,14 +284,14 @@ export default function AnimeFilters({ onApply }: Props) {
         <button
           type="button"
           onClick={resetFilters}
-          className="bg-slate-700 hover:bg-slate-600 text-gray-200 px-5 py-2 rounded-lg text-sm font-medium"
+          className="bg-zinc-700 hover:bg-zinc-600 text-gray-200 px-5 py-2 rounded-lg text-sm font-medium"
         >
           Reset
         </button>
         <button
           type="button"
           onClick={applyFilters}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-semibold"
+          className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-lg text-sm font-semibold"
         >
           Apply Filters
         </button>

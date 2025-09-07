@@ -34,7 +34,7 @@ export default function Pagination({
                 <button
                     type="button"
                     onClick={() => onPageChange(1)}
-                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-slate-700 text-gray-300 hover:bg-slate-600"
+                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-zinc-700 text-gray-300 hover:bg-zinc-600"
                 >
                     <ChevronsLeft className="w-4 h-4" />
                 </button>
@@ -45,7 +45,7 @@ export default function Pagination({
                 <button
                     type="button"
                     onClick={() => onPageChange(currentPage - 1)}
-                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-slate-700 text-gray-300 hover:bg-slate-600"
+                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-zinc-700 text-gray-300 hover:bg-zinc-600"
                 >
                     <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -57,8 +57,8 @@ export default function Pagination({
                     key={p}
                     onClick={() => onPageChange(p)}
                     className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-sm font-medium transition ${currentPage === p
-                        ? "bg-orange-500 text-white"
-                        : "bg-slate-700 text-gray-200 hover:bg-slate-600"
+                        ? "bg-rose-500 text-white"
+                        : "bg-zinc-700 text-gray-200 hover:bg-zinc-600"
                         }`}
                 >
                     {p}
@@ -70,7 +70,7 @@ export default function Pagination({
                 <button
                     type="button"
                     onClick={() => onPageChange(currentPage + 1)}
-                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-slate-700 text-gray-300 hover:bg-slate-600"
+                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-zinc-700 text-gray-300 hover:bg-zinc-600"
                 >
                     <ChevronRight className="w-4 h-4" />
                 </button>
@@ -81,7 +81,7 @@ export default function Pagination({
                 <button
                     type="button"
                     onClick={() => onPageChange(totalPages)}
-                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-slate-700 text-gray-300 hover:bg-slate-600"
+                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-zinc-700 text-gray-300 hover:bg-zinc-600"
                 >
                     <ChevronsRight className="w-4 h-4" />
                 </button>

@@ -13,7 +13,7 @@ const Header = () => {
     return (
         <>
             {/* Header */}
-            <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 transition-colors duration-200">
+            <header className="bg-zinc-950 border-b border-zinc-800 sticky top-0 z-50 transition-colors duration-200">
                 <div className="flex items-center justify-center h-16 mx-auto px-4 lg:px-10 gap-2">
                     {/* Menu Button */}
                     <NavMenu />
@@ -37,7 +37,7 @@ const Header = () => {
                     {/* Search Button */}
                     <SearchBar className='grow hidden sm:block' />
 
-                    <button className="p-2 rounded-lg text-slate-400 block sm:hidden"
+                    <button className="p-2 rounded-lg text-zinc-400 block sm:hidden"
                         onClick={handleFilterClick}>
                         <Search size={20} />
                     </button>
@@ -46,7 +46,7 @@ const Header = () => {
                     {/* <ToggleTheme /> */}
 
                     {/* User Menu */}
-                    <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-800">
+                    <button className="p-2 rounded-lg text-zinc-400 hover:bg-zinc-800">
                         <User size={20} />
                     </button>
                 </div>

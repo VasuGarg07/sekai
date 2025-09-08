@@ -41,6 +41,7 @@ const QUERY = /* GraphQL */ `
           relationType
           node {
             id
+            type
             title {
               romaji
               english

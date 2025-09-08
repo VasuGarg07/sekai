@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+@theme {
+  --breakpoint-xs: 425px;
+}
+
 html {
   font-family: 'Poppins', sans-serif;
 }

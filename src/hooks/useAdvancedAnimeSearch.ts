@@ -105,7 +105,6 @@ export function useAdvancedAnimeSearch(
       country,
       sort.join("-"),
       page,
-      perPage,
     ],
     queryFn: async ({ signal }) => {
       const data = await apiClient.post(

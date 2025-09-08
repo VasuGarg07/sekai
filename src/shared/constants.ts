@@ -10,7 +10,7 @@ export const navigationLinks = [
     // { name: 'Movies', path: '/movies', icon: Film },
     { name: 'Recently Released', path: '/recents', icon: Tv2 },
     { name: 'Most Popular', path: '/popular', icon: Trophy },
-    { name: 'Top Airing', path: '/airing', icon: TrendingUp },
+    { name: 'Top Airing', path: '/top-airing', icon: TrendingUp },
     { name: 'Completed', path: '/completed', icon: Film },
 ];
 

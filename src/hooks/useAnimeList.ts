@@ -43,7 +43,7 @@ export function useAnimeList(
   perPage: number = 30,
 ) {
   return useQuery<PagedResult, Error>({
-    queryKey: ["animeList", key, sort.join('-'), status, perPage],
+    queryKey: ["animeList", key, sort.join('-'), status, page],
     queryFn: async ({ signal }) => {
       const data = await apiClient.post(
         "",

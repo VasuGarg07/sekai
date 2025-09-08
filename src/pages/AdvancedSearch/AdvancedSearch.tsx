@@ -19,11 +19,7 @@ const AdvancedSearch = () => {
 
     const effectiveFilters: Filters = q ? { ...filters, search: q } : { ...filters };
 
-    const { data, isLoading, error } = useAdvancedAnimeSearch("advanced", {
-        ...effectiveFilters,
-        page,
-        perPage: 30,
-    });
+    const { data, isLoading, error } = useAdvancedAnimeSearch("advanced", { ...effectiveFilters, page });
 
     if (isLoading) {
         return (

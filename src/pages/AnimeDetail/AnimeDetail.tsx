@@ -5,6 +5,7 @@ import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
 import LoadingState from "../../components/LoadingState";
 import { useAnimeDetail } from "../../hooks/useAnimeDetail";
+import Fallback from "/default-banner.jpg";
 
 const AnimeDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -49,17 +50,15 @@ const AnimeDetail = () => {
             {/* Hero Section */}
             <div className="relative w-full min-h-[520px]">
                 {/* Banner Background */}
-                {data.bannerImage && (
-                    <div className="absolute inset-0 overflow-hidden">
-                        <img
-                            src={data.bannerImage}
-                            alt="Banner"
-                            className="w-full h-full object-cover blur-xs scale-105"
-                        />
-                        {/* gradient overlay for sleek look */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-zinc-950/70 to-zinc-950/50" />
-                    </div>
-                )}
+                <div className="absolute inset-0 overflow-hidden">
+                    <img
+                        src={data.bannerImage ?? Fallback}
+                        alt="Banner"
+                        className="w-full h-full object-cover blur-xs scale-105"
+                    />
+                    {/* gradient overlay for sleek look */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-zinc-950/70 to-zinc-950/50" />
+                </div>
 
                 {/* Foreground Content */}
                 <div className="relative max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row gap-8">
@@ -173,26 +172,30 @@ const AnimeDetail = () => {
             {/* Relations Section */}
             {data.relations.length > 0 && (
                 <div className="max-w-6xl mx-auto px-4 py-10">
-                    <h2 className="text-2xl font-semibold mb-4">Relations</h2>
-                    <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-zinc-600">
+                    <h2 className="text-2xl font-semibold mb-6">Relations</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {data.relations.map((rel) => (
                             <div
                                 key={rel.node.id}
-                                className="bg-zinc-800 rounded-lg min-w-[140px] p-3 flex-shrink-0 text-center"
+                                className="bg-zinc-800 rounded-lg p-3 flex items-center gap-4 h-full"
                             >
                                 {rel.node.coverImage?.extraLarge && (
                                     <img
                                         src={rel.node.coverImage.extraLarge}
                                         alt={rel.node.title?.romaji ?? ""}
-                                        className="w-full h-40 object-cover rounded-md mb-2"
+                                        className="w-16 h-24 object-cover rounded-md flex-shrink-0"
+                                        loading="lazy"
                                     />
                                 )}
-                                <p className="text-xs font-medium text-white truncate">
-                                    {rel.node.title?.english ?? rel.node.title?.romaji}
-                                </p>
-                                <p className="text-[10px] text-gray-400">
-                                    {rel.relationType}
-                                </p>
+                                <div className="flex flex-col justify-center overflow-hidden min-w-0">
+                                    <p className="text-sm font-medium text-white line-clamp-2">
+                                        {rel.node.title?.english ?? rel.node.title?.romaji}
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-1">{rel.relationType}</p>
+                                    <p className="text-xs text-zinc-400 mt-1">
+                                        {rel.node.format} • {rel.node.status}
+                                    </p>
+                                </div>
                             </div>
                         ))}
                     </div>

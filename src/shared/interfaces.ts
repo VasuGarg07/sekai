@@ -54,6 +54,7 @@ export interface AnimeRelation {
         };
         format: string | null;
         status: string | null;
+        meta: string | null
     };
 }
 

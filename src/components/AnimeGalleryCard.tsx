@@ -10,7 +10,7 @@ interface AnimeGalleryCardProps {
 
 export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const hoverTimeout = useRef<number | null>(null);
+    const hoverTimeout = useRef<any>(null);
     const { goToAnime } = useAnimeNavigation();
 
     const handleMouseEnter = () => {

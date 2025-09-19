@@ -1,4 +1,15 @@
+import type { User } from "firebase/auth";
 import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeTag } from "./interfaces";
+
+export function serializeUser(user: User) {
+    return {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+    };
+}
+
 
 /** Helpers */
 export function getCurrentSeasonYear() {

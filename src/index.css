@@ -48,5 +48,14 @@ html {
 }
 
 .animate-spin-reverse {
-  animation: spin-reverse 1s linear infinite;
+  animation: spin-reverse 3s linear infinite;
 }
+
+@keyframes scale-fade {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-scale-fade {
+  animation: scale-fade 0.15s ease-out forwards;
+}
+

@@ -1,11 +1,13 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import Layout from "./ui/Layout";
 import Homepage from "./pages/Homepage/Homepage";
 import AdvancedSearch from "./pages/AdvancedSearch/AdvancedSearch";
 import AnimeDetail from "./pages/AnimeDetail/AnimeDetail";
 import PagedResults from "./pages/PagedResults/PagedResults";
+import LoginPage from "./pages/Login/LoginPage";
 
 const router = createBrowserRouter([
+    { path: "login", element: <LoginPage /> },
     {
         path: '/',
         element: <Layout />,
@@ -76,7 +78,8 @@ const router = createBrowserRouter([
                 />
             },
         ]
-    }
+    },
+    { path: '*', element: <Navigate to="/" replace /> }
 ])
 
 export default router;

@@ -1,14 +1,17 @@
-import { Search, User } from 'lucide-react';
-import { useTheme } from '../stores/themeStore';
+import { LogIn, Search } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import ProfileMenu from '../components/ProfileMenu';
+import type { RootState } from '../store/store';
 import NavMenu from './NavMenu';
 import SearchBar from './SearchBar';
-import { useNavigate } from 'react-router';
+import Logo from '/logo_white.png';
 
 const Header = () => {
-    const { isDark } = useTheme();
+    const { user } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
-
     const handleFilterClick = () => navigate("/explore");
+    const handleLogin = () => navigate("/login");
 
     return (
         <>
@@ -22,7 +25,7 @@ const Header = () => {
                     <div className="flex items-center space-x-2" onClick={() => navigate('/')}>
                         <div className="flex-shrink-0 hover:cursor-pointer">
                             <img
-                                src={isDark ? "/logo_white.png" : "/logo.png"}
+                                src={Logo}
                                 alt="Sekai Logo"
                                 className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
                             />
@@ -46,9 +49,13 @@ const Header = () => {
                     {/* <ToggleTheme /> */}
 
                     {/* User Menu */}
-                    <button className="p-2 rounded-lg text-zinc-400 hover:bg-zinc-800">
-                        <User size={20} />
-                    </button>
+                    {user ? (
+                        <ProfileMenu />
+                    ) : (
+                        <button className="p-2 rounded-lg text-zinc-400 hover:bg-zinc-800" onClick={handleLogin}>
+                            <LogIn size={20} />
+                        </button>
+                    )}
                 </div>
             </header>
         </>

@@ -1,4 +1,8 @@
-export default function LoadingState({ text }: { text: string }) {
+interface LoadingStateProps {
+    text?: string
+}
+
+const LoadingState = ({ text = 'Loading...' }: LoadingStateProps) => {
     return (
         <div className="flex items-center justify-center min-h-64 w-full max-w-6xl mx-auto p-10">
             <div className="flex flex-col items-center">
@@ -18,3 +22,5 @@ export default function LoadingState({ text }: { text: string }) {
         </div>
     );
 }
+
+export default LoadingState;

@@ -1,11 +1,8 @@
 import { Github, Globe, Heart, Twitter } from "lucide-react";
-import { useTheme } from "../stores/themeStore";
-import Logo from '/logo.png';
-import LogoW from '/logo_white.png';
+import Logo from '/logo_white.png';
 import { navigationLinks } from "../shared/constants";
 
 const Footer = () => {
-    const { isDark } = useTheme();
     const currentYear = new Date().getFullYear();
 
     const socialLinks = [
@@ -26,7 +23,7 @@ const Footer = () => {
                             {/* Logo */}
                             <div className="flex-shrink-0">
                                 <img
-                                    src={isDark ? LogoW : Logo}
+                                    src={Logo}
                                     alt="Sekai Logo"
                                     className="h-8 w-8 sm:h-10 sm:w-10 object-contain"
                                 />

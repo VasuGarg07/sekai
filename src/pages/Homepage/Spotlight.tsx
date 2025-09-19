@@ -32,7 +32,7 @@ const SpotlightSection: React.FC = () => {
   // --- Loading state ---
   if (isLoading) {
     return (
-      <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-gray-900 flex items-center justify-center">
+      <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-neutral-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="flex items-end gap-1.5 h-7">
             <span className="w-2 h-2 rounded-full bg-rose-400 animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -49,7 +49,7 @@ const SpotlightSection: React.FC = () => {
   // --- Error state ---
   if (isError) {
     return (
-      <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-gray-900 flex items-center justify-center text-center px-6">
+      <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-neutral-900 flex items-center justify-center text-center px-6">
         <div>
           <p className="text-white font-semibold">Something went wrong</p>
           <p className="text-white/70 text-sm mt-1">
@@ -69,7 +69,7 @@ const SpotlightSection: React.FC = () => {
   // --- Empty state ---
   if (!len) {
     return (
-      <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-gray-900/80 flex items-center justify-center text-center px-6">
+      <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-neutral-900/80 flex items-center justify-center text-center px-6">
         <div>
           <p className="text-white font-semibold">Nothing to show (yet)</p>
           <p className="text-white/70 text-sm mt-1">We couldn’t find any spotlight anime. Try again later.</p>
@@ -81,7 +81,7 @@ const SpotlightSection: React.FC = () => {
   const anime = animeSpotlights[current];
 
   return (
-    <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-gray-900 overflow-hidden flex items-center">
+    <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-neutral-900 overflow-hidden flex items-center">
       {/* Banner Image */}
       <img
         src={anime.banner || Fallback}
@@ -89,7 +89,7 @@ const SpotlightSection: React.FC = () => {
         className="absolute inset-0 h-full w-full object-cover opacity-100"
       />
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/70 to-gray-900/50 sm:to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/70 to-neutral-900/50 sm:to-transparent" />
       {/* Content */}
       <div className="relative flex flex-row gap-4 sm:gap-6 lg:gap-8 items-center z-10 h-full p-4 sm:p-8 lg:p-16 max-w-6xl w-full">
         <img
@@ -128,7 +128,7 @@ const SpotlightSection: React.FC = () => {
               Add to Watchlist
             </button>
             <button
-              className="bg-gray-800 text-white hidden sm:block px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-700 transition text-base"
+              className="bg-neutral-800 text-white hidden sm:block px-6 py-2 rounded-full font-semibold shadow hover:bg-neutral-700 transition text-base"
               onClick={() => goToAnime(anime.id)}
             >
               Detail

@@ -31,6 +31,8 @@ const QUERY = /* GraphQL */ `
         status
         genres
         episodes
+        season
+        seasonYear
       }
     }
   }

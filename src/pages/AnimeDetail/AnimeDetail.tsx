@@ -54,7 +54,7 @@ const AnimeDetail = () => {
                     <img
                         src={data.bannerImage ?? Fallback}
                         alt="Banner"
-                        className="w-full h-full object-cover blur-xs scale-105"
+                        className="w-full h-full object-cover blur-2xs scale-105"
                     />
                     {/* gradient overlay for sleek look */}
                     <div className="absolute inset-0 bg-gradient-to-r from-zinc-900/80 via-zinc-900/70 to-zinc-900/50" />

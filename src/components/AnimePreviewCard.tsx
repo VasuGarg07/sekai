@@ -37,10 +37,15 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                 </p>
             )}
 
-            <div className="text-white space-y-1 text-[10px]">
+            <div className="text-white space-y-0.5 text-[10px] leading-relaxed">
                 {anime.synonyms && anime.synonyms.length > 0 && (
                     <div>
                         <span className="text-gray-300">Synonyms:</span> {anime.synonyms.slice(0, 2).join(', ')}
+                    </div>
+                )}
+                {anime.season && (
+                    <div>
+                        <span className="text-gray-300">Season:</span> {anime.season} {anime.seasonYear}
                     </div>
                 )}
                 {anime.startDateText && (
@@ -59,8 +64,8 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                     </div>
                 )}
                 {anime.genres && anime.genres.length > 0 && (
-                    <div className="text-gray-400">
-                        <span className="text-gray-400">Genres:</span>{" "}
+                    <div>
+                        <span className="text-gray-300">Genres:</span>{" "}
                         {anime.genres.map((genre, index) => (
                             <a
                                 key={index}
@@ -75,8 +80,8 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                 )}
             </div>
 
-            <button className="flex mt-1 items-center gap-1 bg-rose-500 hover:bg-rose-500/80 hover:cursor-pointer text-white px-2 py-1 rounded-md font-medium">
-                <Bookmark className="w-3 h-3 fill-current" />
+            <button className="flex w-full mt-1 items-center justify-center gap-1 bg-rose-500 hover:bg-rose-500/80 cursor-pointer text-white px-3 py-2 rounded-md font-medium">
+                <Bookmark className="w-4 h-4 fill-current" />
                 Add to Watchlist
             </button>
         </div>

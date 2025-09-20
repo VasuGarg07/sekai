@@ -21,8 +21,6 @@ const QUERY = /* GraphQL */ `
       status
       episodes
       duration
-      season
-      seasonYear
       countryOfOrigin
       synonyms
       genres

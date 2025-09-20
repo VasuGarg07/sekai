@@ -12,6 +12,8 @@ export interface AnimeListItem {
     status: string | null;
     genres: string[];
     episodes: number | null;
+    season: string | null;
+    seasonYear: number | null;
 }
 
 export interface Filters {
@@ -71,8 +73,6 @@ export interface AnimeDetail extends AnimeListItem {
         large: string | null;
     };
     bannerImage: string | null;
-    season: string | null;
-    seasonYear: number | null;
     countryOfOrigin: string | null;
     tags: AnimeTag[];
     popularity: number | null;

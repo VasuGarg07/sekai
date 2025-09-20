@@ -49,7 +49,7 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     return (
         <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             {anime.image && (
-                <div className="aspect-[4/5] relative cursor-pointer"
+                <div className="aspect-[4/5] relative cursor-pointer shadow-md"
                     onClick={() => goToAnime(anime.id)}>
                     <img
                         src={anime.image}

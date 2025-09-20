@@ -14,6 +14,7 @@ export interface AnimeSpotlight {
   startDateText: string | null;
   synopsis: string | null;
   isAdult: boolean;
+  episodes: number | null;
 }
 
 const QUERY = /* GraphQL */ `
@@ -34,6 +35,7 @@ const QUERY = /* GraphQL */ `
         averageScore
         startDate { year month day }
         description(asHtml: false)
+        episodes
         isAdult
       }
     }
@@ -61,6 +63,7 @@ export function useAnimeSpotlight() {
         type: m.format ?? null,
         duration: m.duration ?? null,
         score: m.averageScore ?? null,
+        episodes: m.episodes ?? null,
         startDateText: formatDate(
           m.startDate?.year ?? null,
           m.startDate?.month ?? null,

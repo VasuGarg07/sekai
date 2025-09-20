@@ -80,11 +80,11 @@ const ProfileMenu = ({ className = "" }) => {
 
 
                     {/* Menu Links */}
-                    <div className="py-2 px-4">
+                    <div className="p-2">
                         <Link
                             to="/watchlist"
                             onClick={() => setOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 rounded-md"
+                            className="flex items-center gap-3 px-4 py-1.5 text-sm text-zinc-300 hover:bg-zinc-700 rounded-md"
                         >
                             <Bookmark size={16} className="text-rose-500" />
                             My Watchlists
@@ -92,7 +92,7 @@ const ProfileMenu = ({ className = "" }) => {
                         <Link
                             to="/settings"
                             onClick={() => setOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700 rounded-md"
+                            className="flex items-center gap-3 px-4 py-1.5 text-sm text-zinc-300 hover:bg-zinc-700 rounded-md"
                         >
                             <Settings size={16} className="text-rose-500" />
                             Account Settings
@@ -106,7 +106,7 @@ const ProfileMenu = ({ className = "" }) => {
                                 dispatch(logout());
                                 setOpen(false);
                             }}
-                            className="w-56 mx-4 my-2 h-8 flex items-center gap-3 px-4 py-2 text-sm text-rose-400 hover:bg-zinc-700 rounded-md"
+                            className="w-60 m-2 h-8 flex items-center gap-3 px-4 py-2 text-sm text-rose-400 hover:bg-zinc-700 rounded-md"
                         >
                             <LogOut size={16} />
                             Sign Out

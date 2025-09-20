@@ -169,6 +169,42 @@ const AnimeDetail = () => {
                 </div>
             </div>
 
+            {/* Trailer Section */}
+            {data.trailer && (
+                <div className="max-w-6xl mx-auto px-4 py-10">
+                    <h2 className="text-2xl font-semibold mb-6">Trailer</h2>
+                    <div className="flex justify-center">
+                        {data.trailer.site === "youtube" ? (
+                            <iframe
+                                width="100%"
+                                height="480"
+                                src={`https://www.youtube.com/embed/${data.trailer.id}`}
+                                title="Anime Trailer"
+                                className="rounded-xl shadow-lg max-w-4xl"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        ) : (
+                            <a
+                                href={`https://${data.trailer.site}.com/watch?v=${data.trailer.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group"
+                            >
+                                <img
+                                    src={data.trailer.thumbnail}
+                                    alt="Trailer Thumbnail"
+                                    className="rounded-lg shadow-md group-hover:opacity-80 transition"
+                                />
+                                <p className="text-center text-sm text-blue-400 mt-2 group-hover:underline">
+                                    Watch on {data.trailer.site}
+                                </p>
+                            </a>
+                        )}
+                    </div>
+                </div>
+            )}
+
             {/* Relations Section */}
             {data.relations.length > 0 && (
                 <div className="max-w-6xl mx-auto px-4 py-10">

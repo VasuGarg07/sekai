@@ -48,9 +48,14 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                         <span className="text-gray-300">Aired:</span> {anime.startDateText}
                     </div>
                 )}
+                {anime.episodes && (
+                    <div>
+                        <span className="text-gray-300">Episodes:</span> {anime.episodes}
+                    </div>
+                )}
                 {anime.duration && (
                     <div>
-                        <span className="text-gray-300">Duration:</span> {anime.duration} min
+                        <span className="text-gray-300">Duration:</span> {anime.duration} min/ep
                     </div>
                 )}
                 {anime.genres && anime.genres.length > 0 && (

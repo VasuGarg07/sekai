@@ -74,6 +74,11 @@ const QUERY = /* GraphQL */ `
           }
         }
       }
+      trailer {
+        id
+        site
+        thumbnail
+      }
     }
   }
 `;

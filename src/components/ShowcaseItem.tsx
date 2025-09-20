@@ -1,4 +1,4 @@
-import { Clock, Monitor } from "lucide-react";
+import { Clapperboard, Clock, Monitor } from "lucide-react";
 import type { AnimeListItem } from "../shared/interfaces";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 
@@ -27,7 +27,7 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
                     onClick={() => goToAnime(anime.id)}>
                     {anime.title_english ?? anime.title_romaji}
                 </span>
-                <div className="flex flex-wrap justify-start items-center gap-2 sm:gap-4 text-xs">
+                <div className="flex flex-wrap justify-start items-center gap-2 text-xs">
                     <span className="flex items-center gap-1 text-white/80">
                         <Monitor size={14} className="sm:w-4 sm:h-4" />
                         {anime.type}
@@ -35,7 +35,13 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
                     {anime.duration && (
                         <span className="flex items-center gap-1 text-white/80">
                             <Clock size={14} className="sm:w-4 sm:h-4" />
-                            {anime.duration}m
+                            {anime.duration} min
+                        </span>
+                    )}
+                    {anime.episodes && (
+                        <span className="flex items-center gap-1 text-white/80">
+                            <Clapperboard size={14} className="sm:w-4 sm:h-4" />
+                            {anime.episodes} ep
                         </span>
                     )}
                 </div>

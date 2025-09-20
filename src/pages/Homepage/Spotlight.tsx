@@ -1,8 +1,8 @@
-import { Calendar, Clock, Monitor } from "lucide-react";
+import { Calendar, Clapperboard, Clock, Monitor } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import Fallback from "/default-banner.jpg";
-import { useAnimeSpotlight } from "../../hooks/useAnimeSpotlight";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
+import { useAnimeSpotlight } from "../../hooks/useAnimeSpotlight";
+import Fallback from "/default-banner.jpg";
 
 const AUTO_TRANSITION = 5000;
 
@@ -111,7 +111,13 @@ const SpotlightSection: React.FC = () => {
             {anime.duration && (
               <span className="flex items-center gap-1 text-white/80">
                 <Clock size={14} className="sm:w-4 sm:h-4" />
-                {anime.duration}m
+                {anime.duration} min
+              </span>
+            )}
+            {anime.episodes && (
+              <span className="flex items-center gap-1 text-white/80">
+                <Clapperboard size={14} className="sm:w-4 sm:h-4" />
+                {anime.episodes} ep
               </span>
             )}
             <span className="flex items-center gap-1 text-white/80">

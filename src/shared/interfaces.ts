@@ -11,6 +11,7 @@ export interface AnimeListItem {
     synonyms: string[];
     status: string | null;
     genres: string[];
+    episodes: number | null;
 }
 
 export interface Filters {
@@ -58,6 +59,12 @@ export interface AnimeRelation {
     };
 }
 
+export interface AnimeTrailer {
+    id: string;
+    site: string;
+    thumbnail: string;
+}
+
 export interface AnimeDetail extends AnimeListItem {
     coverImage: {
         extraLarge: string | null;
@@ -66,11 +73,11 @@ export interface AnimeDetail extends AnimeListItem {
     bannerImage: string | null;
     season: string | null;
     seasonYear: number | null;
-    episodes: number | null;
     countryOfOrigin: string | null;
     tags: AnimeTag[];
     popularity: number | null;
     favourites: number | null;
     relations: AnimeRelation[];
     recommendations: AnimeListItem[];
+    trailer: AnimeTrailer | null;
 }

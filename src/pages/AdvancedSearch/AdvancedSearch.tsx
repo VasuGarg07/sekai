@@ -23,7 +23,7 @@ const AdvancedSearch = () => {
 
     if (isLoading) {
         return (
-            <div className="bg-zinc-950 min-h-screen py-8 px-4 flex-col justify-center items-center">
+            <div className="bg-zinc-900 min-h-screen py-8 px-4 flex-col justify-center items-center">
                 <div className="max-w-6xl mx-auto mb-8">
                     <AnimeFilters onApply={setFilters} setPage={setPage} />
                 </div>
@@ -34,7 +34,7 @@ const AdvancedSearch = () => {
 
     if (error) {
         return (
-            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex-col justify-center items-center">
+            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex-col justify-center items-center">
                 <div className="max-w-6xl mx-auto mb-8">
                     <AnimeFilters onApply={setFilters} setPage={setPage} />
                 </div>
@@ -45,7 +45,7 @@ const AdvancedSearch = () => {
 
     if (!data || data.items.length === 0) {
         return (
-            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex-col justify-center items-center">
+            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex-col justify-center items-center">
                 <div className="max-w-6xl mx-auto mb-8">
                     <AnimeFilters onApply={setFilters} setPage={setPage} />
                 </div>
@@ -55,7 +55,7 @@ const AdvancedSearch = () => {
     }
 
     return (
-        <div className="bg-zinc-950 min-h-screen py-8 px-4">
+        <div className="bg-zinc-900 min-h-screen py-8 px-4">
             <div className="max-w-6xl mx-auto mb-8">
                 <AnimeFilters onApply={setFilters} setPage={setPage} />
             </div>

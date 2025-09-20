@@ -12,7 +12,7 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-zinc-950 border-t border-zinc-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
+        <footer className="bg-zinc-900 border-t border-zinc-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
             {/* Main Footer Content */}
             <div className="py-8">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">

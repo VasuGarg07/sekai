@@ -16,6 +16,7 @@ export default function LoginPage() {
                 <Sparkles className="absolute top-10 left-10 text-rose-500 opacity-30 animate-[spin_3s_linear_infinite] w-8 h-8" />
                 <Sparkles className="absolute bottom-20 right-16 text-rose-400 opacity-30 animate-spin-reverse w-6 h-6" />
                 <Sparkles className="absolute top-1/3 right-1/4 text-rose-600 opacity-20 animate-bounce w-10 h-10" />
+                <Sparkles className="absolute bottom-1/3 left-1/4 text-rose-300 opacity-20 animate-bounce w-12 h-12" />
             </div>
 
             {/* Card */}

@@ -16,7 +16,7 @@ export default function Tooltip({ text, children }: TooltipProps) {
         >
             {children}
             {visible && (
-                <span className="absolute top-full mt-2 w-56 bg-zinc-950 text-white text-xs rounded-lg px-3 py-2 shadow-lg z-50">
+                <span className="absolute top-full mt-2 w-56 bg-zinc-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg z-50">
                     {text}
                 </span>
             )}

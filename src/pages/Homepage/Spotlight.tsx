@@ -130,7 +130,7 @@ const SpotlightSection: React.FC = () => {
             <p className="text-white/90 mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 text-xs sm:text-sm">{anime.synopsis}</p>
           </div>
           <div className="flex flex-row gap-2 sm:gap-4">
-            <button className="bg-rose-400 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-rose-500 transition text-sm sm:text-base">
+            <button className="bg-rose-700 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-rose-500 transition text-sm sm:text-base">
               Add to Watchlist
             </button>
             <button

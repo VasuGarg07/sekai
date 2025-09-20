@@ -15,7 +15,7 @@ const AnimeDetail = () => {
 
     if (isNaN(animeId)) {
         return (
-            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex justify-center items-center">
+            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
                 <ErrorState message="Invalid anime ID in URL." />
             </div>
         );
@@ -23,7 +23,7 @@ const AnimeDetail = () => {
 
     if (isLoading) {
         return (
-            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex justify-center items-center">
+            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
                 <LoadingState text="Loading anime..." />
             </div>
         )
@@ -31,7 +31,7 @@ const AnimeDetail = () => {
 
     if (error) {
         return (
-            <div className="bg-zinc-950 min-h-80 py-8 px-4 flex justify-center items-center">
+            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
                 <ErrorState message={error.message} />
             </div>
         )
@@ -39,14 +39,14 @@ const AnimeDetail = () => {
 
     if (!data) {
         return (
-            <div className="bg-zinc-950 min-h-full py-8 px-4 flex justify-center items-center">
+            <div className="bg-zinc-900 min-h-full py-8 px-4 flex justify-center items-center">
                 <EmptyState message="The title you're looking for is not available." />
             </div>
         )
     }
 
     return (
-        <div className="bg-zinc-950 min-h-screen text-white">
+        <div className="bg-zinc-900 min-h-screen text-white">
             {/* Hero Section */}
             <div className="relative w-full min-h-[520px]">
                 {/* Banner Background */}
@@ -57,7 +57,7 @@ const AnimeDetail = () => {
                         className="w-full h-full object-cover blur-xs scale-105"
                     />
                     {/* gradient overlay for sleek look */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-zinc-950/70 to-zinc-950/50" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-zinc-900/80 via-zinc-900/70 to-zinc-900/50" />
                 </div>
 
                 {/* Foreground Content */}

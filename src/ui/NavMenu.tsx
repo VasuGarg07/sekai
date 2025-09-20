@@ -43,7 +43,7 @@ const NavMenu = ({ className = '' }) => {
                             onClick={() => setOpen(false)} // close on selection
                             className="flex items-center space-x-3 mx-2 rounded-md px-4 py-2 text-sm text-zinc-300 
                                        outline-none cursor-pointer hover:bg-zinc-100 hover:dark:bg-zinc-700 
-                                       hover:text-zinc-950 hover:dark:text-white active:bg-zinc-200 
+                                       hover:text-zinc-900 hover:dark:text-white active:bg-zinc-200 
                                        active:dark:bg-zinc-600 transition-all duration-200"
                         >
                             <link.icon

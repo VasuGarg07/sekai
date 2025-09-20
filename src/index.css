@@ -26,13 +26,13 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #d6d6d6, #9d9d9d); /* rose-500 → rose-600 */
+  background: linear-gradient(180deg, #d6d6d6, #9d9d9d);
   border-radius: 9999px; /* pill style */
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9e9e9e; /* lighter rose on hover */
+  background: #9e9e9e;
 }
 
 /* Firefox */

@@ -64,6 +64,8 @@ export function mapMediaToAnimeListItem(m: any): AnimeListItem {
         status: m.status ?? null,
         genres: m.genres ?? [],
         episodes: m.episodes ?? null,
+        season: m.season ?? null,
+        seasonYear: m.seasonYear ?? null,
     };
 }
 
@@ -77,8 +79,6 @@ export function mapMediaToAnimeDetail(m: any): AnimeDetail {
             large: m.coverImage?.large ?? null,
         },
         bannerImage: m.bannerImage ?? null,
-        season: m.season ?? null,
-        seasonYear: m.seasonYear ?? null,
         countryOfOrigin: m.countryOfOrigin ?? null,
         tags: (m.tags ?? []) as AnimeTag[],
         popularity: m.popularity ?? null,

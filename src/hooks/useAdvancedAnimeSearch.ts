@@ -54,6 +54,9 @@ const QUERY = /* GraphQL */ `
         synonyms
         status
         genres
+        episodes
+        season
+        seasonYear
       }
     }
   }

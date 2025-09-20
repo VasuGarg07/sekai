@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
-import AnimeFilters from "./AnimeFilters";
-import type { Filters } from "../../shared/interfaces";
-import { useAdvancedAnimeSearch } from "../../hooks/useAdvancedAnimeSearch";
-import LoadingState from "../../components/LoadingState";
-import ErrorState from "../../components/ErrorState";
-import EmptyState from "../../components/EmptyState";
-import AnimeGalleryCard from "../../components/AnimeGalleryCard";
-import Pagination from "../../ui/Pagination";
 import { useSearchParams } from "react-router";
+import AnimeGallery from "../../components/AnimeGallery";
+import EmptyState from "../../components/EmptyState";
+import ErrorState from "../../components/ErrorState";
+import LoadingState from "../../components/LoadingState";
+import { useAdvancedAnimeSearch } from "../../hooks/useAdvancedAnimeSearch";
+import type { Filters } from "../../shared/interfaces";
+import Pagination from "../../ui/Pagination";
+import ToggleButton from "../../ui/ToggleButton";
+import AnimeFilters from "./AnimeFilters";
 
 const AdvancedSearch = () => {
+    const [showTiles, setShowTiles] = useState<boolean>(true);
     const [filters, setFilters] = useState<Filters>({});
     const [page, setPage] = useState(1);
     const [searchParams] = useSearchParams();
-
     const q = searchParams.get("q")?.trim() || "";
+
     useEffect(() => setPage(1), [q]);
-
     const effectiveFilters: Filters = q ? { ...filters, search: q } : { ...filters };
-
     const { data, isLoading, error } = useAdvancedAnimeSearch("advanced", { ...effectiveFilters, page });
 
     if (isLoading) {
@@ -61,12 +61,16 @@ const AdvancedSearch = () => {
             </div>
 
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-2xl font-bold text-white mb-4">Search Results</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    {data.items.map((anime) => (
-                        <AnimeGalleryCard key={anime.id} anime={anime} />
-                    ))}
+                {/* Section Header */}
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-white">Search Results</h2>
+                    <ToggleButton showTiles={showTiles} setShowTiles={setShowTiles} />
                 </div>
+
+                {/* Anime Gallery */}
+                <AnimeGallery data={data.items} tileView={showTiles} />
+
+                {/* Pagination */}
                 {data && data.pageInfo.lastPage > 1 && (
                     <Pagination
                         currentPage={data.pageInfo.currentPage}

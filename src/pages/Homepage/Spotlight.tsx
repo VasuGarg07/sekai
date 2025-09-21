@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { useAnimeSpotlight } from "../../hooks/useAnimeSpotlight";
 import Fallback from "/default-banner.jpg";
+import { useSaveAnime } from "../../hooks/useSaveAnime";
 
 const AUTO_TRANSITION = 5000;
 
@@ -15,6 +16,7 @@ const SpotlightSection: React.FC = () => {
     refetch,
   } = useAnimeSpotlight();
   const { goToAnime } = useAnimeNavigation();
+  const { mutate, isPending } = useSaveAnime();
 
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<any>(null);
@@ -124,13 +126,16 @@ const SpotlightSection: React.FC = () => {
               <Calendar size={14} className="sm:w-4 sm:h-4" />
               {anime.startDateText}
             </span>
-            {anime.isAdult && <span className="bg-rose-500 text-white text-xs px-2 py-1 rounded">18+</span>}
           </div>
           <div className="hidden md:block">
             <p className="text-white/90 mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 text-xs sm:text-sm">{anime.synopsis}</p>
           </div>
           <div className="flex flex-row gap-2 sm:gap-4">
-            <button className="bg-rose-700 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-rose-500 transition text-sm sm:text-base">
+            <button
+              className="bg-rose-700 text-white px-4 sm:px-6 py-2 rounded-full font-semibold shadow hover:bg-rose-500 disabled:bg-rose-300 disabled:cursor-not-allowed transition text-sm sm:text-base"
+              disabled={isPending}
+              onClick={() => mutate(anime)}
+            >
               Add to Watchlist
             </button>
             <button

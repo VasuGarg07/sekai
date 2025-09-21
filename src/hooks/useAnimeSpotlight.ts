@@ -1,21 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import { formatDate, getCurrentSeasonYear } from "../shared/utilities";
-
-export interface AnimeSpotlight {
-  id: number;
-  image: string | null;
-  title_english: string | null;
-  title_romaji: string | null;
-  banner: string | null;
-  type: string | null;
-  duration: number | null;
-  score: number | null;
-  startDateText: string | null;
-  synopsis: string | null;
-  isAdult: boolean;
-  episodes: number | null;
-}
+import { getCurrentSeasonYear, mapMediaToAnimeListItem } from "../shared/utilities";
+import type { AnimeSpotlight } from "../shared/interfaces";
 
 const QUERY = /* GraphQL */ `
   query ($season: MediaSeason, $seasonYear: Int, $perPage: Int) {
@@ -35,8 +21,12 @@ const QUERY = /* GraphQL */ `
         averageScore
         startDate { year month day }
         description(asHtml: false)
+        synonyms
+        status
+        genres
         episodes
-        isAdult
+        season
+        seasonYear
       }
     }
   }
@@ -55,26 +45,9 @@ export function useAnimeSpotlight() {
       );
       const media = (data as any)?.Page?.media ?? [];
       return media.map((m: any) => ({
-        id: m.id,
-        image: m.coverImage?.large ?? null,
-        title_english: m.title?.english ?? null,
-        title_romaji: m.title?.romaji ?? null,
+        ...mapMediaToAnimeListItem(m),
         banner: m.bannerImage ?? null,
-        type: m.format ?? null,
-        duration: m.duration ?? null,
-        score: m.averageScore ?? null,
-        episodes: m.episodes ?? null,
-        startDateText: formatDate(
-          m.startDate?.year ?? null,
-          m.startDate?.month ?? null,
-          m.startDate?.day ?? null
-        ),
-        synopsis:
-          typeof m.description === "string"
-            ? m.description.replace(/<[^>]+>/g, "").trim()
-            : null,
-        isAdult: m.isAdult ?? false,
-      })) as AnimeSpotlight[];
+      }))
     },
     staleTime: 60 * 60 * 1000, // 1 hour
     retry: false,

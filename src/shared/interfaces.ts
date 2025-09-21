@@ -16,6 +16,10 @@ export interface AnimeListItem {
     seasonYear: number | null;
 }
 
+export interface AnimeSpotlight extends AnimeListItem {
+    banner: string | null;
+}
+
 export interface Filters {
     search?: string;
     formatIn?: string[];
@@ -80,4 +84,13 @@ export interface AnimeDetail extends AnimeListItem {
     relations: AnimeRelation[];
     recommendations: AnimeListItem[];
     trailer: AnimeTrailer | null;
+}
+
+// ----------------------------
+
+export type WatchStatus = 'watching' | 'on-hold' | 'plan-to-watch' | 'dropped' | 'completed';
+
+export interface AnimeWatchList extends AnimeListItem {
+    watchStatus: WatchStatus;
+    updatedAt: number;
 }

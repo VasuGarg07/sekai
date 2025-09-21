@@ -60,3 +60,7 @@ export function getYearOptions() {
     const currentYear = new Date().getFullYear();
     return Array.from({ length: currentYear - 1960 + 2 }, (_, i) => 1960 + i);
 }
+
+export function formatKey(key: string): string {
+    return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");
+}

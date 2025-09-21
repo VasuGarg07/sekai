@@ -1,6 +1,7 @@
 import type { User } from "firebase/auth";
 import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeTag } from "./interfaces";
 
+/** Helpers */
 export function serializeUser(user: User) {
     return {
         uid: user.uid,
@@ -10,8 +11,6 @@ export function serializeUser(user: User) {
     };
 }
 
-
-/** Helpers */
 export function getCurrentSeasonYear() {
     const now = new Date();
     const month = now.getMonth() + 1; // JS months are 0-11

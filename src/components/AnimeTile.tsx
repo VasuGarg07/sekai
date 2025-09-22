@@ -1,6 +1,7 @@
 import { Star, Tags } from "lucide-react";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 import type { AnimeListItem } from "../shared/interfaces";
+import { getSynopsisFallback } from "../shared/constants";
 
 interface AnimeTileProps {
     anime: AnimeListItem;
@@ -24,7 +25,7 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                 {/* Title Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-2 pt-3 pb-1">
                     <h3 className="text-white font-semibold text-sm line-clamp-2 hover:underline">
-                        {anime.title_english ?? anime.title_romaji}
+                        {anime.season} {anime.seasonYear}
                     </h3>
                 </div>
             </div>
@@ -33,8 +34,8 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
             <div className="w-2/3 p-4 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-md">
                 {/* Season & Score */}
                 <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-semibold text-rose-400 line-clamp-2 leading-tight">
-                        {anime.season} {anime.seasonYear}
+                    <h3 className="font-semibold text-rose-400 line-clamp-2 leading-relaxed">
+                        {anime.title_english ?? anime.title_romaji}
                     </h3>
                     {anime.score && (
                         <div className="flex items-center text-yellow-500 gap-1">
@@ -75,11 +76,9 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                         ))}
                     </div>
                 )}
-                {anime.synopsis && (
-                    <p className="text-gray-400 line-clamp-4 leading-relaxed text-xs">
-                        {anime.synopsis}
-                    </p>
-                )}
+                <p className="text-gray-400 line-clamp-4 leading-relaxed text-xs">
+                    {anime.synopsis || getSynopsisFallback(anime.id)}
+                </p>
                 <span className="grow" />
                 <button className="bg-rose-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-rose-800 transition text-sm">
                     Add to Watchlist

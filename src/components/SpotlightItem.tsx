@@ -3,6 +3,7 @@ import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 import { useSaveAnime } from "../hooks/useSaveAnime";
 import type { AnimeSpotlight } from "../shared/interfaces";
 import Fallback from "/default-banner.jpg";
+import { getSynopsisFallback } from "../shared/constants";
 
 interface SpotlightItemProps {
     anime: AnimeSpotlight;
@@ -53,7 +54,7 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                     </h1>
 
                     {/* Meta Information */}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-white/80">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-300">
                         <div className="flex items-center gap-1.5">
                             <Monitor size={16} />
                             <span>{anime.type}</span>
@@ -79,7 +80,7 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                     {/* Synopsis */}
                     <div className="hidden xs:block">
                         <p className="text-white/90 text-xs sm:text-sm leading-relaxed max-w-2xl line-clamp-3">
-                            {anime.synopsis}
+                            {anime.synopsis || getSynopsisFallback(anime.id)}
                         </p>
                     </div>
 

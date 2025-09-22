@@ -64,3 +64,41 @@ export function getYearOptions() {
 export function formatKey(key: string): string {
     return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");
 }
+
+// Array of fun fallback messages for missing anime synopsis
+export const synopsisFallbacks = [
+    // Whimsical/Playful
+    "Plot twist: Even we don't know what happens in this one! 🤔",
+    "Synopsis loading... just like the protagonist's character development!",
+
+    // Mysterious/Intriguing
+    "The story remains a mystery... for now. Some adventures are best discovered firsthand.",
+    "No spoilers here! Dive in and let the story surprise you.",
+
+    // Encouraging
+    "An epic adventure awaits. Sometimes the best stories are the ones you discover yourself.",
+    "The best anime experiences come from going in blind. Trust us on this one!",
+
+    // Anime-themed
+    "Like a hidden jutsu, this plot is best experienced without prior knowledge.",
+    "Even the greatest detectives couldn't crack this case. Time to investigate yourself!",
+    "This story is locked away like a secret technique. Unlock it by watching!",
+
+    // Self-aware/Meta
+    "Error 404: Synopsis not found. Plot armor still intact though!",
+
+    // Simple but engaging
+    "Sometimes the journey is better than knowing the destination.",
+    "Great stories don't need introductions. They speak for themselves.",
+];
+
+// Function to get a random fallback message
+export const getRandomSynopsisFallback = (): string => {
+    return synopsisFallbacks[Math.floor(Math.random() * synopsisFallbacks.length)];
+};
+
+// Function to get a consistent fallback based on anime ID (same anime = same fallback)
+export const getSynopsisFallback = (animeId: string | number): string => {
+    const index = Math.abs(String(animeId).split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % synopsisFallbacks.length;
+    return synopsisFallbacks[index];
+};

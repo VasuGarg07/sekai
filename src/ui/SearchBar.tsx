@@ -3,6 +3,7 @@ import { Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAnimeSearch } from "../hooks/useAnimeSearch";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
+import { getSynopsisFallback } from "../shared/constants";
 
 type Props = { className?: string };
 
@@ -98,7 +99,7 @@ const SearchBar = ({ className = "" }: Props) => {
                                             </h3>
 
                                             <p className="mt-1 text-xs text-zinc-400 line-clamp-2">
-                                                {anime.synopsis || "No synopsis available"}
+                                                {anime.synopsis || getSynopsisFallback(anime.id)}
                                             </p>
 
                                             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-300">

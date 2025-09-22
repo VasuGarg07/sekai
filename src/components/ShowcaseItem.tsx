@@ -23,23 +23,23 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
 
             {/* Info */}
             <div className="flex flex-col">
-                <span className="font-medium text-white text-sm hover:text-rose-300 transition mb-1 line-clamp-2"
+                <span className="text-white text-sm font-semibold hover:text-rose-400 hover:cursor-pointer transition mb-1 line-clamp-2"
                     onClick={() => goToAnime(anime.id)}>
                     {anime.title_english ?? anime.title_romaji}
                 </span>
                 <div className="flex flex-wrap justify-start items-center gap-2 text-xs">
-                    <span className="flex items-center gap-1 text-white/80">
+                    <span className="flex items-center gap-1 text-gray-400">
                         <Monitor size={14} className="sm:w-4 sm:h-4" />
                         {anime.type}
                     </span>
                     {anime.duration && (
-                        <span className="flex items-center gap-1 text-white/80">
+                        <span className="flex items-center gap-1 text-gray-400">
                             <Clock size={14} className="sm:w-4 sm:h-4" />
                             {anime.duration} min
                         </span>
                     )}
                     {anime.episodes && (
-                        <span className="flex items-center gap-1 text-white/80">
+                        <span className="flex items-center gap-1 text-gray-400">
                             <Clapperboard size={14} className="sm:w-4 sm:h-4" />
                             {anime.episodes} ep
                         </span>

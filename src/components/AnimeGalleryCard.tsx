@@ -80,7 +80,7 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
                     {anime.title_english ?? anime.title_romaji}
                 </h3>
 
-                <div className="text-xs text-gray-300 flex flex-wrap gap-2">
+                <div className="text-xs text-gray-400 flex flex-wrap gap-2">
                     {anime.score && (
                         <>
                             <div className="flex items-center">

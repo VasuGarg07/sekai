@@ -1,5 +1,6 @@
 import { Bookmark, Star } from "lucide-react";
 import type { AnimeListItem } from "../shared/interfaces";
+import { getSynopsisFallback } from "../shared/constants";
 
 interface AnimePreviewCardProps {
     anime: AnimeListItem;
@@ -31,11 +32,9 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                 )}
             </div>
 
-            {anime.synopsis && (
-                <p className="text-gray-200 line-clamp-4 leading-relaxed text-[10px]">
-                    {anime.synopsis}
-                </p>
-            )}
+            <p className="text-gray-200 line-clamp-4 leading-relaxed text-[10px]">
+                {anime.synopsis || getSynopsisFallback(anime.id)}
+            </p>
 
             <div className="text-white space-y-0.5 text-[10px] leading-relaxed">
                 {anime.synonyms && anime.synonyms.length > 0 && (

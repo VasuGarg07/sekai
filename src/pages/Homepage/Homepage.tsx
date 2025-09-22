@@ -1,11 +1,11 @@
 import AnimeShowcase from "./AnimeShowcase"
 import CurrentSeasonAnime from "./CurrentSeasonAnime"
-import SpotlightSection from "./Spotlight"
+import SpotlightCarousel from "./SpotlightCarousel";
 
 const Homepage = () => {
     return (
         <>
-            <SpotlightSection />
+            <SpotlightCarousel />
             <AnimeShowcase />
             <CurrentSeasonAnime />
         </>

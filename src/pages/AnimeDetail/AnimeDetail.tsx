@@ -4,6 +4,7 @@ import AnimeGalleryCard from "../../components/AnimeGalleryCard";
 import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
 import LoadingState from "../../components/LoadingState";
+import { WatchlistButton } from "../../components/WatchlistButton";
 import { useAnimeDetail } from "../../hooks/useAnimeDetail";
 import Fallback from "/default-banner.jpg";
 
@@ -161,9 +162,13 @@ const AnimeDetail = () => {
 
                         {/* Add to List button */}
                         <div>
-                            <button className="bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition">
-                                + Add to List
-                            </button>
+                            <WatchlistButton
+                                anime={data}
+                                className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800
+                                cursor-pointer disabled:cursor-default text-white font-semibold 
+                                px-6 py-2.5 rounded-lg transition-all duration-200 
+                                text-sm sm:text-base"
+                            />
                         </div>
                     </div>
                 </div>
@@ -173,11 +178,11 @@ const AnimeDetail = () => {
             {data.trailer && (
                 <div className="max-w-6xl mx-auto px-4 py-10">
                     <h2 className="text-2xl font-semibold mb-6">Trailer</h2>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center aspect-20/9">
                         {data.trailer.site === "youtube" ? (
                             <iframe
                                 width="100%"
-                                height="480"
+                                height="100%"
                                 src={`https://www.youtube.com/embed/${data.trailer.id}`}
                                 title="Anime Trailer"
                                 className="rounded-xl shadow-lg max-w-4xl"

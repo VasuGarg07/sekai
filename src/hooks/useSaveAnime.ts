@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAppSelector } from "../store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import type { AnimeListItem, WatchStatus } from "../shared/interfaces";
 import { toastService } from "../shared/toastr";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { fireStore } from "../shared/firebase";
+import { addWatchlistId } from "../store/slices/watchlistSlice";
 
 export function useSaveAnime() {
     const userId = useAppSelector(state => state.auth.user?.uid);
+    const dispatch = useAppDispatch();
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -30,10 +32,11 @@ export function useSaveAnime() {
                 updatedAt: Date.now()
             })
             toastService.success(`${anime.title_english ?? anime.title_romaji} is added to watchlist`);
-            return { success: true };
+            return { success: true, id: anime.id.toString() };
         },
         onSuccess: (result) => {
-            if (userId && result?.success) {
+            if (userId && result?.success && result.id) {
+                dispatch(addWatchlistId(result.id));
                 queryClient.invalidateQueries({ queryKey: ['watchlist', userId] });
             }
         }

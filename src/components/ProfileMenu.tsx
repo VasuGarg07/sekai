@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { logout } from "../store/slices/authSlice";
+import { toastService } from "../shared/toastr";
 
 const ProfileMenu = ({ className = "" }) => {
     const dispatch = useAppDispatch();
@@ -105,6 +106,7 @@ const ProfileMenu = ({ className = "" }) => {
                             onClick={() => {
                                 dispatch(logout());
                                 setOpen(false);
+                                toastService.success("Logged Out!")
                             }}
                             className="w-60 m-2 h-8 flex items-center gap-3 px-4 py-2 text-sm text-rose-400 hover:bg-zinc-700 rounded-md"
                         >

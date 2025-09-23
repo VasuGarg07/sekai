@@ -6,6 +6,7 @@ import {
     signOut
 } from "firebase/auth";
 import { fireAuth } from "../../shared/firebase";
+import { registerProfile } from "../../shared/firestore";
 import { serializeUser } from "../../shared/utilities";
 
 interface AuthState {
@@ -28,14 +29,16 @@ const initialState: AuthState = {
 // --- Async Thunks ---
 export const loginWithGoogle = createAsyncThunk("auth/loginWithGoogle", async () => {
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(fireAuth, provider);
-    return serializeUser(result.user);
+    const { user } = await signInWithPopup(fireAuth, provider);
+    await registerProfile(user);
+    return serializeUser(user);
 });
 
 export const loginWithGitHub = createAsyncThunk("auth/loginWithGitHub", async () => {
     const provider = new GithubAuthProvider();
-    const result = await signInWithPopup(fireAuth, provider);
-    return serializeUser(result.user);
+    const { user } = await signInWithPopup(fireAuth, provider);
+    await registerProfile(user);
+    return serializeUser(user);
 });
 
 

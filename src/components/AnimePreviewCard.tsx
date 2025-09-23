@@ -1,6 +1,7 @@
-import { Bookmark, Star } from "lucide-react";
-import type { AnimeListItem } from "../shared/interfaces";
+import { Star } from "lucide-react";
 import { getSynopsisFallback } from "../shared/constants";
+import type { AnimeListItem } from "../shared/interfaces";
+import { WatchlistButton } from "./WatchlistButton";
 
 interface AnimePreviewCardProps {
     anime: AnimeListItem;
@@ -79,10 +80,13 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                 )}
             </div>
 
-            <button className="flex w-full mt-1 items-center justify-center gap-1 bg-rose-500 hover:bg-rose-500/80 cursor-pointer text-white px-3 py-2 rounded-md font-medium">
-                <Bookmark className="w-4 h-4 fill-current" />
-                Add to Watchlist
-            </button>
+            <WatchlistButton
+                anime={anime}
+                className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800 
+                cursor-pointer disabled:cursor-default text-white 
+                flex w-full mt-1 items-center justify-center gap-1 
+                px-3 py-2 rounded-md font-medium"
+            />
         </div>
     );
 }

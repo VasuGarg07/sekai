@@ -1,7 +1,8 @@
 import { Star, Tags } from "lucide-react";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
-import type { AnimeListItem } from "../shared/interfaces";
 import { getSynopsisFallback } from "../shared/constants";
+import type { AnimeListItem } from "../shared/interfaces";
+import { WatchlistButton } from "./WatchlistButton";
 
 interface AnimeTileProps {
     anime: AnimeListItem;
@@ -12,7 +13,7 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
 
     return (
         <div className="flex items-center shadow-xl">
-            <div className="w-1/3 aspect-[3/4] relative group cursor-pointer" onClick={() => goToAnime(anime.id)}>
+            <div className="w-1/3 h-full relative group cursor-pointer" onClick={() => goToAnime(anime.id)}>
                 {/* Image */}
                 {anime.image && (
                     <img
@@ -34,7 +35,10 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
             <div className="w-2/3 p-4 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-md">
                 {/* Season & Score */}
                 <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-semibold text-rose-400 line-clamp-2 leading-relaxed">
+                    <h3
+                        onClick={() => goToAnime(anime.id)}
+                        className="font-semibold text-rose-500 line-clamp-2 leading-relaxed cursor-pointer
+                            hover:underline hover:text-rose-600">
                         {anime.title_english ?? anime.title_romaji}
                     </h3>
                     {anime.score && (
@@ -80,9 +84,13 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                     {anime.synopsis || getSynopsisFallback(anime.id)}
                 </p>
                 <span className="grow" />
-                <button className="bg-rose-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-rose-800 transition text-sm">
-                    Add to Watchlist
-                </button>
+                <WatchlistButton
+                    anime={anime}
+                    className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800 
+                    cursor-pointer disabled:cursor-default text-white 
+                    flex text-sm items-center justify-center gap-2 
+                    px-4 py-2 rounded-lg font-semibold"
+                />
             </div>
         </div>
     )

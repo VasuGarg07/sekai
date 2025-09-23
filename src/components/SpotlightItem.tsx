@@ -1,9 +1,9 @@
 import { Calendar, Clapperboard, Clock, Monitor } from "lucide-react";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
-import { useSaveAnime } from "../hooks/useSaveAnime";
 import type { AnimeSpotlight } from "../shared/interfaces";
 import Fallback from "/default-banner.jpg";
 import { getSynopsisFallback } from "../shared/constants";
+import { WatchlistButton } from "./WatchlistButton";
 
 interface SpotlightItemProps {
     anime: AnimeSpotlight;
@@ -12,7 +12,6 @@ interface SpotlightItemProps {
 
 const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
     const { goToAnime } = useAnimeNavigation();
-    const { mutate, isPending } = useSaveAnime();
 
     return (
         <div className="relative w-full h-full">
@@ -86,13 +85,13 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
 
                     {/* Action Buttons */}
                     <div className="flex flex-wrap gap-3 pt-2">
-                        <button
-                            onClick={() => mutate(anime)}
-                            disabled={isPending}
-                            className="bg-rose-600 hover:bg-rose-700 disabled:bg-rose-400 disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-lg transition-all duration-200 text-sm sm:text-base"
-                        >
-                            {isPending ? "Adding..." : "Add to Watchlist"}
-                        </button>
+                        <WatchlistButton
+                            anime={anime}
+                            className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800
+                                cursor-pointer disabled:cursor-default text-white font-semibold 
+                                px-6 py-2.5 rounded-lg transition-all duration-200 
+                                text-sm sm:text-base"
+                        />
                         <button
                             onClick={() => goToAnime(anime.id)}
                             className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold px-6 py-2.5 rounded-lg transition-all duration-200 text-sm sm:text-base"

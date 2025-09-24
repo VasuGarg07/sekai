@@ -70,7 +70,7 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                             <a
                                 key={index}
                                 href={`/genre/${encodeURIComponent(genre)}`}
-                                className="text-white hover:text-rose-300 cursor-pointer"
+                                className="text-white hover:text-accent-300 cursor-pointer"
                             >
                                 {genre}
                                 {index < anime.genres.length - 1 && ", "}
@@ -82,7 +82,7 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
 
             <WatchlistButton
                 anime={anime}
-                className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800 
+                className="bg-accent-500 hover:bg-accent-600 disabled:bg-accent-800 
                 cursor-pointer disabled:cursor-default text-white 
                 flex w-full mt-1 items-center justify-center gap-1 
                 px-3 py-2 rounded-md font-medium"

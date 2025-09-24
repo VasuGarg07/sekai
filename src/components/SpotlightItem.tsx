@@ -41,8 +41,8 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                 {/* Right side - Content */}
                 <div className="flex-1 text-white space-y-2 sm:space-y-4">
                     {/* Spotlight Badge */}
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/30">
-                        <span className="text-rose-400 font-semibold text-sm">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-accent-500/20 border border-accent-500/30">
+                        <span className="text-accent-400 font-semibold text-sm">
                             #{index + 1} Spotlight
                         </span>
                     </div>
@@ -87,7 +87,7 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                     <div className="flex flex-wrap gap-3 pt-2">
                         <WatchlistButton
                             anime={anime}
-                            className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800
+                            className="bg-accent-500 hover:bg-accent-600 disabled:bg-accent-800
                                 cursor-pointer disabled:cursor-default text-white font-semibold 
                                 px-6 py-2.5 rounded-lg transition-all duration-200 
                                 text-sm sm:text-base"

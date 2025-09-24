@@ -7,10 +7,11 @@ import router from './Router';
 import { queryClient } from './shared/queryClient';
 import { store } from './store/store';
 import { useAuthListener } from './hooks/useAuthListener';
+import { useThemeSync } from './hooks/useThemeSync';
 
-function AuthSync() {
-  // A small helper component to run useAuthListener once
+function InitiateServices() {
   useAuthListener();
+  useThemeSync();
   return null;
 }
 
@@ -21,7 +22,7 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           {/* Sync Firebase -> Redux state */}
-          <AuthSync />
+          <InitiateServices />
           <RouterProvider router={router} />
         </Provider>
       </QueryClientProvider>

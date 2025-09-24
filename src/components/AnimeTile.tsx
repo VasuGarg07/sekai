@@ -37,8 +37,8 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                 <div className="flex items-center justify-between gap-2">
                     <h3
                         onClick={() => goToAnime(anime.id)}
-                        className="font-semibold text-rose-500 line-clamp-2 leading-relaxed cursor-pointer
-                            hover:underline hover:text-rose-600">
+                        className="font-semibold text-accent-500 line-clamp-2 leading-relaxed cursor-pointer
+                            hover:underline hover:text-accent-600">
                         {anime.title_english ?? anime.title_romaji}
                     </h3>
                     {anime.score && (
@@ -67,12 +67,12 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                 </div>
                 {anime.genres && anime.genres.length > 0 && (
                     <div className="text-xs flex items-center gap-2 my-1 flex-wrap">
-                        <Tags className="text-rose-500 w-4 h-4" />
+                        <Tags className="text-accent-500 w-4 h-4" />
                         {anime.genres.map((genre, index) => (
                             <a
                                 key={index}
                                 href={`/genre/${encodeURIComponent(genre)}`}
-                                className="text-gray-300 hover:text-rose-300 cursor-pointer"
+                                className="text-gray-300 hover:text-accent-300 cursor-pointer"
                             >
                                 {genre}
                                 {index < anime.genres.length - 1 && ", "}
@@ -86,7 +86,7 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                 <span className="grow" />
                 <WatchlistButton
                     anime={anime}
-                    className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800 
+                    className="bg-accent-500 hover:bg-accent-600 disabled:bg-accent-800 
                     cursor-pointer disabled:cursor-default text-white 
                     flex text-sm items-center justify-center gap-2 
                     px-4 py-2 rounded-lg font-semibold"

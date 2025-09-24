@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from './slices/authSlice';
+import themeReducer from "./slices/themeSlice";
 import watchlistReducer from './slices/watchlistSlice';
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        watchlist: watchlistReducer
+        theme: themeReducer,
+        watchlist: watchlistReducer,
     },
 });
 

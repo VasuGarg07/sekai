@@ -61,7 +61,7 @@ const SearchBar = ({ className = "" }: Props) => {
                 <button
                     type="button"
                     onClick={handleFilterClick}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-rose-400 hover:text-white hover:cursor-pointer transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-accent-400 hover:text-white hover:cursor-pointer transition-colors"
                 >
                     <Filter size={16} />
                     <span className="text-xs font-medium hidden sm:inline">FILTER</span>

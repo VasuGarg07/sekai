@@ -88,7 +88,7 @@ const ProfileMenu = ({ className = "" }) => {
                             className="flex items-center gap-3 px-4 py-1.5 text-sm text-zinc-300 hover:bg-zinc-700 rounded-md"
                         >
                             <Bookmark size={16} className="text-rose-500" />
-                            My Watchlists
+                            My Watchlist
                         </Link>
                         <Link
                             to="/settings"
@@ -96,7 +96,7 @@ const ProfileMenu = ({ className = "" }) => {
                             className="flex items-center gap-3 px-4 py-1.5 text-sm text-zinc-300 hover:bg-zinc-700 rounded-md"
                         >
                             <Settings size={16} className="text-rose-500" />
-                            Account Settings
+                            Settings
                         </Link>
                     </div>
 

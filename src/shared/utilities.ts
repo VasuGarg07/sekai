@@ -1,8 +1,8 @@
 import type { User } from "firebase/auth";
-import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeTag } from "./interfaces";
+import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeTag, SekaiUser } from "./interfaces";
 
 /** Helpers */
-export function serializeUser(user: User) {
+export function serializeUser(user: User): SekaiUser {
     return {
         uid: user.uid,
         email: user.email,
@@ -90,4 +90,9 @@ export function mapMediaToAnimeDetail(m: any): AnimeDetail {
                 .map(mapMediaToAnimeListItem) ?? [],
         trailer: m.trailer ?? null,
     };
+}
+
+export function formatKey(key: string): string {
+    if (!key) return "";
+    return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");
 }

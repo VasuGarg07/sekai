@@ -39,7 +39,10 @@ const SearchBar = ({ className = "" }: Props) => {
         navigate("/explore");
     }
 
-    const handleViewAllResults = () => navigate(`/search?q=${encodeURIComponent(q)}`);
+    const handleViewAllResults = () => {
+        navigate(`/search?q=${encodeURIComponent(q)}`);
+        setQuery("");
+    }
 
     return (
         <div className={`relative max-w-xl ${className}`}>
@@ -94,7 +97,7 @@ const SearchBar = ({ className = "" }: Props) => {
                                             loading="lazy"
                                         />
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="text-sm font-semibold text-white truncate">
+                                            <h3 className="text-sm font-semibold text-rose-500 truncate">
                                                 {anime.title_english ?? anime.title_romaji ?? "Untitled"}
                                             </h3>
 
@@ -102,24 +105,34 @@ const SearchBar = ({ className = "" }: Props) => {
                                                 {anime.synopsis || getSynopsisFallback(anime.id)}
                                             </p>
 
-                                            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-300">
-                                                <span className="bg-amber-600 text-white rounded px-2 py-0.5 font-medium">
-                                                    ★ {anime.rating != null ? (anime.rating / 10).toFixed(1) : "--"}
-                                                </span>
-                                                •
-                                                {anime.type && (
-                                                    <span className="bg-green-600 text-white rounded px-2 py-0.5 font-medium uppercase">
-                                                        {anime.type}
-                                                    </span>
+                                            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-zinc-200">
+                                                {anime.rating && (
+                                                    <>
+                                                        <span className="bg-yellow-500 text-white rounded px-1 font-medium">
+                                                            ★ {anime.rating}%
+                                                        </span>
+                                                        <span>•</span>
+                                                    </>
                                                 )}
-                                                •
-                                                <span className="bg-red-600 text-white rounded px-2 py-0.5 font-medium">
-                                                    {anime.year ?? "N/A"}
-                                                </span>
+                                                {anime.type && (
+                                                    <>
+                                                        <span className="bg-cyan-500 text-white rounded px-1 font-medium uppercase">
+                                                            {anime.type}
+                                                        </span>
+                                                        <span>•</span>
+                                                    </>
+                                                )}
+                                                {anime.year && (
+                                                    <>
+                                                        <span className="bg-lime-500 text-white rounded px-1 font-medium uppercase">
+                                                            {anime.year}
+                                                        </span>
+                                                        <span>•</span>
+                                                    </>
+                                                )}
                                                 {anime.duration && (
                                                     <>
-                                                        •
-                                                        <span className="bg-purple-600 text-white rounded px-2 py-0.5 font-medium">
+                                                        <span className="bg-purple-500 text-white rounded px-1 font-medium">
                                                             {anime.duration >= 60
                                                                 ? `${Math.floor(anime.duration / 60)}h ${anime.duration % 60}m`
                                                                 : `${anime.duration}m`}

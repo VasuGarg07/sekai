@@ -34,6 +34,8 @@ const QUERY = /* GraphQL */ `
       averageScore
       popularity
       favourites
+      season
+      seasonYear
       relations {
         edges {
           relationType

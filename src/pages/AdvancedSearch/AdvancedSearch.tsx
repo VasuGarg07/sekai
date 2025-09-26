@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import AnimeGallery from "../../components/AnimeGallery";
-import EmptyState from "../../components/EmptyState";
-import ErrorState from "../../components/ErrorState";
-import LoadingState from "../../components/LoadingState";
+import EmptyState from "../../ui/EmptyState";
+import ErrorState from "../../ui/ErrorState";
+import LoadingState from "../../ui/LoadingState";
 import { useAdvancedAnimeSearch } from "../../hooks/useAdvancedAnimeSearch";
 import type { Filters } from "../../shared/interfaces";
 import Pagination from "../../ui/Pagination";
@@ -11,7 +11,7 @@ import ToggleButton from "../../ui/ToggleButton";
 import AnimeFilters from "./AnimeFilters";
 
 const AdvancedSearch = () => {
-    const [showTiles, setShowTiles] = useState<boolean>(true);
+    const [showTiles, setShowTiles] = useState<boolean>(false);
     const [filters, setFilters] = useState<Filters>({});
     const [page, setPage] = useState(1);
     const [searchParams] = useSearchParams();
@@ -81,7 +81,6 @@ const AdvancedSearch = () => {
             </div>
         </div>
     );
-
 }
 
 export default AdvancedSearch;

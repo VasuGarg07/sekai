@@ -3,7 +3,7 @@ import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 import type { AnimeSpotlight } from "../shared/interfaces";
 import Fallback from "/default-banner.jpg";
 import { getSynopsisFallback } from "../shared/constants";
-import { WatchlistButton } from "./WatchlistButton";
+import { WatchlistButton } from "../ui/WatchlistButton";
 
 interface SpotlightItemProps {
     anime: AnimeSpotlight;
@@ -41,60 +41,62 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                 {/* Right side - Content */}
                 <div className="flex-1 text-white space-y-2 sm:space-y-4">
                     {/* Spotlight Badge */}
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/30">
-                        <span className="text-rose-400 font-semibold text-sm">
+                    <div className="inline-flex items-center sm:px-2 sm:py-0.5 sm:rounded-full sm:bg-rose-500/20 sm:border sm:border-rose-500/30">
+                        <span className="text-rose-400 font-semibold text-xs">
                             #{index + 1} Spotlight
                         </span>
                     </div>
 
                     {/* Title */}
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight line-clamp-2">
                         {anime.title_english ?? anime.title_romaji}
                     </h1>
 
                     {/* Meta Information */}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-300">
-                        <div className="flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-300">
+                        <div className="flex items-center gap-1">
                             <Monitor size={16} />
                             <span>{anime.type}</span>
                         </div>
                         {anime.duration && (
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1">
                                 <Clock size={16} />
                                 <span>{anime.duration} min</span>
                             </div>
                         )}
                         {anime.episodes && (
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1">
                                 <Clapperboard size={16} />
                                 <span>{anime.episodes} ep</span>
                             </div>
                         )}
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1">
                             <Calendar size={16} />
                             <span>{anime.startDateText}</span>
                         </div>
                     </div>
 
                     {/* Synopsis */}
-                    <div className="hidden xs:block">
+                    <div className="hidden sm:block">
                         <p className="text-white/90 text-xs sm:text-sm leading-relaxed max-w-2xl line-clamp-3">
                             {anime.synopsis || getSynopsisFallback(anime.id)}
                         </p>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-3 pt-2">
+                    <div className="flex flex-wrap gap-3 sm:pt-2">
                         <WatchlistButton
                             anime={anime}
                             className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800
                                 cursor-pointer disabled:cursor-default text-white font-semibold 
-                                px-6 py-2.5 rounded-lg transition-all duration-200 
+                                px-4 py-2 rounded-lg transition-all duration-200 
                                 text-sm sm:text-base"
                         />
                         <button
                             onClick={() => goToAnime(anime.id)}
-                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold px-6 py-2.5 rounded-lg transition-all duration-200 text-sm sm:text-base"
+                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border 
+                                border-white/20 text-white font-semibold px-4 py-2 rounded-lg 
+                                transition-all duration-200 text-sm sm:text-base hidden sm:block"
                         >
                             Details
                         </button>

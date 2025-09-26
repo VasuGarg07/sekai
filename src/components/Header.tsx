@@ -1,7 +1,7 @@
 import { LogIn, Search } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import ProfileMenu from '../components/ProfileMenu';
+import ProfileMenu from './ProfileMenu';
 import type { RootState } from '../store/store';
 import NavMenu from './NavMenu';
 import SearchBar from './SearchBar';
@@ -44,9 +44,6 @@ const Header = () => {
                         onClick={handleFilterClick}>
                         <Search size={20} />
                     </button>
-
-                    {/* Theme Toggle */}
-                    {/* <ToggleTheme /> */}
 
                     {/* User Menu */}
                     {user ? (

@@ -16,7 +16,7 @@ export interface AnimeSearchItem {
 const QUERY = /* GraphQL */ `
   query ($search: String, $perPage: Int) {
     Page(perPage: $perPage) {
-      media(search: $search, type: ANIME, sort: SEARCH_MATCH) {
+      media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
         id
         title { english romaji }
         coverImage { large }

@@ -5,6 +5,7 @@ import AdvancedSearch from "./pages/AdvancedSearch/AdvancedSearch";
 import AnimeDetail from "./pages/AnimeDetail/AnimeDetail";
 import PagedResults from "./pages/PagedResults/PagedResults";
 import LoginPage from "./pages/Login/LoginPage";
+import Watchlist from "./pages/Watchlist/Watchlist";
 
 const router = createBrowserRouter([
     { path: "login", element: <LoginPage /> },
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             { index: true, element: <Homepage /> },
+            { path: 'watchlist', element: <Watchlist /> },
             { path: 'explore', element: <AdvancedSearch /> },
             { path: 'search', element: <AdvancedSearch /> },
             { path: 'anime/:id', element: <AnimeDetail /> },

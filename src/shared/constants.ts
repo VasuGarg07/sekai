@@ -4,6 +4,7 @@ import {
     Trophy,
     Tv2
 } from 'lucide-react';
+import type { WatchStatus } from './interfaces';
 
 export const navigationLinks = [
     // { name: 'TV Series', path: '/tv-series', icon: Tv2 },
@@ -61,10 +62,6 @@ export function getYearOptions() {
     return Array.from({ length: currentYear - 1960 + 2 }, (_, i) => 1960 + i);
 }
 
-export function formatKey(key: string): string {
-    return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");
-}
-
 // Array of fun fallback messages for missing anime synopsis
 export const synopsisFallbacks = [
     // Whimsical/Playful
@@ -102,3 +99,11 @@ export const getSynopsisFallback = (animeId: string | number): string => {
     const index = Math.abs(String(animeId).split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % synopsisFallbacks.length;
     return synopsisFallbacks[index];
 };
+
+export const WatchStatusColor: Record<WatchStatus, string> = {
+    'watching': 'bg-blue-900/60 text-blue-200 border-blue-600',
+    'completed': 'bg-green-900/60 text-green-200 border-green-600',
+    'on-hold': 'bg-yellow-900/60 text-yellow-200 border-yellow-600',
+    'plan-to-watch': 'bg-purple-900/60 text-purple-200 border-purple-600',
+    'dropped': 'bg-red-900/60 text-red-200 border-red-600'
+}

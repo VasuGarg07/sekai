@@ -93,7 +93,7 @@ const SpotlightCarousel: React.FC = () => {
   }
 
   return (
-    <div {...handlers} className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-neutral-900 overflow-hidden flex items-center">
+    <div {...handlers} className="relative w-full h-[240px] sm:h-[400px] lg:h-[480px] bg-neutral-900 overflow-hidden flex items-center">
 
       {/* Slider Wrapper */}
       <div

@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
-import { WatchlistButton } from "./WatchlistButton";
+import { WatchlistButton } from "../ui/WatchlistButton";
 
 interface AnimePreviewCardProps {
     anime: AnimeListItem;

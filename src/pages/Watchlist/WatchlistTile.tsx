@@ -1,14 +1,16 @@
 import { Star, Tags } from "lucide-react";
-import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
-import { getSynopsisFallback } from "../shared/constants";
-import type { AnimeListItem } from "../shared/interfaces";
-import { WatchlistButton } from "../ui/WatchlistButton";
+import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
+import { getSynopsisFallback, WatchStatusColor } from "../../shared/constants";
+import type { AnimeWatchList } from "../../shared/interfaces";
+import { formatKey } from "../../shared/utilities";
+import { EditAnime } from "./EditAnime";
+import { RemoveAnime } from "./RemoveAnime";
 
-interface AnimeTileProps {
-    anime: AnimeListItem;
+interface WatchlistTileProps {
+    anime: AnimeWatchList
 }
 
-export default function AnimeTile({ anime }: AnimeTileProps) {
+export default function WatchlistTile({ anime }: WatchlistTileProps) {
     const { goToAnime } = useAnimeNavigation();
 
     return (
@@ -19,12 +21,13 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                     <img
                         src={anime.image}
                         alt={anime.title_english ?? ''}
-                        className="w-full h-full object-cover rounded-l-md"
+                        className="w-full h-full object-cover rounded-l-lg"
                         loading="lazy"
                     />
                 )}
-                {/* Title Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-2 pt-3 pb-1">
+                {/* Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 rounded-l-lg px-2 pt-3 pb-1
+                    bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                     <h3 className="text-white font-semibold text-sm">
                         {anime.season} {anime.seasonYear}
                     </h3>
@@ -32,23 +35,24 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
             </div>
 
             {/* Content */}
-            <div className="w-2/3 p-4 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-md">
-                {/* Season & Score */}
-                <div className="flex items-center justify-between gap-2">
-                    <h3
-                        onClick={() => goToAnime(anime.id)}
-                        className="font-semibold text-rose-500 line-clamp-2 leading-relaxed cursor-pointer
+            <div className="w-2/3 p-3 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-lg">
+                {/* Title */}
+                <h3 onClick={() => goToAnime(anime.id)}
+                    className="font-semibold text-rose-500 truncate leading-tight cursor-pointer
                             hover:underline hover:text-rose-600">
-                        {anime.title_english ?? anime.title_romaji}
-                    </h3>
+                    {anime.title_english ?? anime.title_romaji}
+                </h3>
+
+                <div className="text-xs lg:text-sm text-gray-300 flex flex-wrap gap-1">
                     {anime.score && (
-                        <div className="flex items-center text-yellow-500 gap-1">
-                            <Star className="w-4 h-4" />
-                            <span className="font-medium">{anime.score / 10}</span>
-                        </div>
+                        <>
+                            <div className="flex items-center gap-1">
+                                <Star className="w-3 h-3 text-yellow-500 fill-yellow-400" />
+                                <span className="font-medium">{anime.score / 10}</span>
+                            </div>
+                            <span>•</span>
+                        </>
                     )}
-                </div>
-                <div className="text-sm text-gray-300 flex flex-wrap gap-2">
                     {anime.type && (
                         <>
                             <div className="font-medium">{anime.type}</div>
@@ -65,8 +69,9 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                         <div className="font-medium">{anime.status}</div>
                     )}
                 </div>
+
                 {anime.genres && anime.genres.length > 0 && (
-                    <div className="text-xs flex items-center gap-2 my-1 flex-wrap">
+                    <div className="text-xs flex items-center gap-1 my-1 flex-wrap">
                         <Tags className="text-rose-500 w-4 h-4" />
                         {anime.genres.map((genre, index) => (
                             <a
@@ -80,17 +85,22 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                         ))}
                     </div>
                 )}
-                <p className="text-gray-400 line-clamp-4 leading-relaxed text-xs">
+                <p className="text-gray-400 line-clamp-5 leading-relaxed text-xs">
                     {anime.synopsis || getSynopsisFallback(anime.id)}
                 </p>
                 <span className="grow" />
-                <WatchlistButton
-                    anime={anime}
-                    className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800 
-                    cursor-pointer disabled:cursor-default text-white 
-                    flex text-sm items-center justify-center gap-2 
-                    px-4 py-2 rounded-lg font-semibold"
-                />
+
+                <div className="flex items-center gap-2">
+                    {anime.watchStatus && (
+                        <div className={`rounded-md px-2 py-0.5 text-xs lg:text-sm border ${WatchStatusColor[anime.watchStatus]}`}>
+                            {formatKey(anime.watchStatus)}
+                        </div>
+                    )}
+                    <span className="grow" />
+
+                    <EditAnime anime={anime} />
+                    <RemoveAnime anime={anime} />
+                </div>
             </div>
         </div>
     )

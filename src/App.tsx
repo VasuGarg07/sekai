@@ -7,6 +7,7 @@ import router from './Router';
 import { queryClient } from './shared/queryClient';
 import { store } from './store/store';
 import { useAuthListener } from './hooks/useAuthListener';
+import { ModalProvider } from './ui/ModalContext';
 
 function AuthSync() {
   // A small helper component to run useAuthListener once
@@ -22,7 +23,9 @@ const App = () => {
         <Provider store={store}>
           {/* Sync Firebase -> Redux state */}
           <AuthSync />
-          <RouterProvider router={router} />
+          <ModalProvider>
+            <RouterProvider router={router} />
+          </ModalProvider>
         </Provider>
       </QueryClientProvider>
       <ToastContainer stacked limit={5} position="bottom-right" />

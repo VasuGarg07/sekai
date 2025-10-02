@@ -1,29 +1,8 @@
-import { collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
-import type { AnimeListItem, WatchStatus } from "./interfaces";
+import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import type { AnimeListItem, AnimeWatchList, WatchStatus } from "./interfaces";
 import { toastService } from "./toastr";
 import { fireStore } from "./firebase";
 import type { User } from "firebase/auth";
-
-export const saveAnimeToWatchlist = async (anime: AnimeListItem, userId?: string, watchStatus: WatchStatus = 'plan-to-watch') => {
-    if (!userId) {
-        return toastService.info("Please Login First");
-    }
-
-    const ref = doc(fireStore, "users", userId, "watchlist", anime.id.toString());
-    const snapshot = await getDoc(ref);
-
-    if (snapshot.exists()) {
-        return toastService.error(`${anime.title_english ?? anime.title_romaji} already exists in watchlist`);
-    }
-
-    await setDoc(ref, {
-        ...anime,
-        status: watchStatus,
-        addedAt: Date.now()
-    })
-
-    return toastService.success(`${anime.title_english ?? anime.title_romaji} is added to watchlist`);
-}
 
 export const registerProfile = async (user?: User) => {
     if (!user) return;
@@ -47,3 +26,59 @@ export const fetchWatchlistIds = async (uid: string) => {
     const snapshot = await getDocs(ref);
     return snapshot.docs.map((doc) => doc.id);
 };
+
+export const fetchUserWatchList = async (uid: string) => {
+    const ref = collection(fireStore, "users", uid, "watchlist");
+    const snapshot = await getDocs(ref);
+    const list: AnimeWatchList[] = snapshot.docs
+        .map((doc) => doc.data() as AnimeWatchList)
+        .sort((a, b) => b.updatedAt - a.updatedAt);
+    return list;
+}
+
+
+export const saveAnimeToWatchlist = async (anime: AnimeListItem, userId?: string, watchStatus: WatchStatus = 'plan-to-watch') => {
+    if (!userId) {
+        toastService.info("Please Login First");
+        return { success: false };
+    }
+
+    const docId = anime.id.toString();
+    const ref = doc(fireStore, "users", userId, "watchlist", docId);
+    const snapshot = await getDoc(ref);
+
+    if (snapshot.exists()) {
+        toastService.error(`${anime.title_english ?? anime.title_romaji} already exists in watchlist`);
+        return { success: false };
+    }
+
+    await setDoc(ref, {
+        ...anime,
+        watchStatus,
+        addedAt: Date.now()
+    })
+
+    toastService.success(`${anime.title_english ?? anime.title_romaji} is added to watchlist`);
+    return { success: true, id: docId };
+}
+
+export const deleteAnimeFromWatchlist = async (anime: AnimeListItem, uid?: string) => {
+    if (!uid) return { success: false };
+
+    const docId = anime.id.toString();
+    const ref = doc(fireStore, "users", uid, "watchlist", docId);
+    await deleteDoc(ref);
+    return { success: true, id: docId };
+}
+
+export const updateWatchStatus = async (anime: AnimeListItem, newStatus: WatchStatus, uid?: string) => {
+    if (!uid) return { success: false };
+
+    const docId = anime.id.toString();
+    const ref = doc(fireStore, "users", uid, "watchlist", docId);
+    await updateDoc(ref, {
+        watchStatus: newStatus
+    });
+
+    return { success: true, id: docId };
+}

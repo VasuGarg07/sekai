@@ -1,7 +1,7 @@
 import AnimeGalleryCard from '../../components/AnimeGalleryCard';
-import EmptyState from '../../components/EmptyState';
-import ErrorState from '../../components/ErrorState';
-import LoadingState from '../../components/LoadingState';
+import EmptyState from '../../ui/EmptyState';
+import ErrorState from '../../ui/ErrorState';
+import LoadingState from '../../ui/LoadingState';
 import { useAnimeList } from '../../hooks/useAnimeList';
 import { Link } from "react-router";
 

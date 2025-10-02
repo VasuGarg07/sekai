@@ -1,14 +1,14 @@
-import { Github, Globe, Heart, Twitter } from "lucide-react";
-import Logo from '/logo_white.png';
+import { Github, Heart, Instagram, Twitter } from "lucide-react";
 import { navigationLinks } from "../shared/constants";
+import Logo from '/logo_white.png';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     const socialLinks = [
-        { icon: Twitter, label: 'Twitter', href: '#', color: 'hover:text-blue-400' },
-        { icon: Github, label: 'GitHub', href: '#', color: 'hover:text-zinc-300' },
-        { icon: Globe, label: 'Website', href: '#', color: 'hover:text-green-400' }
+        { icon: Twitter, label: 'X (formerly Twitter)', href: 'https://x.com/', color: 'hover:text-blue-400' },
+        { icon: Github, label: 'GitHub', href: 'https://github.com/', color: 'hover:text-zinc-300' },
+        { icon: Instagram, label: 'Website', href: 'https://www.instagram.com/', color: 'hover:text-red-400' }
     ];
 
     return (

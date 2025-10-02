@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router";
 import type { RootState } from "../store/store";
-import LoadingState from "./LoadingState";
+import LoadingState from "../ui/LoadingState";
 
 const PrivateRoute = () => {
     const { user, loading } = useSelector((state: RootState) => state.auth);

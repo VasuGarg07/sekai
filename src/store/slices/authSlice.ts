@@ -8,14 +8,10 @@ import {
 import { fireAuth } from "../../shared/firebase";
 import { registerProfile } from "../../shared/firestore";
 import { serializeUser } from "../../shared/utilities";
+import type { SekaiUser } from "../../shared/interfaces";
 
 interface AuthState {
-    user: {
-        uid: string;
-        email: string | null;
-        displayName: string | null;
-        photoURL: string | null;
-    } | null;
+    user: SekaiUser | null;
     loading: boolean;
     error: string | null;
 }

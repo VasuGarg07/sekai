@@ -30,7 +30,7 @@ interface AnimeFiltersProps {
 export default function AnimeFilters({ onApply, setPage }: AnimeFiltersProps) {
   const { data: genres = [] } = useGenres();
   const currentYear = new Date().getFullYear();
-  const [filters, setFilters] = useState<Filters>({ year: currentYear });
+  const [filters, setFilters] = useState<Filters>({ sort: ['SEARCH_MATCH'] });
 
   const toggleFilter = (field: keyof Filters, value: string) => {
     setFilters((prev) => {

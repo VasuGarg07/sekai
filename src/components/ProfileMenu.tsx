@@ -1,6 +1,6 @@
 import { Bookmark, LogOut, Settings } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { logout } from "../store/slices/authSlice";
 import { toastService } from "../shared/toastr";
@@ -8,6 +8,7 @@ import { toastService } from "../shared/toastr";
 const ProfileMenu = ({ className = "" }) => {
     const dispatch = useAppDispatch();
     const { user } = useAppSelector((state) => state.auth);
+    const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
@@ -27,6 +28,13 @@ const ProfileMenu = ({ className = "" }) => {
 
     const avatarFallback =
         user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U";
+
+    const handleLogout = () => {
+        dispatch(logout());
+        setOpen(false);
+        toastService.success("Logged Out!");
+        navigate("/");
+    }
 
     return (
         <div className={`relative ${className}`} ref={menuRef}>
@@ -103,11 +111,7 @@ const ProfileMenu = ({ className = "" }) => {
                     {/* Sign Out */}
                     <div className="border-t border-zinc-700">
                         <button
-                            onClick={() => {
-                                dispatch(logout());
-                                setOpen(false);
-                                toastService.success("Logged Out!")
-                            }}
+                            onClick={handleLogout}
                             className="w-60 m-2 h-8 flex items-center gap-3 px-4 py-2 text-sm text-rose-400 hover:bg-zinc-700 rounded-md"
                         >
                             <LogOut size={16} />

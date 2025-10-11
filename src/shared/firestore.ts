@@ -3,6 +3,7 @@ import type { AnimeListItem, AnimeWatchList, WatchStatus } from "./interfaces";
 import { toastService } from "./toastr";
 import { fireStore } from "./firebase";
 import type { User } from "firebase/auth";
+import { cleanAnimeForWatchlist } from "./utilities";
 
 export const registerProfile = async (user?: User) => {
     if (!user) return;
@@ -32,7 +33,7 @@ export const fetchUserWatchList = async (uid: string) => {
     const snapshot = await getDocs(ref);
     const list: AnimeWatchList[] = snapshot.docs
         .map((doc) => doc.data() as AnimeWatchList)
-        .sort((a, b) => b.updatedAt - a.updatedAt);
+        .sort((a, b) => b.addedAt - a.addedAt);
     return list;
 }
 
@@ -53,7 +54,7 @@ export const saveAnimeToWatchlist = async (anime: AnimeListItem, userId?: string
     }
 
     await setDoc(ref, {
-        ...anime,
+        ...cleanAnimeForWatchlist(anime),
         watchStatus,
         addedAt: Date.now()
     })

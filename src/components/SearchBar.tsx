@@ -3,7 +3,7 @@ import { Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAnimeSearch } from "../hooks/useAnimeSearch";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
-import { getSynopsisFallback } from "../shared/constants";
+import QuickSearchItem from "./QuickSearchItem";
 
 type Props = { className?: string };
 
@@ -85,63 +85,10 @@ const SearchBar = ({ className = "" }: Props) => {
                         ) : results.length > 0 ? (
                             <>
                                 {results.map((anime) => (
-                                    <div
-                                        key={anime.id}
-                                        onClick={() => handleResultClick(anime.id)}
-                                        className="flex items-start space-x-3 p-3 hover:bg-zinc-700 cursor-pointer border-b border-zinc-600 last:border-b-0"
-                                    >
-                                        <img
-                                            src={anime.image ?? ""}
-                                            alt={anime.title_english ?? anime.title_romaji ?? "Poster"}
-                                            className="w-14 h-20 object-cover rounded bg-zinc-700"
-                                            loading="lazy"
-                                        />
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-sm font-semibold text-rose-500 truncate">
-                                                {anime.title_english ?? anime.title_romaji ?? "Untitled"}
-                                            </h3>
-
-                                            <p className="mt-1 text-xs text-zinc-400 line-clamp-2">
-                                                {anime.synopsis || getSynopsisFallback(anime.id)}
-                                            </p>
-
-                                            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-zinc-200">
-                                                {anime.rating && (
-                                                    <>
-                                                        <span className="bg-yellow-500 text-white rounded px-1 font-medium">
-                                                            ★ {anime.rating}%
-                                                        </span>
-                                                        <span>•</span>
-                                                    </>
-                                                )}
-                                                {anime.type && (
-                                                    <>
-                                                        <span className="bg-cyan-500 text-white rounded px-1 font-medium uppercase">
-                                                            {anime.type}
-                                                        </span>
-                                                        <span>•</span>
-                                                    </>
-                                                )}
-                                                {anime.year && (
-                                                    <>
-                                                        <span className="bg-lime-500 text-white rounded px-1 font-medium uppercase">
-                                                            {anime.year}
-                                                        </span>
-                                                        <span>•</span>
-                                                    </>
-                                                )}
-                                                {anime.duration && (
-                                                    <>
-                                                        <span className="bg-purple-500 text-white rounded px-1 font-medium">
-                                                            {anime.duration >= 60
-                                                                ? `${Math.floor(anime.duration / 60)}h ${anime.duration % 60}m`
-                                                                : `${anime.duration}m`}
-                                                        </span>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <QuickSearchItem
+                                        anime={anime}
+                                        handleClick={handleResultClick}
+                                    />
                                 ))}
 
                                 <div className="p-3 text-center border-t border-zinc-600">

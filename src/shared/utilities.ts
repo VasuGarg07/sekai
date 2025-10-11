@@ -1,5 +1,5 @@
 import type { User } from "firebase/auth";
-import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeTag, SekaiUser } from "./interfaces";
+import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeSpotlight, AnimeTag, SekaiUser } from "./interfaces";
 
 /** Helpers */
 export function serializeUser(user: User): SekaiUser {
@@ -96,3 +96,41 @@ export function formatKey(key: string): string {
     if (!key) return "";
     return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");
 }
+
+export const cleanAnimeForWatchlist = (anime: AnimeListItem | AnimeDetail | AnimeSpotlight): AnimeListItem => {
+    const {
+        id,
+        image,
+        title_english,
+        title_romaji,
+        type,
+        duration,
+        score,
+        startDateText,
+        synopsis,
+        synonyms,
+        status,
+        genres,
+        episodes,
+        season,
+        seasonYear
+    } = anime;
+
+    return {
+        id,
+        image,
+        title_english,
+        title_romaji,
+        type,
+        duration,
+        score,
+        startDateText,
+        synopsis,
+        synonyms,
+        status,
+        genres,
+        episodes,
+        season,
+        seasonYear
+    };
+};

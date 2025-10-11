@@ -12,67 +12,65 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-zinc-900 border-t border-zinc-800 transition-colors duration-200 mt-auto px-6 sm:px-6 lg:px-10">
+        <footer className="mt-auto bg-zinc-900 border-t border-zinc-800">
             {/* Main Footer Content */}
-            <div className="py-8">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
+            <div className="px-4 py-6 sm:px-6 sm:py-8">
+                <div className="flex flex-col gap-6 sm:gap-8 md:flex-row lg:justify-between">
 
                     {/* Brand Section */}
-                    <div className="flex-1 max-w-md space-y-4">
-                        <div className="flex items-center space-x-2">
-                            {/* Logo */}
-                            <div className="flex-shrink-0">
-                                <img
-                                    src={Logo}
-                                    alt="Sekai Logo"
-                                    className="h-8 w-8 sm:h-10 sm:w-10 object-contain"
-                                />
-                            </div>
-                            {/* Brand Name */}
-                            <span className="text-2xl sm:text-3xl font-bold text-white">
+                    <div className="flex-1 lg:max-w-md space-y-3 sm:space-y-4">
+                        {/* Logo & Brand */}
+                        <div className="flex items-center gap-2">
+                            <img
+                                src={Logo}
+                                alt="Sekai Logo"
+                                className="h-7 w-7 object-contain sm:h-8 sm:w-8"
+                            />
+                            <span className="text-xl font-bold text-white sm:text-2xl">
                                 Sekai
                             </span>
                         </div>
 
-                        <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                        {/* Description - Hidden on mobile, show on tablet+ */}
+                        <p className="text-sm leading-relaxed text-zinc-400">
                             Your ultimate destination for anime discovery. Explore thousands of titles,
                             get personalized recommendations, and stay updated with the latest releases.
                         </p>
 
                         {/* Social Links */}
-                        <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                            <span className="text-sm text-zinc-400">Socials:</span>
-                            <div className="flex space-x-3">
+                        <div className="hidden sm:flex items-center gap-3">
+                            <span className="text-xs text-zinc-400 sm:text-sm">Socials:</span>
+                            <div className="flex gap-2">
                                 {socialLinks.map((social, index) => (
                                     <a
                                         key={index}
                                         href={social.href}
-                                        className={`text-zinc-400 ${social.color} transition-colors duration-200 p-2 rounded-full bg-zinc-800`}
+                                        className={`rounded-full bg-zinc-800 p-1.5 text-zinc-400 transition-colors duration-200 ${social.color} sm:p-2`}
                                         aria-label={social.label}
                                     >
-                                        <social.icon size={18} />
+                                        <social.icon size={16} className="sm:w-[18px] sm:h-[18px]" />
                                     </a>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    {/* Quick Links */}
-                    <div className="flex-shrink-0 text-right">
-                        <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                    {/* Quick Links - Hidden on mobile, show on tablet+ */}
+                    <div className="flex flex-col flex-shrink-0 md:text-right">
+                        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white sm:text-sm">
                             Quick Links
                         </h3>
-                        <div className="grid grid-cols-1 gap-x-6 gap-y-2">
+                        <nav className="flex flex-col gap-1.5 sm:gap-3">
                             {navigationLinks.map((link, index) => (
                                 <a
                                     key={index}
                                     href={link.path}
-                                    className="text-sm text-zinc-400 hover:hover:text-white transition-colors duration-200 py-1"
+                                    className="text-xs text-zinc-400 transition-colors duration-200 hover:text-white sm:text-sm"
                                 >
                                     {link.name}
                                 </a>
                             ))}
-                        </div>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -81,26 +79,28 @@ const Footer = () => {
             <div className="border-t border-zinc-800"></div>
 
             {/* Bottom Section */}
-            <div className="flex flex-col space-y-4 sm:space-y-3 py-6">
+            <div className="px-4 py-4 sm:px-6">
+                <div className="flex flex-col gap-2 sm:gap-3">
 
-                {/* Copyright */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                    <p className="text-sm text-zinc-400">
-                        Copyright © Sekai {currentYear}. All Rights Reserved
-                    </p>
+                    {/* Copyright & Made with Love */}
+                    <div className="flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+                        <p className="text-xs text-zinc-400 sm:text-sm">
+                            Copyright © Sekai {currentYear}. All Rights Reserved
+                        </p>
 
-                    {/* Made with love indicator */}
-                    <div className="flex items-center space-x-1 text-sm text-zinc-500">
-                        <span>Made with</span>
-                        <Heart size={14} className="text-red-500 fill-current" />
-                        <span>for anime fans</span>
+                        {/* Made with love - Hidden on mobile, show on tablet+ */}
+                        <div className="hidden sm:flex items-center gap-1 text-xs text-zinc-500 sm:text-sm">
+                            <span>Made with</span>
+                            <Heart size={12} className="fill-current text-red-500 sm:w-[14px] sm:h-[14px]" />
+                            <span>for anime fans</span>
+                        </div>
                     </div>
-                </div>
 
-                {/* Disclaimer */}
-                <p className="text-xs text-zinc-500 leading-relaxed">
-                    This site does not store any files on its server. All contents are provided by non-affiliated third parties.
-                </p>
+                    {/* Disclaimer - Hidden on mobile, show on tablet+ */}
+                    <p className="hidden sm:block text-xs leading-relaxed text-zinc-500">
+                        This site does not store any files on its server. All contents are provided by non-affiliated third parties.
+                    </p>
+                </div>
             </div>
         </footer>
     );

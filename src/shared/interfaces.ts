@@ -92,8 +92,7 @@ export type WatchStatus = 'watching' | 'on-hold' | 'plan-to-watch' | 'dropped' |
 
 export interface AnimeWatchList extends AnimeListItem {
     watchStatus: WatchStatus;
-    userScore?: number;
-    updatedAt: number;
+    addedAt: number;
 }
 
 export interface SekaiUser {

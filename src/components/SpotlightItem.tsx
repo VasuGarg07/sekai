@@ -84,7 +84,7 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-3 sm:pt-2">
+                    <div className="flex flex-wrap gap-3 pt-2">
                         <WatchlistButton
                             anime={anime}
                             className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800

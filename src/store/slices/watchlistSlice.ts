@@ -1,33 +1,40 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { AnimeWatchList } from "../../shared/interfaces";
 
 interface WatchlistState {
-    ids: string[];
+    items: AnimeWatchList[];
 }
 
 const initialState: WatchlistState = {
-    ids: [],
+    items: [],
 }
 
 const watchlistSlice = createSlice({
     name: 'watchlist',
     initialState,
     reducers: {
-        setWatchlistIds(state, action: PayloadAction<string[]>) {
-            state.ids = action.payload;
+        setWatchlist(state, action: PayloadAction<AnimeWatchList[]>) {
+            state.items = action.payload;
         },
-        addWatchlistId(state, action: PayloadAction<string>) {
-            if (!state.ids.includes(action.payload)) {
-                state.ids.push(action.payload);
+        addItemToWatchlist(state, action: PayloadAction<AnimeWatchList>) {
+            if (!state.items.includes(action.payload)) {
+                state.items.push(action.payload);
             }
         },
-        removeWatchlistId(state, action: PayloadAction<string>) {
-            state.ids = state.ids.filter((id) => id !== action.payload);
+        removeItemFromWatchlist(state, action: PayloadAction<string | number>) {
+            state.items = state.items.filter((item) => item.id != action.payload);
+        },
+        updateWatchlistStatus(state, action: PayloadAction<{ id: string | number; status: string }>) {
+            const item = state.items.find((item) => item.id == action.payload.id);
+            if (item) {
+                item.status = action.payload.status;
+            }
         },
         clearWatchlist(state) {
-            state.ids = [];
+            state.items = [];
         },
     }
 });
 
-export const { setWatchlistIds, addWatchlistId, removeWatchlistId, clearWatchlist } = watchlistSlice.actions;
+export const { setWatchlist, addItemToWatchlist, removeItemFromWatchlist, clearWatchlist, updateWatchlistStatus } = watchlistSlice.actions;
 export default watchlistSlice.reducer;

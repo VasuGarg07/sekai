@@ -10,9 +10,9 @@ interface WatchlistButtonProps {
 
 export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps) {
     const { mutate, isPending } = useSaveAnime();
-    const watchlistIds = useAppSelector((state) => state.watchlist.ids);
+    const watchlistIds = useAppSelector((state) => state.watchlist.items);
 
-    const isInWatchlist = watchlistIds.includes(anime.id.toString());
+    const isInWatchlist = watchlistIds.findIndex(item => item.id == anime.id) >= 0;
 
     let content;
     if (isPending) {

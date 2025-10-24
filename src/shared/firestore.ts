@@ -53,14 +53,15 @@ export const saveAnimeToWatchlist = async (anime: AnimeListItem, userId?: string
         return { success: false };
     }
 
-    await setDoc(ref, {
+    const item = {
         ...cleanAnimeForWatchlist(anime),
         watchStatus,
         addedAt: Date.now()
-    })
+    }
+    await setDoc(ref, item);
 
     toastService.success(`${anime.title_english ?? anime.title_romaji} is added to watchlist`);
-    return { success: true, id: docId };
+    return { success: true, item };
 }
 
 export const deleteAnimeFromWatchlist = async (anime: AnimeListItem, uid?: string) => {
@@ -81,5 +82,47 @@ export const updateWatchStatus = async (anime: AnimeListItem, newStatus: WatchSt
         watchStatus: newStatus
     });
 
-    return { success: true, id: docId };
+    return { success: true, id: docId, status: newStatus };
 }
+
+// TODO: Add index to existing documents:
+// export const fetchUserWatchList = async (
+//     uid: string,
+//     page: number = 1,
+//     perPage: number = 20
+// ): Promise<PagedResult> => {
+//     const ref = collection(fireStore, "users", uid, "watchlist");
+    
+//     // Get total count
+//     const countSnapshot = await getCountFromServer(ref);
+//     const total = countSnapshot.data().count;
+    
+//     const lastPage = Math.ceil(total / perPage);
+//     const startIndex = (page - 1) * perPage;
+//     const endIndex = startIndex + perPage - 1;
+    
+//     // Query by index range
+//     const q = query(
+//         ref,
+//         where("paginationIndex", ">=", startIndex),
+//         where("paginationIndex", "<=", endIndex),
+//         orderBy("paginationIndex", "desc"),
+//         orderBy("addedAt", "desc")
+//     );
+    
+//     const snapshot = await getDocs(q);
+//     const items: AnimeListItem[] = snapshot.docs.map(
+//         (doc) => doc.data() as AnimeListItem
+//     );
+    
+//     return {
+//         items,
+//         pageInfo: {
+//             total,
+//             perPage,
+//             currentPage: page,
+//             lastPage,
+//             hasNextPage: page < lastPage
+//         }
+//     };
+// };

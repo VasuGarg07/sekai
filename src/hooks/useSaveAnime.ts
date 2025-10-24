@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import type { AnimeListItem, WatchStatus } from "../shared/interfaces";
-import { addWatchlistId } from "../store/slices/watchlistSlice";
+import { addItemToWatchlist } from "../store/slices/watchlistSlice";
 import { saveAnimeToWatchlist } from "../shared/firestore";
 
 export function useSaveAnime() {
@@ -13,8 +13,8 @@ export function useSaveAnime() {
             return saveAnimeToWatchlist(anime, userId, watchStatus);
         },
         onSuccess: (result) => {
-            if (userId && result?.success && result.id) {
-                dispatch(addWatchlistId(result.id));
+            if (userId && result?.success && result.item) {
+                dispatch(addItemToWatchlist(result.item));
             }
         }
     });

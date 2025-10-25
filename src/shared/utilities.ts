@@ -89,7 +89,11 @@ export function mapMediaToAnimeDetail(m: any): AnimeDetail {
                 .filter(Boolean)
                 .map(mapMediaToAnimeListItem) ?? [],
         trailer: m.trailer ?? null,
-    };
+        nextEpisode: m.nextAiringEpisode ? {
+            episode: m.nextAiringEpisode.episode,
+            airingAt: m.nextAiringEpisode.airingAt * 1000
+        } : null
+    }
 }
 
 export function formatKey(key: string): string {
@@ -133,4 +137,12 @@ export const cleanAnimeForWatchlist = (anime: AnimeListItem | AnimeDetail | Anim
         season,
         seasonYear
     };
+};
+
+export const formatDateEpoch = (timestamp: number) => {
+    return new Date(timestamp).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
 };

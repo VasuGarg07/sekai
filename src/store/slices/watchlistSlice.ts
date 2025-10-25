@@ -1,12 +1,14 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { AnimeWatchList } from "../../shared/interfaces";
+import type { AnimeWatchList, WatchStatus } from "../../shared/interfaces";
 
 interface WatchlistState {
     items: AnimeWatchList[];
+    lastFetched: number | null;
 }
 
 const initialState: WatchlistState = {
     items: [],
+    lastFetched: null
 }
 
 const watchlistSlice = createSlice({
@@ -15,6 +17,7 @@ const watchlistSlice = createSlice({
     reducers: {
         setWatchlist(state, action: PayloadAction<AnimeWatchList[]>) {
             state.items = action.payload;
+            state.lastFetched = Date.now();
         },
         addItemToWatchlist(state, action: PayloadAction<AnimeWatchList>) {
             if (!state.items.includes(action.payload)) {
@@ -24,10 +27,10 @@ const watchlistSlice = createSlice({
         removeItemFromWatchlist(state, action: PayloadAction<string | number>) {
             state.items = state.items.filter((item) => item.id != action.payload);
         },
-        updateWatchlistStatus(state, action: PayloadAction<{ id: string | number; status: string }>) {
+        updateWatchlistStatus(state, action: PayloadAction<{ id: string | number; status: WatchStatus }>) {
             const item = state.items.find((item) => item.id == action.payload.id);
             if (item) {
-                item.status = action.payload.status;
+                item.watchStatus = action.payload.status;
             }
         },
         clearWatchlist(state) {

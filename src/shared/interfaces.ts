@@ -84,11 +84,15 @@ export interface AnimeDetail extends AnimeListItem {
     relations: AnimeRelation[];
     recommendations: AnimeListItem[];
     trailer: AnimeTrailer | null;
+    nextEpisode: {
+        episode: number;
+        airingAt: number;
+    } | null;
 }
 
 // ----------------------------
 
-export type WatchStatus = 'watching' | 'on-hold' | 'plan-to-watch' | 'dropped' | 'completed';
+export type WatchStatus = 'watching' | 'on-hold' | 'plan-to-watch' | 'dropped' | 'completed' | 'rewatch';
 
 export interface AnimeWatchList extends AnimeListItem {
     watchStatus: WatchStatus;

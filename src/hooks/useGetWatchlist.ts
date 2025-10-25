@@ -6,8 +6,11 @@ import type { AnimeWatchList } from "../shared/interfaces";
 import { setWatchlist } from "../store/slices/watchlistSlice";
 import { useEffect } from "react";
 
+const MIN_REFRESH_INTERVAL = 5000; // 5 seconds
+
 export function useGetWatchlist() {
     const { user } = useAppSelector(state => state.auth);
+    const { lastFetched } = useAppSelector(state => state.watchlist);
     const dispatch = useAppDispatch();
 
     const query = useQuery<AnimeWatchList[], Error>({
@@ -21,6 +24,7 @@ export function useGetWatchlist() {
             return fetchUserWatchList(user.uid);
         },
         staleTime: 1000 * 60 * 5,
+        enabled: !!user?.uid, // Only run query if user exists
     });
 
     useEffect(() => {
@@ -29,5 +33,15 @@ export function useGetWatchlist() {
         }
     }, [query.data, dispatch]);
 
-    return query;
+    const refetch = () => {
+        const timeSinceLastFetch = lastFetched ? Date.now() - lastFetched : Infinity;
+        if (timeSinceLastFetch < MIN_REFRESH_INTERVAL) return;
+        query.refetch();
+    };
+
+    return {
+        ...query,
+        refetch,
+    };
+
 }

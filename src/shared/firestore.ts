@@ -1,9 +1,10 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import type { AnimeListItem, AnimeWatchList, WatchStatus } from "./interfaces";
 import { toastService } from "./toastr";
 import { fireStore } from "./firebase";
 import type { User } from "firebase/auth";
 import { cleanAnimeForWatchlist } from "./utilities";
+import { MAX_USER_DOCUMENTS } from "./constants";
 
 export const registerProfile = async (user?: User) => {
     if (!user) return;
@@ -30,23 +31,36 @@ export const fetchWatchlistIds = async (uid: string) => {
 
 export const fetchUserWatchList = async (uid: string) => {
     const ref = collection(fireStore, "users", uid, "watchlist");
-    const snapshot = await getDocs(ref);
+    const q = query(ref, orderBy("addedAt", "desc"), limit(MAX_USER_DOCUMENTS)); // Hard limit
+    
+    const snapshot = await getDocs(q);
     const list: AnimeWatchList[] = snapshot.docs
-        .map((doc) => doc.data() as AnimeWatchList)
-        .sort((a, b) => b.addedAt - a.addedAt);
+        .map((doc) => doc.data() as AnimeWatchList);
     return list;
 }
 
-
-export const saveAnimeToWatchlist = async (anime: AnimeListItem, userId?: string, watchStatus: WatchStatus = 'plan-to-watch') => {
+export const saveAnimeToWatchlist = async (
+    anime: AnimeListItem, 
+    userId?: string, 
+    watchStatus: WatchStatus = 'plan-to-watch',
+) => {
     if (!userId) {
         toastService.info("Please Login First");
         return { success: false };
     }
 
+    // Check count with aggregation (FREE - doesn't count toward reads!)
+    const ref = collection(fireStore, "users", userId, "watchlist");
+    const countSnapshot = await getCountFromServer(ref);
+    
+    if (countSnapshot.data().count >= 2000) {
+        toastService.error("Watchlist limit reached. Please remove some items first.");
+        return { success: false };
+    }
+
     const docId = anime.id.toString();
-    const ref = doc(fireStore, "users", userId, "watchlist", docId);
-    const snapshot = await getDoc(ref);
+    const docRef = doc(fireStore, "users", userId, "watchlist", docId);
+    const snapshot = await getDoc(docRef);
 
     if (snapshot.exists()) {
         toastService.error(`${anime.title_english ?? anime.title_romaji} already exists in watchlist`);
@@ -58,7 +72,7 @@ export const saveAnimeToWatchlist = async (anime: AnimeListItem, userId?: string
         watchStatus,
         addedAt: Date.now()
     }
-    await setDoc(ref, item);
+    await setDoc(docRef, item);
 
     toastService.success(`${anime.title_english ?? anime.title_romaji} is added to watchlist`);
     return { success: true, item };

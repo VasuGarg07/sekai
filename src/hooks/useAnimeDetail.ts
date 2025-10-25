@@ -79,6 +79,10 @@ const QUERY = /* GraphQL */ `
         site
         thumbnail
       }
+      nextAiringEpisode {
+        airingAt
+        episode
+      }
     }
   }
 `;

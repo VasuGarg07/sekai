@@ -105,5 +105,8 @@ export const WatchStatusColor: Record<WatchStatus, string> = {
     'completed': 'bg-green-900/60 text-green-200 border-green-600',
     'on-hold': 'bg-yellow-900/60 text-yellow-200 border-yellow-600',
     'plan-to-watch': 'bg-purple-900/60 text-purple-200 border-purple-600',
-    'dropped': 'bg-red-900/60 text-red-200 border-red-600'
+    'dropped': 'bg-red-900/60 text-red-200 border-red-600',
+    'rewatch': 'bg-sky-900/60 text-sky-200 border-sky-600'
 }
+
+export const MAX_USER_DOCUMENTS = 2000;

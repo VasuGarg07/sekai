@@ -1,4 +1,4 @@
-import { Flame, Heart, Star } from "lucide-react";
+import { Clock, Flame, Heart, Star } from "lucide-react";
 import { useParams } from "react-router";
 import AnimeGalleryCard from "../../components/AnimeGalleryCard";
 import EmptyState from "../../ui/EmptyState";
@@ -7,6 +7,7 @@ import LoadingState from "../../ui/LoadingState";
 import { WatchlistButton } from "../../ui/WatchlistButton";
 import { useAnimeDetail } from "../../hooks/useAnimeDetail";
 import Fallback from "/default-banner.jpg";
+import { formatDateEpoch } from "../../shared/utilities";
 
 const AnimeDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -149,6 +150,15 @@ const AnimeDetail = () => {
                                     {g}
                                 </span>
                             ))}
+                        </div>
+                    )}
+
+                    {data.nextEpisode && (
+                        <div className="w-fit flex items-center gap-3 px-4 py-2.5 my-2 bg-blue-600/10 border border-blue-500/20 rounded-lg">
+                            <Clock className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                            <span className="text-sm text-blue-100/90">
+                                Episode <span className="font-semibold text-blue-50">{data.nextEpisode.episode}</span> will be airing at <span className="font-semibold text-blue-50">{formatDateEpoch(data.nextEpisode.airingAt)}</span>
+                            </span>
                         </div>
                     )}
 

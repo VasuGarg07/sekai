@@ -23,7 +23,7 @@ export default function QuickSearchItem({ anime, handleClick }: QuickSearchItemP
 
             <div className="flex-1 min-w-0">
                 {/* Title */}
-                <h3 className="text-sm font-semibold text-rose-500 truncate">
+                <h3 className="text-sm font-semibold text-accent-500 truncate">
                     {anime.title_english ?? anime.title_romaji ?? "Untitled"}
                 </h3>
 
@@ -72,7 +72,7 @@ export default function QuickSearchItem({ anime, handleClick }: QuickSearchItemP
                     {/* Watchlist Button */}
                     <WatchlistButton
                         anime={anime}
-                        className="text-xs px-2 py-1 bg-rose-600 hover:bg-rose-800 rounded-md text-zinc-200 flex items-center gap-1 transition-colors"
+                        className="text-xs px-2 py-1 bg-accent-600 hover:bg-accent-800 rounded-md text-zinc-200 flex items-center gap-1 transition-colors"
                     />
                 </div>
             </div>

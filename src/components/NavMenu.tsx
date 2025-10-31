@@ -48,7 +48,7 @@ const NavMenu = ({ className = '' }) => {
                         >
                             <link.icon
                                 size={16}
-                                className="text-rose-500 transition-colors duration-200"
+                                className="text-accent-500 transition-colors duration-200"
                             />
                             <span>{link.name}</span>
                         </Link>

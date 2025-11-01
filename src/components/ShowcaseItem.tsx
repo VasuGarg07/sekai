@@ -23,7 +23,7 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
 
             {/* Info */}
             <div className="flex flex-col grow">
-                <span className="text-white text-sm font-semibold hover:text-rose-400 hover:cursor-pointer transition mb-1 line-clamp-2"
+                <span className="text-white text-sm font-semibold hover:text-accent-400 hover:cursor-pointer transition mb-1 line-clamp-2"
                     onClick={() => goToAnime(anime.id)}>
                     {anime.title_english ?? anime.title_romaji}
                 </span>

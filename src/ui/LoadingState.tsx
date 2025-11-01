@@ -9,9 +9,9 @@ const LoadingState = ({ text = 'Loading...' }: LoadingStateProps) => {
                 {/* Dual ring spinner */}
                 <div className="relative w-16 h-16 mb-4">
                     {/* Outer ring */}
-                    <div className="absolute inset-0 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="absolute inset-0 border-4 border-accent-500 border-t-transparent rounded-full animate-spin"></div>
                     {/* Inner ring */}
-                    <div className="absolute inset-2 border-4 border-rose-400 border-b-transparent rounded-full animate-spin-reverse"></div>
+                    <div className="absolute inset-2 border-4 border-accent-400 border-b-transparent rounded-full animate-spin-reverse"></div>
                 </div>
 
                 {/* Loading text */}

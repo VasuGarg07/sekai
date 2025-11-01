@@ -1,12 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-@import "tailwindcss";
-
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-@theme {
-  --breakpoint-xs: 425px;
-  --blur-2xs: 2px; 
-}
+@import "./styles/theme.css";
 
 html {
   font-family: 'Poppins', sans-serif;
@@ -14,6 +7,8 @@ html {
 
 #root {
   isolation: isolate;
+  transform-style: flat;
+  backface-visibility: hidden;
 }
 
 /* Sleek Global Scrollbar with Accent */

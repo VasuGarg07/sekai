@@ -68,7 +68,7 @@ export default function Watchlist() {
                             <button
                                 onClick={() => setViewMode('grid')}
                                 className={`p-2 rounded transition-colors ${viewMode === 'grid'
-                                    ? 'bg-rose-700 text-white'
+                                    ? 'bg-accent-700 text-white'
                                     : 'text-gray-400 hover:text-white'
                                     }`}
                                 title="Grid view"
@@ -78,7 +78,7 @@ export default function Watchlist() {
                             <button
                                 onClick={() => setViewMode('table')}
                                 className={`p-2 rounded transition-colors ${viewMode === 'table'
-                                    ? 'bg-rose-700 text-white'
+                                    ? 'bg-accent-700 text-white'
                                     : 'text-gray-400 hover:text-white'
                                     }`}
                                 title="Table view"
@@ -88,7 +88,7 @@ export default function Watchlist() {
                             <button
                                 onClick={() => setViewMode('tile')}
                                 className={`p-2 rounded transition-colors ${viewMode === 'tile'
-                                    ? 'bg-rose-700 text-white'
+                                    ? 'bg-accent-700 text-white'
                                     : 'text-gray-400 hover:text-white'
                                     }`}
                                 title="Tile view"

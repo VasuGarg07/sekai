@@ -49,9 +49,9 @@ const SpotlightCarousel: React.FC = () => {
       <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[480px] bg-neutral-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="flex items-end gap-1.5 h-7">
-            <span className="w-2 h-2 rounded-full bg-rose-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-            <span className="w-2 h-2 rounded-full bg-rose-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-            <span className="w-2 h-2 rounded-full bg-rose-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+            <span className="w-2 h-2 rounded-full bg-accent-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+            <span className="w-2 h-2 rounded-full bg-accent-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+            <span className="w-2 h-2 rounded-full bg-accent-400 animate-bounce" style={{ animationDelay: "300ms" }} />
           </div>
           <p className="text-white font-semibold">Loading</p>
           <p className="text-white/70 text-sm">Fetching spotlight anime…</p>
@@ -71,7 +71,7 @@ const SpotlightCarousel: React.FC = () => {
           </p>
           <button
             onClick={() => refetch?.()}
-            className="mt-3 inline-flex items-center gap-2 bg-rose-400 hover:bg-rose-500 text-white px-4 py-2 rounded-full font-semibold shadow transition text-sm"
+            className="mt-3 inline-flex items-center gap-2 bg-accent-400 hover:bg-accent-500 text-white px-4 py-2 rounded-full font-semibold shadow transition text-sm"
           >
             Retry
           </button>
@@ -114,7 +114,7 @@ const SpotlightCarousel: React.FC = () => {
             key={idx}
             onClick={() => setCurrent(idx)}
             className={`w-3 h-3 rounded-full transition-all duration-200 ${current === idx
-              ? "bg-rose-500 scale-110"
+              ? "bg-accent-500 scale-110"
               : "bg-white/40 hover:bg-white/60"
               }`}
             aria-label={`Go to slide ${idx + 1}`}

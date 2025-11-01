@@ -38,8 +38,8 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
             <div className="w-2/3 p-3 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-lg">
                 {/* Title */}
                 <h3 onClick={() => goToAnime(anime.id)}
-                    className="font-semibold text-rose-500 truncate leading-tight cursor-pointer
-                            hover:underline hover:text-rose-600">
+                    className="font-semibold text-accent-500 truncate leading-tight cursor-pointer
+                            hover:underline hover:text-accent-600">
                     {anime.title_english ?? anime.title_romaji}
                 </h3>
 
@@ -72,12 +72,12 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
 
                 {anime.genres && anime.genres.length > 0 && (
                     <div className="text-xs flex items-center gap-1 my-1 flex-wrap">
-                        <Tags className="text-rose-500 w-4 h-4" />
+                        <Tags className="text-accent-500 w-4 h-4" />
                         {anime.genres.map((genre, index) => (
                             <a
                                 key={index}
                                 href={`/genre/${encodeURIComponent(genre)}`}
-                                className="text-gray-300 hover:text-rose-300 cursor-pointer"
+                                className="text-gray-300 hover:text-accent-300 cursor-pointer"
                             >
                                 {genre}
                                 {index < anime.genres.length - 1 && ", "}

@@ -38,7 +38,7 @@ export default function CurrentSeasonAnime() {
                 <h2 className="text-2xl font-bold text-white">Recently Released</h2>
                 <Link
                     to='recents'
-                    className="text-rose-100 bg-zinc-600 px-2 py-1 rounded-md text-xs font-medium">
+                    className="text-accent-100 bg-zinc-600 px-2 py-1 rounded-md text-xs font-medium">
                     View more →
                 </Link>
             </div>

@@ -87,7 +87,7 @@ const AnimeDetail = () => {
                     {/* Meta badges */}
                     <div className="flex flex-wrap items-center gap-3 my-2">
                         {data.type && (
-                            <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs font-semibold text-rose-400 border border-rose-500/30">
+                            <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs font-semibold text-accent-400 border border-accent-500/30">
                                 {data.type}
                             </span>
                         )}
@@ -145,7 +145,7 @@ const AnimeDetail = () => {
                             {data.genres.map((g) => (
                                 <span
                                     key={g}
-                                    className="px-3 py-1 bg-gradient-to-r from-rose-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
+                                    className="px-3 py-1 bg-gradient-to-r from-accent-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
                                 >
                                     {g}
                                 </span>
@@ -173,7 +173,7 @@ const AnimeDetail = () => {
                     <div>
                         <WatchlistButton
                             anime={data}
-                            className="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800
+                            className="bg-accent-500 hover:bg-accent-600 disabled:bg-accent-800
                             cursor-pointer disabled:cursor-default text-white font-semibold 
                             px-6 py-2.5 rounded-lg transition-all duration-200 
                             text-sm sm:text-base"
@@ -259,7 +259,7 @@ const AnimeDetail = () => {
                         {data.tags.map((tag) => (
                             <span
                                 key={tag.name}
-                                className="px-3 py-1 bg-gradient-to-r from-rose-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
+                                className="px-3 py-1 bg-gradient-to-r from-accent-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
                             >
                                 #{tag.name}
                             </span>

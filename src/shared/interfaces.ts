@@ -99,9 +99,22 @@ export interface AnimeWatchList extends AnimeListItem {
     addedAt: number;
 }
 
+// ----------------------------
+
 export interface SekaiUser {
     uid: string,
     email: string | null,
     displayName: string | null,
     photoURL: string | null,
+}
+
+export interface UserPreferences {
+    app_theme: string;
+    default_watch_status: string;
+}
+
+export interface ThemeColor {
+    name: string;
+    label: string;
+    className: string;
 }

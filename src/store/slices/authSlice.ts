@@ -43,6 +43,17 @@ export const logout = createAsyncThunk("auth/logout", async () => {
     return null;
 });
 
+const getAuthErrorMessage = (errorCode?: string) => {
+    switch (errorCode) {
+        case "auth/popup-closed-by-user":
+            return "Login canceled.";
+        case "auth/network-request-failed":
+            return "Network error, please try again.";
+        default:
+            return "Login failed. Please try again.";
+    }
+};
+
 // --- Slice ---
 const authSlice = createSlice({
     name: "auth",
@@ -64,7 +75,7 @@ const authSlice = createSlice({
             })
             .addCase(loginWithGoogle.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message ?? "Google login failed";
+                state.error = getAuthErrorMessage(action.error.code);
             })
             .addCase(loginWithGitHub.pending, (state) => {
                 state.loading = true;
@@ -76,10 +87,12 @@ const authSlice = createSlice({
             })
             .addCase(loginWithGitHub.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message ?? "GitHub login failed";
+                state.error = getAuthErrorMessage(action.error.code);
             })
             .addCase(logout.fulfilled, (state) => {
                 state.user = null;
+                state.loading = false;
+                state.error = null;
             });
     },
 });

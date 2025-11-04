@@ -80,3 +80,16 @@
     --color-accent-800: var(--color-fuchsia-800);
     --color-accent-900: var(--color-fuchsia-900);
 }
+
+.theme-slate {
+    --color-accent-50: var(--color-slate-50);
+    --color-accent-100: var(--color-slate-100);
+    --color-accent-200: var(--color-slate-200);
+    --color-accent-300: var(--color-slate-300);
+    --color-accent-400: var(--color-slate-400);
+    --color-accent-500: var(--color-slate-500);
+    --color-accent-600: var(--color-slate-600);
+    --color-accent-700: var(--color-slate-700);
+    --color-accent-800: var(--color-slate-800);
+    --color-accent-900: var(--color-slate-900);
+}

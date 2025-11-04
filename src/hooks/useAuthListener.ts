@@ -1,35 +1,50 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { fireAuth } from "../shared/firebase";
 import { fetchUserWatchList } from "../shared/firestore";
-import { serializeUser } from "../shared/utilities";
+import { applyThemeClass, serializeUser } from "../shared/utilities";
 import { setUser } from "../store/slices/authSlice";
 import { clearWatchlist, setWatchlist } from "../store/slices/watchlistSlice";
+import { fetchPreferences, resetPreferences } from "../store/slices/preferencesSlice";
+import { toastService } from "../shared/toastr";
+import { useAppDispatch } from "../store/reduxHooks";
 
 export const useAuthListener = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(fireAuth, async (user) => {
             if (user) {
-                // Set user in auth slice
+                // 1️⃣ Update auth state
                 dispatch(setUser(serializeUser(user)));
 
+                // 2️⃣ Load user watchlist
                 try {
-                    // Fetch watchlist IDs once on login
                     const items = await fetchUserWatchList(user.uid);
                     dispatch(setWatchlist(items));
                 } catch (err) {
                     console.error("Failed to fetch watchlist IDs:", err);
                     dispatch(setWatchlist([]));
                 }
+
+                // 3️⃣ Load user preferences
+                try {
+                    const { app_theme } = await dispatch(fetchPreferences(user.uid)).unwrap();
+                    applyThemeClass(app_theme);
+                } catch (err) {
+                    console.error("Failed to fetch user preferences:", err);
+                    toastService.error("Failed to load preferences. Defaults will be used.");
+                }
+
             } else {
-                // Clear user + watchlist on logout
+                // 4️⃣ Clear all user data on logout
                 dispatch(setUser(null));
                 dispatch(clearWatchlist());
+                dispatch(resetPreferences());
+                applyThemeClass("rose");
             }
         });
+
         return () => unsubscribe();
     }, [dispatch]);
-}
+};

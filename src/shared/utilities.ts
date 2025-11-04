@@ -146,3 +146,15 @@ export const formatDateEpoch = (timestamp: number) => {
         day: 'numeric'
     });
 };
+
+export const applyThemeClass = (themeClass: string) => {
+    const body = document.body;
+
+    // Remove all existing theme classes
+    Array.from(body.classList)
+        .filter(cls => cls.startsWith("theme-"))
+        .forEach(cls => body.classList.remove(cls));
+
+    // Add new theme
+    body.classList.add(`theme-${themeClass}`);
+};

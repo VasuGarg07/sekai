@@ -4,7 +4,7 @@ import {
     Trophy,
     Tv2
 } from 'lucide-react';
-import type { WatchStatus } from './interfaces';
+import type { ThemeColor, WatchStatus } from './interfaces';
 
 export const navigationLinks = [
     // { name: 'TV Series', path: '/tv-series', icon: Tv2 },
@@ -110,3 +110,18 @@ export const WatchStatusColor: Record<WatchStatus, string> = {
 }
 
 export const MAX_USER_DOCUMENTS = 2000;
+
+export const DEFAULT_PREFERENCES = {
+    app_theme: "rose",
+    default_watch_status: "watching",
+};
+
+
+export const AVAILABLE_THEMES: ThemeColor[] = [
+    { name: 'rose', label: 'Rose', className: 'bg-rose-500' },
+    { name: 'cyan', label: 'cyan', className: 'bg-cyan-500' },
+    { name: 'orange', label: 'orange', className: 'bg-orange-500' },
+    { name: 'emerald', label: 'Emerald', className: 'bg-emerald-500' },
+    { name: 'fuchsia', label: 'Fuchsia', className: 'bg-fuchsia-500' },
+    // { name: 'slate', label: 'Slate', className: 'bg-slate-500' }
+];

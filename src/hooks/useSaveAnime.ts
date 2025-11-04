@@ -6,10 +6,11 @@ import { saveAnimeToWatchlist } from "../shared/firestore";
 
 export function useSaveAnime() {
     const userId = useAppSelector(state => state.auth.user?.uid);
+    const defaultStatus = useAppSelector(state => state.preferences.default_watch_status) as WatchStatus;
     const dispatch = useAppDispatch();
 
     return useMutation({
-        mutationFn: async (anime: AnimeListItem, watchStatus: WatchStatus = 'plan-to-watch') => {
+        mutationFn: async (anime: AnimeListItem, watchStatus: WatchStatus = defaultStatus) => {
             return saveAnimeToWatchlist(anime, userId, watchStatus);
         },
         onSuccess: (result) => {

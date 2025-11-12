@@ -13,7 +13,7 @@ export const SectionLayout = ({
     description,
     children,
 }: SectionLayoutProps) => (
-    <section className="mb-20">
+    <section>
         <div className="flex items-center gap-3 mb-3">
             {icon}
             <h2 className="text-2xl font-semibold text-white">{title}</h2>
@@ -21,14 +21,12 @@ export const SectionLayout = ({
 
         {description && (
             <>
-                <p className="text-sm text-zinc-400 mb-4 leading-relaxed">
+                <p className="text-sm text-zinc-400 leading-relaxed">
                     {description}
                 </p>
-                <div className="border-t border-zinc-600 mb-6" />
+                <div className="border-t border-zinc-600 my-4" />
             </>
         )}
-
         <div>{children}</div>
-        <div className="border-t border-zinc-600 mt-6" />
     </section>
 );

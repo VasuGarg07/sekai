@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
@@ -9,8 +11,80 @@ interface WatchlistTableProps {
     items: AnimeWatchList[];
 }
 
+type SortKey = keyof AnimeWatchList | null;
+type SortDirection = "asc" | "desc";
+
+interface SortConfig {
+    key: SortKey;
+    direction: SortDirection;
+}
+
 export default function WatchlistTable({ items }: WatchlistTableProps) {
     const { goToAnime } = useAnimeNavigation();
+    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "asc" });
+
+    const handleSort = (key: SortKey) => {
+        setSortConfig((prev) => ({
+            key,
+            direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+        }));
+    };
+
+    const sortedItems = [...items].sort((a, b) => {
+        if (!sortConfig.key) return 0;
+
+        const aVal = a[sortConfig.key];
+        const bVal = b[sortConfig.key];
+
+        // Handle null/undefined
+        if (aVal == null && bVal == null) return 0;
+        if (aVal == null) return 1;
+        if (bVal == null) return -1;
+
+        // Handle arrays (genres)
+        if (Array.isArray(aVal) && Array.isArray(bVal)) {
+            const aStr = aVal.join(",");
+            const bStr = bVal.join(",");
+            return sortConfig.direction === "asc"
+                ? aStr.localeCompare(bStr)
+                : bStr.localeCompare(aStr);
+        }
+
+        // Handle strings
+        if (typeof aVal === "string" && typeof bVal === "string") {
+            return sortConfig.direction === "asc"
+                ? aVal.localeCompare(bVal)
+                : bVal.localeCompare(aVal);
+        }
+
+        // Handle numbers
+        if (typeof aVal === "number" && typeof bVal === "number") {
+            return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal;
+        }
+
+        return 0;
+    });
+
+    const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+        if (sortConfig.key !== columnKey) {
+            return <ChevronsUpDown className="w-3 h-3 opacity-50" />;
+        }
+        return sortConfig.direction === "asc"
+            ? <ChevronUp className="w-3 h-3" />
+            : <ChevronDown className="w-3 h-3" />;
+    };
+
+    const SortableHeader = ({ label, sortKey }: { label: string; sortKey: SortKey }) => (
+        <th
+            className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap cursor-pointer hover:bg-zinc-700 transition-colors select-none"
+            onClick={() => handleSort(sortKey)}
+        >
+            <div className="flex items-center justify-between gap-1">
+                {label}
+                <SortIcon columnKey={sortKey} />
+            </div>
+        </th>
+    );
 
     return (
         <div className="overflow-x-auto">
@@ -18,23 +92,23 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                 <thead className="text-xs uppercase bg-zinc-800 text-gray-400 sticky top-0">
                     <tr>
                         <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Image</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Title</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Type</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Episodes</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Duration</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Score</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Status</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Watch Status</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Season</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Year</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Genres</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Start Date</th>
-                        <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Added</th>
+                        <SortableHeader label="Title" sortKey="title_english" />
+                        <SortableHeader label="Type" sortKey="type" />
+                        <SortableHeader label="Episodes" sortKey="episodes" />
+                        <SortableHeader label="Duration" sortKey="duration" />
+                        <SortableHeader label="Score" sortKey="score" />
+                        <SortableHeader label="Status" sortKey="status" />
+                        <SortableHeader label="Watch Status" sortKey="watchStatus" />
+                        <SortableHeader label="Season" sortKey="season" />
+                        <SortableHeader label="Year" sortKey="seasonYear" />
+                        <SortableHeader label="Genres" sortKey="genres" />
+                        <SortableHeader label="Start Date" sortKey="startDateText" />
+                        <SortableHeader label="Added" sortKey="addedAt" />
                         <th className="px-3 py-2 whitespace-nowrap">Actions</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-800">
-                    {items.map((anime) => (
+                    {sortedItems.map((anime) => (
                         <tr
                             key={anime.id}
                             className="bg-zinc-900 hover:bg-zinc-800/50 transition-colors"
@@ -105,7 +179,7 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                                 {anime.season || '-'}
                             </td>
 
-                            {/* Season */}
+                            {/* Year */}
                             <td className="px-3 py-1.5 text-gray-400 border-r border-zinc-800 whitespace-nowrap">
                                 {anime.seasonYear || '-'}
                             </td>

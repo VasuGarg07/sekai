@@ -11,6 +11,7 @@ const ProfileMenu = ({ className = "" }) => {
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
+    const [avatarError, setAvatarError] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
     // Close when clicking outside
@@ -24,17 +25,27 @@ const ProfileMenu = ({ className = "" }) => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // Reset avatar error when user changes
+    useEffect(() => {
+        setAvatarError(false);
+    }, [user?.photoURL]);
+
     if (!user) return null; // Hide if not logged in
 
-    const avatarFallback =
-        user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U";
+    const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=random&rounded=true&size=96`;
+
+    const handleAvatarError = () => {
+        setAvatarError(true);
+    };
 
     const handleLogout = () => {
         dispatch(logout());
         setOpen(false);
         toastService.success("Logged Out!");
         navigate("/");
-    }
+    };
+
+    const avatarSrc = avatarError || !user.photoURL ? avatarFallback : user.photoURL;
 
     return (
         <div className={`relative ${className}`} ref={menuRef}>
@@ -46,15 +57,12 @@ const ProfileMenu = ({ className = "" }) => {
                 aria-haspopup="true"
                 aria-expanded={open}
             >
-                {user.photoURL ? (
-                    <img
-                        src={user.photoURL}
-                        alt="avatar"
-                        className="w-full h-full rounded-full object-cover"
-                    />
-                ) : (
-                    <span>{avatarFallback}</span>
-                )}
+                <img
+                    src={avatarSrc}
+                    alt="avatar"
+                    className="w-full h-full rounded-full object-cover"
+                    onError={handleAvatarError}
+                />
             </button>
 
             {/* Dropdown */}
@@ -66,17 +74,12 @@ const ProfileMenu = ({ className = "" }) => {
                     {/* Header */}
                     <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-700">
                         {/* Avatar */}
-                        {user.photoURL ? (
-                            <img
-                                src={user.photoURL}
-                                alt="avatar"
-                                className="w-10 h-10 rounded-full object-cover"
-                            />
-                        ) : (
-                            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-accent-600 text-white font-bold">
-                                {avatarFallback}
-                            </div>
-                        )}
+                        <img
+                            src={avatarSrc}
+                            alt="avatar"
+                            className="w-10 h-10 rounded-full object-cover"
+                            onError={handleAvatarError}
+                        />
 
                         {/* User Info */}
                         <div className="flex flex-col min-w-0">
@@ -86,7 +89,6 @@ const ProfileMenu = ({ className = "" }) => {
                             <p className="text-xs text-zinc-400 truncate">{user.email}</p>
                         </div>
                     </div>
-
 
                     {/* Menu Links */}
                     <div className="p-2">

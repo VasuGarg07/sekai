@@ -49,54 +49,57 @@ export default function Watchlist() {
         <>
             <ProfileBanner />
             <div className="bg-zinc-900 px-4 sm:px-6 lg:px-8 py-4">
-                <div className="max-w-7xl mx-auto flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-white">Your Watchlist ({watchlistItems.length})</h2>
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={handleRefresh}
-                            disabled={isFetching}
-                            className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            title="Refresh watchlist"
-                        >
-                            <RefreshCw
-                                className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`}
-                            />
-                        </button>
+                <div className="max-w-7xl mx-auto flex items-center gap-2 justify-center mb-4">
+                    <h2 className="text-xl sm:text-2xl font-bold text-white">Watchlist ({watchlistItems.length})</h2>
+                    <span className="grow" />
 
-                        {/* View Mode Selector */}
-                        <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded transition-colors ${viewMode === 'grid'
-                                    ? 'bg-accent-700 text-white'
-                                    : 'text-gray-400 hover:text-white'
-                                    }`}
-                                title="Grid view"
-                            >
-                                <Grid3x3 className="w-4 h-4" />
-                            </button>
-                            <button
-                                onClick={() => setViewMode('table')}
-                                className={`p-2 rounded transition-colors ${viewMode === 'table'
-                                    ? 'bg-accent-700 text-white'
-                                    : 'text-gray-400 hover:text-white'
-                                    }`}
-                                title="Table view"
-                            >
-                                <TableIcon className="w-4 h-4" />
-                            </button>
-                            <button
-                                onClick={() => setViewMode('tile')}
-                                className={`p-2 rounded transition-colors ${viewMode === 'tile'
-                                    ? 'bg-accent-700 text-white'
-                                    : 'text-gray-400 hover:text-white'
-                                    }`}
-                                title="Tile view"
-                            >
-                                <LayoutList className="w-4 h-4" />
-                            </button>
-                        </div>
+                    <button
+                        onClick={handleRefresh}
+                        disabled={isFetching}
+                        className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Refresh watchlist"
+                    >
+                        <RefreshCw
+                            className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`}
+                        />
+                    </button>
+                    {/* View Mode Selector */}
+                    <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
+                        <button
+                            onClick={() => setViewMode('grid')}
+                            className={`p-2 rounded transition-colors ${viewMode === 'grid'
+                                ? 'bg-accent-700 text-white'
+                                : 'text-gray-400 hover:text-white'
+                                }`}
+                            title="Grid view"
+                        >
+                            <Grid3x3 className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('table')}
+                            className={`p-2 rounded transition-colors ${viewMode === 'table'
+                                ? 'bg-accent-700 text-white'
+                                : 'text-gray-400 hover:text-white'
+                                }`}
+                            title="Table view"
+                        >
+                            <TableIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('tile')}
+                            className={`p-2 rounded transition-colors ${viewMode === 'tile'
+                                ? 'bg-accent-700 text-white'
+                                : 'text-gray-400 hover:text-white'
+                                }`}
+                            title="Tile view"
+                        >
+                            <LayoutList className="w-4 h-4" />
+                        </button>
                     </div>
+                </div>
+
+                {/* Watchlist Filters */}
+                <div className="max-w-7xl mx-auto flex items-center justify-between mb-4">
                 </div>
 
                 <div className="max-w-7xl mx-auto">

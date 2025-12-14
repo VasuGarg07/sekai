@@ -24,7 +24,7 @@ const AdvancedSearch = () => {
     if (isLoading) {
         return (
             <div className="bg-zinc-900 min-h-screen py-8 px-4 flex-col justify-center items-center">
-                <div className="max-w-6xl mx-auto mb-8">
+                <div className="max-w-6xl mx-auto mb-4 sm:mb-6">
                     <AnimeFilters onApply={setFilters} setPage={setPage} />
                 </div>
                 <LoadingState text="Loading anime..." />
@@ -35,7 +35,7 @@ const AdvancedSearch = () => {
     if (error) {
         return (
             <div className="bg-zinc-900 min-h-80 py-8 px-4 flex-col justify-center items-center">
-                <div className="max-w-6xl mx-auto mb-8">
+                <div className="max-w-6xl mx-auto mb-4 sm:mb-6">
                     <AnimeFilters onApply={setFilters} setPage={setPage} />
                 </div>
                 <ErrorState message={error.message} />
@@ -56,7 +56,7 @@ const AdvancedSearch = () => {
 
     return (
         <div className="bg-zinc-900 min-h-screen py-8 px-4">
-            <div className="max-w-6xl mx-auto mb-8">
+            <div className="max-w-6xl mx-auto mb-4 sm:mb-6">
                 <AnimeFilters onApply={setFilters} setPage={setPage} />
             </div>
 

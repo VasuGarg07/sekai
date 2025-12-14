@@ -98,16 +98,18 @@ export function useAdvancedAnimeSearch(
     queryKey: [
       "advancedAnimeSearch",
       key,
-      search,
-      genreIn?.join(","),
-      genreNotIn?.join(","),
-      formatIn?.join(","),
-      statusIn?.join(","),
-      season,
-      year,
-      country,
-      sort.join("-"),
       page,
+      {
+        ...(search && { search }),
+        ...(genreIn?.length && { genreIn }),
+        ...(genreNotIn?.length && { genreNotIn }),
+        ...(formatIn?.length && { formatIn }),
+        ...(statusIn?.length && { statusIn }),
+        ...(season && { season }),
+        ...(year && { year }),
+        ...(country && { country }),
+        ...(sort?.length && { sort }),
+      }
     ],
     queryFn: async ({ signal }) => {
       const data = await apiClient.post(

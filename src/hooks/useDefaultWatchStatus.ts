@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { setDefaultWatchStatus } from "../store/slices/preferencesSlice";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import type { WatchStatus } from "../shared/interfaces";
-import { toastService } from "../shared/toastr";
+import { toastService } from "../ui/toastService";
 import { updatePreferences } from "../shared/firestore";
 
 export const useDefaultWatchStatus = () => {

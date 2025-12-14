@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { fetchUserWatchList } from "../shared/firestore";
-import { toastService } from "../shared/toastr";
+import { toastService } from "../ui/toastService";
 import type { AnimeWatchList } from "../shared/interfaces";
 import { setWatchlist } from "../store/slices/watchlistSlice";
 import { useEffect } from "react";

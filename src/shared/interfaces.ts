@@ -118,3 +118,5 @@ export interface ThemeColor {
     label: string;
     className: string;
 }
+
+export type ToastType = 'success' | 'error' | 'warning' | 'info';

@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import type { AnimeListItem, AnimeWatchList, UserPreferences, WatchStatus } from "./interfaces";
-import { toastService } from "./toastr";
+import { toastService } from "../ui/toastService";
 import { fireStore } from "./firebase";
 import type { User } from "firebase/auth";
 import { cleanAnimeForWatchlist } from "./utilities";

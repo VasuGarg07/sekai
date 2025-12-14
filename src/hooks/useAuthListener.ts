@@ -6,7 +6,7 @@ import { applyThemeClass, serializeUser } from "../shared/utilities";
 import { setUser } from "../store/slices/authSlice";
 import { clearWatchlist, setWatchlist } from "../store/slices/watchlistSlice";
 import { fetchPreferences, resetPreferences } from "../store/slices/preferencesSlice";
-import { toastService } from "../shared/toastr";
+import { toastService } from "../ui/toastService";
 import { useAppDispatch } from "../store/reduxHooks";
 
 export const useAuthListener = () => {

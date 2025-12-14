@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { setTheme } from "../store/slices/preferencesSlice";
 import { updatePreferences } from "../shared/firestore";
-import { toastService } from "../shared/toastr";
+import { toastService } from "../ui/toastService";
 import { applyThemeClass } from "../shared/utilities";
 
 export const useTheme = () => {

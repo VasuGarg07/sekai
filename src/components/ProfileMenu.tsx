@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { logout } from "../store/slices/authSlice";
-import { toastService } from "../shared/toastr";
+import { toastService } from "../ui/toastService";
 
 const ProfileMenu = ({ className = "" }) => {
     const dispatch = useAppDispatch();

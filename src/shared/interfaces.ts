@@ -99,6 +99,14 @@ export interface AnimeWatchList extends AnimeListItem {
     addedAt: number;
 }
 
+export interface AnalyticsData {
+    byWatchStatus: Record<string, number>;
+    byStatus: Record<string, number>;
+    bySeason: Record<string, number>;
+    byType: Record<string, number>;
+}
+
+
 // ----------------------------
 
 export interface SekaiUser {

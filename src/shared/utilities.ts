@@ -1,5 +1,5 @@
 import type { User } from "firebase/auth";
-import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeSpotlight, AnimeTag, SekaiUser } from "./interfaces";
+import type { AnalyticsData, AnimeDetail, AnimeListItem, AnimeRelation, AnimeSpotlight, AnimeTag, AnimeWatchList, SekaiUser } from "./interfaces";
 
 /** Helpers */
 export function serializeUser(user: User): SekaiUser {
@@ -158,3 +158,28 @@ export const applyThemeClass = (themeClass: string) => {
     // Add new theme
     body.classList.add(`theme-${themeClass}`);
 };
+
+export const computeAnalytics = (items: AnimeWatchList[]) => {
+    const data: AnalyticsData = {
+        byWatchStatus: {},
+        byStatus: {},
+        bySeason: {},
+        byType: {},
+    };
+
+    for (const item of items) {
+        const ws = item.watchStatus || "unknown";
+        data.byWatchStatus[ws] = (data.byWatchStatus[ws] || 0) + 1;
+
+        const status = item.status || "Unknown";
+        data.byStatus[status] = (data.byStatus[status] || 0) + 1;
+
+        const season = item.season || "Unknown";
+        data.bySeason[season] = (data.bySeason[season] || 0) + 1;
+
+        const type = item.type || "Unknown";
+        data.byType[type] = (data.byType[type] || 0) + 1;
+    }
+
+    return data;
+}

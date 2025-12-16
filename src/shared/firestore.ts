@@ -40,12 +40,6 @@ export const updatePreferences = async (uid: string, updates: Partial<UserPrefer
     await updateDoc(ref, updates);
 };
 
-export const fetchWatchlistIds = async (uid: string) => {
-    const ref = collection(fireStore, "users", uid, "watchlist");
-    const snapshot = await getDocs(ref);
-    return snapshot.docs.map((doc) => doc.id);
-};
-
 export const fetchUserWatchList = async (uid: string) => {
     const ref = collection(fireStore, "users", uid, "watchlist");
     const q = query(ref, orderBy("addedAt", "desc"), limit(MAX_USER_DOCUMENTS)); // Hard limit

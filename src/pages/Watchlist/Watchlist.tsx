@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
@@ -7,8 +7,10 @@ import { useGetWatchlist } from "../../hooks/useGetWatchlist";
 import WatchlistTile from "./WatchlistTile";
 import WatchlistGrid from "./WatchlistGrid";
 import WatchlistTable from "./WatchlistTable";
-import { RefreshCw, Grid3x3, LayoutList, TableIcon } from "lucide-react";
+import WatchlistAnalytics from "./WatchlistAnalytics";
+import { Grid3x3, LayoutList, TableIcon } from "lucide-react";
 import { useAppSelector } from "../../store/reduxHooks";
+import { computeAnalytics } from "../../shared/utilities";
 
 type ViewMode = 'grid' | 'tile' | 'table';
 
@@ -17,9 +19,7 @@ export default function Watchlist() {
     const { items: watchlistItems } = useAppSelector(state => state.watchlist);
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
-    const handleRefresh = () => {
-        refetch();
-    };
+    const analytics = useMemo(() => computeAnalytics(watchlistItems), [watchlistItems]);
 
     if (isLoading || isFetching) {
         return (
@@ -49,21 +49,8 @@ export default function Watchlist() {
         <>
             <ProfileBanner />
             <div className="bg-zinc-900 px-4 sm:px-6 lg:px-8 py-4">
-                <div className="max-w-7xl mx-auto flex items-center gap-2 justify-center mb-4">
+                <div className="max-w-7xl mx-auto flex items-center gap-2 justify-between mb-4">
                     <h2 className="text-xl sm:text-2xl font-bold text-white">Watchlist ({watchlistItems.length})</h2>
-                    <span className="grow" />
-
-                    <button
-                        onClick={handleRefresh}
-                        disabled={isFetching}
-                        className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Refresh watchlist"
-                    >
-                        <RefreshCw
-                            className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`}
-                        />
-                    </button>
-                    {/* View Mode Selector */}
                     <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
                         <button
                             onClick={() => setViewMode('grid')}
@@ -98,8 +85,12 @@ export default function Watchlist() {
                     </div>
                 </div>
 
-                {/* Watchlist Filters */}
-                <div className="max-w-7xl mx-auto flex items-center justify-between mb-4">
+                {/* Analytics Section */}
+                <div className="max-w-7xl mx-auto">
+                    <WatchlistAnalytics
+                        analytics={analytics}
+                        onRefresh={refetch}
+                        isRefreshing={isFetching} />
                 </div>
 
                 <div className="max-w-7xl mx-auto">

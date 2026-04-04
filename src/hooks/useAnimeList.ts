@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
-import type { PagedResult } from "./useAdvancedAnimeSearch";
+import type { AnimeListItem, AnimeListResponse, PagedResult } from "../shared/interfaces";
 
 const QUERY = /* GraphQL */ `
   query ($page: Int, $perPage: Int, $sort: [MediaSort], $status: MediaStatus) {
@@ -48,14 +48,13 @@ export function useAnimeList(
   return useQuery<PagedResult, Error>({
     queryKey: ["animeList", key, sort.join('-'), status, page, perPage],
     queryFn: async () => {
-      const data = await apiClient(QUERY, { page, perPage, sort, status });
-      const pageData = (data as any)?.Page;
-      const media = pageData?.media ?? [];
-      const pageInfo = pageData?.pageInfo ?? {};
+      const data = await apiClient<AnimeListResponse>(QUERY, { page, perPage, sort, status });
+      const media = data.Page?.media ?? [];
+      const pageInfo = data.Page?.pageInfo ?? {};
       return {
-        items: media.map(mapMediaToAnimeListItem),
+        items: media.map(m => mapMediaToAnimeListItem(m as AnimeListItem)),
         pageInfo,
-      };
+      } as PagedResult;
     },
     staleTime: 60 * 60 * 1000,
     retry: false,

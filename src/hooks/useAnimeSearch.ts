@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import type { AnimeListItem } from "../shared/interfaces";
+import type { AnimeListItem, AnimeSearchResponse } from "../shared/interfaces";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
 
 const QUERY = /* GraphQL */ `
@@ -31,9 +31,9 @@ export function useAnimeSearch(search: string, enabled = true) {
     queryKey: ["animeSearch", search],
     enabled: enabled && search.trim().length >= 3,
     queryFn: async () => {
-      const data = await apiClient(QUERY, { search, perPage: 5 });
-      const media = (data as any)?.Page?.media ?? [];
-      return media.map(mapMediaToAnimeListItem);
+      const data = await apiClient<AnimeSearchResponse>(QUERY, { search, perPage: 5 });
+      const media = data.Page?.media ?? [];
+      return media.map(m => mapMediaToAnimeListItem(m as AnimeListItem));
     },
     staleTime: 5 * 60 * 1000,
     retry: false,

@@ -96,6 +96,13 @@ export function mapMediaToAnimeDetail(m: any): AnimeDetail {
     }
 }
 
+export function mapMediaToAnimeSpotlight(m: any): AnimeSpotlight {
+    return {
+        ...mapMediaToAnimeListItem(m),
+        banner: m.bannerImage ?? null,
+    };
+}
+
 export function formatKey(key: string): string {
     if (!key) return "";
     return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");

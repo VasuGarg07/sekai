@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import { getCurrentSeasonYear, mapMediaToAnimeListItem } from "../shared/utilities";
-import type { AnimeSpotlight } from "../shared/interfaces";
+import { getCurrentSeasonYear, mapMediaToAnimeSpotlight } from "../shared/utilities";
+import type { AnimeSpotlight, AnimeSpotlightResponse } from "../shared/interfaces";
 
 const QUERY = /* GraphQL */ `
   query ($season: MediaSeason, $seasonYear: Int, $perPage: Int) {
@@ -38,12 +38,9 @@ export function useAnimeSpotlight() {
   return useQuery<AnimeSpotlight[], Error>({
     queryKey: ["animeSpotlightList", season, year],
     queryFn: async () => {
-      const data = await apiClient(QUERY, { season, seasonYear: year, perPage: 10 });
-      const media = (data as any)?.Page?.media ?? [];
-      return media.map((m: any) => ({
-        ...mapMediaToAnimeListItem(m),
-        banner: m.bannerImage ?? null,
-      }));
+      const data = await apiClient<AnimeSpotlightResponse>(QUERY, { season, seasonYear: year, perPage: 10 });
+      const media = data.Page?.media ?? [];
+      return media.map(m => mapMediaToAnimeSpotlight(m as any));
     },
     staleTime: 60 * 60 * 1000,
     retry: false,

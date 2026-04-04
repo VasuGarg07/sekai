@@ -120,3 +120,41 @@ export interface ThemeColor {
 }
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
+
+// ----------------------------
+
+// --- API Response Types ---
+
+export interface PagedResult {
+    items: AnimeListItem[];
+    pageInfo: Pagination;
+}
+
+// Raw GraphQL response wrappers — used to type apiClient<T> calls
+
+export interface AnimeListResponse {
+    Page: {
+        pageInfo: Pagination;
+        media: unknown[];
+    };
+}
+
+export interface AnimeDetailResponse {
+    Media: unknown;
+}
+
+export interface AnimeSpotlightResponse {
+    Page: {
+        media: unknown[];
+    };
+}
+
+export interface AnimeSearchResponse {
+    Page: {
+        media: unknown[];
+    };
+}
+
+export interface GenreCollectionResponse {
+    GenreCollection: string[];
+}

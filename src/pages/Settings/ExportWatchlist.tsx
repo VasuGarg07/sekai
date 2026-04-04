@@ -1,48 +1,25 @@
 import { Download, FileText, FileJson, FileCode } from "lucide-react";
 import { SectionLayout } from "./SectionLayout";
-import { useAppSelector } from "../../store/reduxHooks";
 import { WatchlistExporter } from "../../shared/download";
+import { useGetWatchlist } from "../../hooks/useGetWatchlist";
 
 const EXPORT_OPTIONS = [
-    {
-        format: "csv",
-        label: "CSV",
-        description: "Comma-separated values",
-        icon: FileText,
-    },
-    {
-        format: "json",
-        label: "JSON",
-        description: "JSON format",
-        icon: FileJson,
-    },
-    {
-        format: "xml",
-        label: "XML",
-        description: "XML format",
-        icon: FileCode,
-    },
+    { format: "csv", label: "CSV", description: "Comma-separated values", icon: FileText },
+    { format: "json", label: "JSON", description: "JSON format", icon: FileJson },
+    { format: "xml", label: "XML", description: "XML format", icon: FileCode },
 ];
 
 export const ExportWatchlist = () => {
-    const { items } = useAppSelector(state => state.watchlist);
+    const { data: items = [] } = useGetWatchlist();
 
     const handleExport = (format: string) => {
         switch (format) {
-            case "csv":
-                WatchlistExporter.toCSV(items);
-                break;
-            case "json":
-                WatchlistExporter.toJSON(items);
-                break;
-            case "xml":
-                WatchlistExporter.toXML(items);
-                break;
-            default:
-                console.error(`Unknown format: ${format}`);
+            case "csv": WatchlistExporter.toCSV(items); break;
+            case "json": WatchlistExporter.toJSON(items); break;
+            case "xml": WatchlistExporter.toXML(items); break;
+            default: console.error(`Unknown format: ${format}`);
         }
     };
-
 
     return (
         <SectionLayout

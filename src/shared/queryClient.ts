@@ -5,9 +5,10 @@ export const queryClient = new QueryClient({
         queries: {
             staleTime: 5 * 60 * 1000,   // 5 Min
             gcTime: 10 * 60 * 1000,     // 10 Min
-            retry: (failureCount, error: any) => {
-                if (error?.response?.status === 429) return failureCount < 3;
-                if (error?.response?.status >= 500) return failureCount < 2;
+            retry: (failureCount, error: unknown) => {
+                const msg = error instanceof Error ? error.message : '';
+                if (msg.includes('Rate limited')) return failureCount < 3;
+                if (msg.includes('Server error')) return failureCount < 2;
                 return false;
             },
             retryDelay: (attemptIndex) => {

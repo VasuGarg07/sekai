@@ -9,25 +9,27 @@ export const useDefaultWatchStatus = () => {
     const uid = useAppSelector(state => state.auth.user?.uid);
     const dispatch = useAppDispatch();
 
-    // Define a mutation for updating Firestore
     return useMutation({
         mutationFn: async (newStatus: WatchStatus) => {
-            if (!uid) {
-                toastService.error("User ID is required.");
-                return;
-            }
-            await updatePreferences(uid, { default_watch_status: newStatus });
-            return newStatus;
+            if (!uid) return { success: false as const, reason: 'not-logged-in' as const };
+            return updatePreferences(uid, { default_watch_status: newStatus });
         },
-        onMutate: async (newStatus) => {
+        onMutate: (newStatus) => {
             dispatch(setDefaultWatchStatus(newStatus));
         },
-        onError: (error) => {
-            console.error(error);
-            toastService.error("Failed to update default watch status",);
+        onSuccess: (result, newStatus) => {
+            if (result.success) {
+                toastService.success(`Default watch status updated to ${newStatus}.`);
+                return;
+            }
+            if (result.reason === 'not-logged-in') {
+                toastService.info("Please login first.");
+                return;
+            }
+            toastService.error("Failed to update default watch status.");
         },
-        onSuccess: (newStatus) => {
-            toastService.success(`Updated default watch status: ${newStatus}`);
+        onError: () => {
+            toastService.error("Failed to update default watch status.");
         },
     });
 };

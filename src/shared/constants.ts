@@ -7,8 +7,6 @@ import {
 import type { ThemeColor, WatchStatus } from './interfaces';
 
 export const navigationLinks = [
-    // { name: 'TV Series', path: '/tv-series', icon: Tv2 },
-    // { name: 'Movies', path: '/movies', icon: Film },
     { name: 'Recently Released', path: '/recents', icon: Tv2 },
     { name: 'Most Popular', path: '/popular', icon: Trophy },
     { name: 'Top Airing', path: '/top-airing', icon: TrendingUp },
@@ -56,11 +54,6 @@ export const SORT_OPTIONS = [
     { key: "TITLE_ROMAJI", label: "Title (A-Z)" },
     { key: "EPISODES_DESC", label: "Episode Count" },
 ];
-
-export function getYearOptions() {
-    const currentYear = new Date().getFullYear();
-    return Array.from({ length: currentYear - 1960 + 2 }, (_, i) => 1960 + i);
-}
 
 // Array of fun fallback messages for missing anime synopsis
 export const synopsisFallbacks = [

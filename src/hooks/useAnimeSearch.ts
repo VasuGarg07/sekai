@@ -30,13 +30,8 @@ export function useAnimeSearch(search: string, enabled = true) {
   return useQuery<AnimeListItem[], Error>({
     queryKey: ["animeSearch", search],
     enabled: enabled && search.trim().length >= 3,
-    queryFn: async ({ signal }) => {
-      const data = await apiClient.post(
-        "",
-        { query: QUERY, variables: { search, perPage: 5 } },
-        { signal }
-      );
-      // apiClient interceptor returns GraphQL `data`, so shape is { Page: { media: [...] } }
+    queryFn: async () => {
+      const data = await apiClient(QUERY, { search, perPage: 5 });
       const media = (data as any)?.Page?.media ?? [];
       return media.map(mapMediaToAnimeListItem);
     },

@@ -90,16 +90,10 @@ const QUERY = /* GraphQL */ `
 export function useAnimeDetail(id: number) {
   return useQuery<AnimeDetail, Error>({
     queryKey: ["animeDetail", id],
-    queryFn: async ({ signal }) => {
-      const data = await apiClient.post(
-        "",
-        { query: QUERY, variables: { id } },
-        { signal }
-      );
-
+    queryFn: async () => {
+      const data = await apiClient(QUERY, { id });
       const m = (data as any)?.Media;
       if (!m) throw new Error("Anime not found");
-
       return mapMediaToAnimeDetail(m);
     },
     staleTime: 30 * 60 * 1000,

@@ -47,12 +47,8 @@ export function useAnimeList(
 ) {
   return useQuery<PagedResult, Error>({
     queryKey: ["animeList", key, sort.join('-'), status, page, perPage],
-    queryFn: async ({ signal }) => {
-      const data = await apiClient.post(
-        "",
-        { query: QUERY, variables: { page, perPage, sort, status } },
-        { signal }
-      );
+    queryFn: async () => {
+      const data = await apiClient(QUERY, { page, perPage, sort, status });
       const pageData = (data as any)?.Page;
       const media = pageData?.media ?? [];
       const pageInfo = pageData?.pageInfo ?? {};

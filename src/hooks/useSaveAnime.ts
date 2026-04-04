@@ -10,8 +10,8 @@ export function useSaveAnime() {
     const dispatch = useAppDispatch();
 
     return useMutation({
-        mutationFn: async (anime: AnimeListItem, watchStatus: WatchStatus = defaultStatus) => {
-            return saveAnimeToWatchlist(anime, userId, watchStatus);
+        mutationFn: async (anime: AnimeListItem) => {
+            return saveAnimeToWatchlist(anime, userId, defaultStatus);
         },
         onSuccess: (result) => {
             if (userId && result?.success && result.item) {
@@ -19,4 +19,4 @@ export function useSaveAnime() {
             }
         }
     });
-} 
+}

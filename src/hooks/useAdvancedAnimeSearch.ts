@@ -8,7 +8,6 @@ export interface PagedResult {
   pageInfo: Pagination;
 }
 
-
 const QUERY = /* GraphQL */ `
   query (
     $page: Int
@@ -111,27 +110,20 @@ export function useAdvancedAnimeSearch(
         ...(sort?.length && { sort }),
       }
     ],
-    queryFn: async ({ signal }) => {
-      const data = await apiClient.post(
-        "",
-        {
-          query: QUERY,
-          variables: {
-            page,
-            perPage,
-            search,
-            genreIn,
-            genreNotIn,
-            formatIn,
-            statusIn,
-            season,
-            year,
-            country,
-            sort,
-          },
-        },
-        { signal }
-      );
+    queryFn: async () => {
+      const data = await apiClient(QUERY, {
+        page,
+        perPage,
+        search,
+        genreIn,
+        genreNotIn,
+        formatIn,
+        statusIn,
+        season,
+        year,
+        country,
+        sort,
+      });
 
       const pageData = (data as any)?.Page;
       const media = pageData?.media ?? [];

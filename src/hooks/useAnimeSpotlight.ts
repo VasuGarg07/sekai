@@ -37,19 +37,15 @@ export function useAnimeSpotlight() {
 
   return useQuery<AnimeSpotlight[], Error>({
     queryKey: ["animeSpotlightList", season, year],
-    queryFn: async ({ signal }) => {
-      const data = await apiClient.post(
-        "",
-        { query: QUERY, variables: { season, seasonYear: year, perPage: 10 } },
-        { signal }
-      );
+    queryFn: async () => {
+      const data = await apiClient(QUERY, { season, seasonYear: year, perPage: 10 });
       const media = (data as any)?.Page?.media ?? [];
       return media.map((m: any) => ({
         ...mapMediaToAnimeListItem(m),
         banner: m.bannerImage ?? null,
-      }))
+      }));
     },
-    staleTime: 60 * 60 * 1000, // 1 hour
+    staleTime: 60 * 60 * 1000,
     retry: false,
   });
 }

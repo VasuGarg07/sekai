@@ -22,14 +22,13 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                     alt={anime.title_english ?? anime.title_romaji ?? "Anime Banner"}
                     className="w-full h-full object-cover"
                 />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/30 sm:to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-r from-black/90 via-black/60 to-black/30 sm:to-transparent" />
             </div>
 
             {/* Content Container */}
             <div className="relative flex items-center z-10 h-full max-w-screen mx-auto p-4 sm:p-8 lg:p-16">
                 {/* Left side - Poster Image */}
-                <div className="hidden sm:flex flex-shrink-0 mr-4 sm:mr-6 lg:mr-8">
+                <div className="hidden sm:flex shrink-0 mr-4 sm:mr-6 lg:mr-8">
                     <img
                         src={anime.image || Fallback}
                         alt={anime.title_english ?? anime.title_romaji ?? "Anime Poster"}
@@ -88,14 +87,15 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                         <WatchlistButton
                             anime={anime}
                             className="bg-accent-500 hover:bg-accent-600 disabled:bg-accent-800
-                                cursor-pointer disabled:cursor-default text-white font-semibold 
-                                px-4 py-2 rounded-lg transition-all duration-200 
+                                cursor-pointer disabled:cursor-default text-white font-semibold
+                                px-4 py-2 rounded-lg transition-all duration-200
                                 text-sm sm:text-base"
                         />
                         <button
+                            type="button"
                             onClick={() => goToAnime(anime.id)}
-                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border 
-                                border-white/20 text-white font-semibold px-4 py-2 rounded-lg 
+                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border
+                                border-white/20 text-white font-semibold px-4 py-2 rounded-lg
                                 transition-all duration-200 text-sm sm:text-base hidden sm:block"
                         >
                             Details
@@ -105,6 +105,6 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
             </div>
         </div>
     );
-}
+};
 
 export default SpotlightItem;

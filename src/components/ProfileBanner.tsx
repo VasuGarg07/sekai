@@ -13,7 +13,6 @@ const ProfileBanner = () => {
                     alt="User Profile"
                     className="w-full h-full object-cover"
                 />
-                {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-black/30" />
             </div>
 
@@ -37,6 +36,6 @@ const ProfileBanner = () => {
             </div>
         </div>
     );
-}
+};
 
 export default ProfileBanner;

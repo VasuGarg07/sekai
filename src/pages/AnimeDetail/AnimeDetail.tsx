@@ -1,17 +1,19 @@
 import { Clock, Flame, Heart, Star } from "lucide-react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import AnimeGalleryCard from "../../components/AnimeGalleryCard";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
 import { WatchlistButton } from "../../ui/WatchlistButton";
 import { useAnimeDetail } from "../../hooks/useAnimeDetail";
+import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import Fallback from "/default-banner.jpg";
 import { formatDateEpoch } from "../../shared/utilities";
 
 const AnimeDetail = () => {
     const { id } = useParams<{ id: string }>();
     const animeId = id ? parseInt(id, 10) : NaN;
+    const { goToAnime } = useAnimeNavigation();
 
     const { data, isLoading, error } = useAnimeDetail(animeId);
 
@@ -28,7 +30,7 @@ const AnimeDetail = () => {
             <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
                 <LoadingState text="Loading anime..." />
             </div>
-        )
+        );
     }
 
     if (error) {
@@ -36,7 +38,7 @@ const AnimeDetail = () => {
             <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
                 <ErrorState message={error.message} />
             </div>
-        )
+        );
     }
 
     if (!data) {
@@ -44,21 +46,19 @@ const AnimeDetail = () => {
             <div className="bg-zinc-900 min-h-full py-8 px-4 flex justify-center items-center">
                 <EmptyState message="The title you're looking for is not available." />
             </div>
-        )
+        );
     }
 
     return (
         <div className="bg-zinc-900 h-full text-white">
             {/* Hero Section */}
-            <div className="relative w-full aspect-[3/1] sm:aspect-[4/1] md:aspect-[5/1]">
-                {/* Banner Background */}
+            <div className="relative w-full aspect-3/1 sm:aspect-4/1 md:aspect-5/1">
                 <img
                     src={data.bannerImage ?? Fallback}
                     alt="Banner"
                     className="w-full h-full object-cover"
                 />
-                {/* gradient overlay for sleek look */}
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/60 via-zinc-900/30 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-zinc-900/60 via-zinc-900/30 to-transparent" />
             </div>
 
             {/* Foreground Content */}
@@ -76,7 +76,6 @@ const AnimeDetail = () => {
 
                 {/* Center: Title + meta */}
                 <div className="flex flex-col justify-start gap-2">
-                    {/* Title */}
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight drop-shadow-lg">
                         {data.title_english || data.title_romaji}
                     </h1>
@@ -98,9 +97,7 @@ const AnimeDetail = () => {
                         )}
                         {data.seasonYear && (
                             <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-blue-400 border border-blue-500/30">
-                                {data.season
-                                    ? `${data.season} ${data.seasonYear}`
-                                    : data.seasonYear}
+                                {data.season ? `${data.season} ${data.seasonYear}` : data.seasonYear}
                             </span>
                         )}
                         {data.episodes && (
@@ -139,37 +136,39 @@ const AnimeDetail = () => {
                         )}
                     </div>
 
-                    {/* Genres */}
+                    {/* Genres — now links */}
                     {data.genres.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-2">
                             {data.genres.map((g) => (
-                                <span
+                                <Link
                                     key={g}
-                                    className="px-3 py-1 bg-gradient-to-r from-accent-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
+                                    to={`/genre/${encodeURIComponent(g)}`}
+                                    className="px-3 py-1 bg-linear-to-r from-accent-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200 hover:border-accent-500/50 hover:text-white transition-colors"
                                 >
                                     {g}
-                                </span>
+                                </Link>
                             ))}
                         </div>
                     )}
 
                     {data.nextEpisode && (
                         <div className="w-fit flex items-center gap-3 px-4 py-2.5 my-2 bg-blue-600/10 border border-blue-500/20 rounded-lg">
-                            <Clock className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                            <Clock className="w-4 h-4 text-blue-400 shrink-0" />
                             <span className="text-sm text-blue-100/90">
-                                Episode <span className="font-semibold text-blue-50">{data.nextEpisode.episode}</span> will be airing at <span className="font-semibold text-blue-50">{formatDateEpoch(data.nextEpisode.airingAt)}</span>
+                                Episode{" "}
+                                <span className="font-semibold text-blue-50">{data.nextEpisode.episode}</span>
+                                {" "}airing at{" "}
+                                <span className="font-semibold text-blue-50">{formatDateEpoch(data.nextEpisode.airingAt)}</span>
                             </span>
                         </div>
                     )}
 
-                    {/* Synopsis */}
                     {data.synopsis && (
                         <p className="text-gray-200 leading-relaxed max-w-4xl mb-4 text-xs lg:text-sm">
                             {data.synopsis}
                         </p>
                     )}
 
-                    {/* Add to List button */}
                     <div>
                         <WatchlistButton
                             anime={data}
@@ -218,21 +217,23 @@ const AnimeDetail = () => {
                 </div>
             )}
 
-            {/* Relations Section */}
+            {/* Relations */}
             {data.relations.length > 0 && (
                 <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
                     <h2 className="text-2xl font-semibold mb-6">Relations</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {data.relations.map((rel) => (
-                            <div
+                            <button
                                 key={rel.node.id}
-                                className="bg-zinc-800 rounded-lg p-3 flex items-center gap-4 h-full"
+                                type="button"
+                                onClick={() => goToAnime(rel.node.id)}
+                                className="bg-zinc-800 rounded-lg p-3 flex items-center gap-4 h-full text-left hover:bg-zinc-700 transition-colors w-full"
                             >
                                 {rel.node.coverImage?.extraLarge && (
                                     <img
                                         src={rel.node.coverImage.extraLarge}
                                         alt={rel.node.title?.romaji ?? ""}
-                                        className="w-16 h-24 object-cover rounded-md flex-shrink-0"
+                                        className="w-16 h-24 object-cover rounded-md shrink-0"
                                         loading="lazy"
                                     />
                                 )}
@@ -245,13 +246,13 @@ const AnimeDetail = () => {
                                         {rel.node.format} • {rel.node.status}
                                     </p>
                                 </div>
-                            </div>
+                            </button>
                         ))}
                     </div>
                 </div>
             )}
 
-            {/* Relations Section */}
+            {/* Tags */}
             {data.tags.length > 0 && (
                 <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
                     <h2 className="text-2xl font-semibold mb-6">Tags</h2>
@@ -259,7 +260,7 @@ const AnimeDetail = () => {
                         {data.tags.map((tag) => (
                             <span
                                 key={tag.name}
-                                className="px-3 py-1 bg-gradient-to-r from-accent-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
+                                className="px-3 py-1 bg-linear-to-r from-accent-500/20 to-zinc-800 border border-zinc-700 rounded-full text-xs text-gray-200"
                             >
                                 #{tag.name}
                             </span>
@@ -268,7 +269,7 @@ const AnimeDetail = () => {
                 </div>
             )}
 
-            {/* Recommendations Section */}
+            {/* Recommendations */}
             {data.recommendations.length > 0 && (
                 <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
                     <h2 className="text-2xl font-semibold mb-4">Recommendations</h2>

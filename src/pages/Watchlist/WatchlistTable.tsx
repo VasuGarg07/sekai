@@ -19,6 +19,38 @@ interface SortConfig {
     direction: SortDirection;
 }
 
+// Extracted outside component so React doesn't treat them as new types on every render
+function SortIcon({ columnKey, sortConfig }: { columnKey: SortKey; sortConfig: SortConfig }) {
+    if (sortConfig.key !== columnKey) return <ChevronsUpDown className="w-3 h-3 opacity-50" />;
+    return sortConfig.direction === "asc"
+        ? <ChevronUp className="w-3 h-3" />
+        : <ChevronDown className="w-3 h-3" />;
+}
+
+function SortableHeader({
+    label,
+    sortKey,
+    sortConfig,
+    onSort,
+}: {
+    label: string;
+    sortKey: SortKey;
+    sortConfig: SortConfig;
+    onSort: (key: SortKey) => void;
+}) {
+    return (
+        <th
+            className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap cursor-pointer hover:bg-zinc-700 transition-colors select-none"
+            onClick={() => onSort(sortKey)}
+        >
+            <div className="flex items-center justify-between gap-1">
+                {label}
+                <SortIcon columnKey={sortKey} sortConfig={sortConfig} />
+            </div>
+        </th>
+    );
+}
+
 export default function WatchlistTable({ items }: WatchlistTableProps) {
     const { goToAnime } = useAnimeNavigation();
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "asc" });
@@ -33,15 +65,22 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
     const sortedItems = [...items].sort((a, b) => {
         if (!sortConfig.key) return 0;
 
+        // Title sort falls back to romaji when english is null
+        if (sortConfig.key === "title_english") {
+            const aVal = a.title_english ?? a.title_romaji ?? "";
+            const bVal = b.title_english ?? b.title_romaji ?? "";
+            return sortConfig.direction === "asc"
+                ? aVal.localeCompare(bVal)
+                : bVal.localeCompare(aVal);
+        }
+
         const aVal = a[sortConfig.key];
         const bVal = b[sortConfig.key];
 
-        // Handle null/undefined
         if (aVal == null && bVal == null) return 0;
         if (aVal == null) return 1;
         if (bVal == null) return -1;
 
-        // Handle arrays (genres)
         if (Array.isArray(aVal) && Array.isArray(bVal)) {
             const aStr = aVal.join(",");
             const bStr = bVal.join(",");
@@ -50,14 +89,12 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                 : bStr.localeCompare(aStr);
         }
 
-        // Handle strings
         if (typeof aVal === "string" && typeof bVal === "string") {
             return sortConfig.direction === "asc"
                 ? aVal.localeCompare(bVal)
                 : bVal.localeCompare(aVal);
         }
 
-        // Handle numbers
         if (typeof aVal === "number" && typeof bVal === "number") {
             return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal;
         }
@@ -65,45 +102,26 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
         return 0;
     });
 
-    const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
-        if (sortConfig.key !== columnKey) {
-            return <ChevronsUpDown className="w-3 h-3 opacity-50" />;
-        }
-        return sortConfig.direction === "asc"
-            ? <ChevronUp className="w-3 h-3" />
-            : <ChevronDown className="w-3 h-3" />;
-    };
-
-    const SortableHeader = ({ label, sortKey }: { label: string; sortKey: SortKey }) => (
-        <th
-            className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap cursor-pointer hover:bg-zinc-700 transition-colors select-none"
-            onClick={() => handleSort(sortKey)}
-        >
-            <div className="flex items-center justify-between gap-1">
-                {label}
-                <SortIcon columnKey={sortKey} />
-            </div>
-        </th>
-    );
+    const sharedHeaderProps = { sortConfig, onSort: handleSort };
 
     return (
         <div className="overflow-x-auto">
             <table className="w-full text-sm text-left border-collapse border border-zinc-800">
-                <thead className="text-xs uppercase bg-zinc-800 text-gray-400 sticky top-0">
+                <thead className="text-xs uppercase bg-zinc-800 text-gray-400 sticky top-0 z-10">
                     <tr>
                         <th className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap">Image</th>
-                        <SortableHeader label="Title" sortKey="title_english" />
-                        <SortableHeader label="Type" sortKey="type" />
-                        <SortableHeader label="Episodes" sortKey="episodes" />
-                        <SortableHeader label="Duration" sortKey="duration" />
-                        <SortableHeader label="Score" sortKey="score" />
-                        <SortableHeader label="Status" sortKey="status" />
-                        <SortableHeader label="Watch Status" sortKey="watchStatus" />
-                        <SortableHeader label="Season" sortKey="season" />
-                        <SortableHeader label="Year" sortKey="seasonYear" />
-                        <SortableHeader label="Genres" sortKey="genres" />
-                        <SortableHeader label="Start Date" sortKey="startDateText" />
-                        <SortableHeader label="Added" sortKey="addedAt" />
+                        <SortableHeader label="Title" sortKey="title_english" {...sharedHeaderProps} />
+                        <SortableHeader label="Type" sortKey="type" {...sharedHeaderProps} />
+                        <SortableHeader label="Episodes" sortKey="episodes" {...sharedHeaderProps} />
+                        <SortableHeader label="Duration" sortKey="duration" {...sharedHeaderProps} />
+                        <SortableHeader label="Score" sortKey="score" {...sharedHeaderProps} />
+                        <SortableHeader label="Status" sortKey="status" {...sharedHeaderProps} />
+                        <SortableHeader label="Watch Status" sortKey="watchStatus" {...sharedHeaderProps} />
+                        <SortableHeader label="Season" sortKey="season" {...sharedHeaderProps} />
+                        <SortableHeader label="Year" sortKey="seasonYear" {...sharedHeaderProps} />
+                        <SortableHeader label="Genres" sortKey="genres" {...sharedHeaderProps} />
+                        <SortableHeader label="Start Date" sortKey="startDateText" {...sharedHeaderProps} />
+                        <SortableHeader label="Added" sortKey="addedAt" {...sharedHeaderProps} />
                         <th className="px-3 py-2 whitespace-nowrap">Actions</th>
                     </tr>
                 </thead>
@@ -129,11 +147,15 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                             </td>
 
                             {/* Title */}
-                            <td className="px-3 py-1.5 text-white font-medium border-r border-zinc-800" onClick={() => goToAnime(anime.id)}>
-                                <div title={anime.title_english || anime.title_romaji || 'Unknown'}
-                                    className="max-w-sm truncate cursor-pointer hover:text-blue-400 hover:underline hover:underline-offset-2">
+                            <td className="px-3 py-1.5 text-white font-medium border-r border-zinc-800">
+                                <button
+                                    type="button"
+                                    onClick={() => goToAnime(anime.id)}
+                                    title={anime.title_english || anime.title_romaji || 'Unknown'}
+                                    className="max-w-sm truncate cursor-pointer hover:text-blue-400 hover:underline hover:underline-offset-2 text-left"
+                                >
                                     {anime.title_english || anime.title_romaji || 'Unknown'}
-                                </div>
+                                </button>
                             </td>
 
                             {/* Type */}
@@ -154,15 +176,13 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                             {/* Score */}
                             <td className="px-3 py-1.5 border-r border-zinc-800 whitespace-nowrap text-center">
                                 {anime.score ? (
-                                    <span className="text-yellow-400 font-medium">
-                                        {anime.score}
-                                    </span>
+                                    <span className="text-yellow-400 font-medium">{anime.score}</span>
                                 ) : (
                                     <span className="text-gray-500">-</span>
                                 )}
                             </td>
 
-                            {/* Status (Airing/Finished) */}
+                            {/* Status */}
                             <td className="px-3 py-1.5 text-gray-400 border-r border-zinc-800 whitespace-nowrap">
                                 {anime.status || '-'}
                             </td>
@@ -189,9 +209,9 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                                 <div className="flex gap-1">
                                     {anime.genres && anime.genres.length > 0 ? (
                                         <>
-                                            {anime.genres.slice(0, 3).map((genre, idx) => (
+                                            {anime.genres.slice(0, 3).map((genre) => (
                                                 <span
-                                                    key={idx}
+                                                    key={genre}
                                                     className="text-xs bg-zinc-800 px-1.5 py-0.5 rounded"
                                                 >
                                                     {genre}

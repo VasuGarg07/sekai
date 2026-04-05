@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
@@ -11,31 +11,51 @@ import { RefreshCw, Grid3x3, LayoutList, TableIcon } from "lucide-react";
 
 type ViewMode = 'grid' | 'tile' | 'table';
 
+const VIEW_MODE_KEY = 'sekai-watchlist-view';
+
 export default function Watchlist() {
     const { isLoading, error, refetch, isFetching, data: watchlistItems } = useGetWatchlist();
-    const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
-    if (isLoading || isFetching) {
+    const [viewMode, setViewMode] = useState<ViewMode>(() => {
+        const saved = localStorage.getItem(VIEW_MODE_KEY);
+        return (saved as ViewMode) ?? 'grid';
+    });
+
+    useEffect(() => {
+        localStorage.setItem(VIEW_MODE_KEY, viewMode);
+    }, [viewMode]);
+
+    // Initial load only — don't replace content with spinner on background refetches
+    if (isLoading) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <LoadingState text='Loading your watchlist...' />
-            </div>
+            <>
+                <ProfileBanner />
+                <div className="bg-zinc-900 py-8 px-4">
+                    <LoadingState text='Loading your watchlist...' />
+                </div>
+            </>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <ErrorState message={error.message} />
-            </div>
+            <>
+                <ProfileBanner />
+                <div className="bg-zinc-900 py-8 px-4">
+                    <ErrorState message={error.message} />
+                </div>
+            </>
         );
     }
 
     if (!watchlistItems || watchlistItems.length === 0) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <EmptyState message='Guess you have yet to add shows in your list.' />
-            </div>
+            <>
+                <ProfileBanner />
+                <div className="bg-zinc-900 py-8 px-4">
+                    <EmptyState message='Guess you have yet to add shows in your list.' />
+                </div>
+            </>
         );
     }
 
@@ -44,9 +64,12 @@ export default function Watchlist() {
             <ProfileBanner />
             <div className="bg-zinc-900 px-4 sm:px-6 lg:px-8 py-4">
                 <div className="max-w-7xl mx-auto flex items-center gap-2 justify-center mb-4">
-                    <h2 className="text-xl sm:text-2xl font-bold text-white">Watchlist ({watchlistItems.length})</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white">
+                        Watchlist ({watchlistItems.length})
+                    </h2>
                     <span className="grow" />
                     <button
+                        type="button"
                         onClick={() => refetch()}
                         disabled={isFetching}
                         className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -56,6 +79,7 @@ export default function Watchlist() {
                     </button>
                     <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
                         <button
+                            type="button"
                             onClick={() => setViewMode('grid')}
                             className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Grid view"
@@ -63,6 +87,7 @@ export default function Watchlist() {
                             <Grid3x3 className="w-4 h-4" />
                         </button>
                         <button
+                            type="button"
                             onClick={() => setViewMode('table')}
                             className={`p-2 rounded transition-colors ${viewMode === 'table' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Table view"
@@ -70,6 +95,7 @@ export default function Watchlist() {
                             <TableIcon className="w-4 h-4" />
                         </button>
                         <button
+                            type="button"
                             onClick={() => setViewMode('tile')}
                             className={`p-2 rounded transition-colors ${viewMode === 'tile' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Tile view"

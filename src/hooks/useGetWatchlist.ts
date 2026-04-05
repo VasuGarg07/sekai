@@ -25,6 +25,6 @@ export function useGetWatchlist() {
 
     return {
         ...query,
-        refetch,
+        refetch, // must come after spread so it overrides query.refetch
     };
 }

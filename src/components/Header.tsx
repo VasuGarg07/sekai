@@ -1,6 +1,6 @@
 import { LogIn, Search } from 'lucide-react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import ProfileMenu from './ProfileMenu';
 import type { RootState } from '../store/store';
 import NavMenu from './NavMenu';
@@ -10,53 +10,56 @@ import Logo from '/logo_white.png';
 const Header = () => {
     const { user } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
-    const handleFilterClick = () => navigate("/explore");
-    const handleLogin = () => navigate("/login");
 
     return (
-        <>
-            {/* Header */}
-            <header className="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50 transition-colors duration-200">
-                <div className="flex items-center justify-center h-16 mx-auto px-4 lg:px-10 gap-2">
-                    {/* Menu Button */}
-                    <NavMenu />
+        <header className="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50 transition-colors duration-200">
+            <div className="flex items-center justify-center h-16 mx-auto px-4 lg:px-10 gap-2">
+                {/* Menu Button */}
+                <NavMenu />
 
-                    {/* Logo */}
-                    <div className="flex items-center space-x-2" onClick={() => navigate('/')}>
-                        <div className="flex-shrink-0 hover:cursor-pointer">
-                            <img
-                                src={Logo}
-                                alt="Sekai Logo"
-                                className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
-                            />
-                        </div>
-                        <span className="text-lg sm:text-xl font-bold text-white hover:cursor-pointer">
-                            Sekai
-                        </span>
-                    </div>
+                {/* Logo */}
+                <Link to="/" className="flex items-center space-x-2 shrink-0">
+                    <img
+                        src={Logo}
+                        alt="Sekai Logo"
+                        className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+                    />
+                    <span className="text-lg sm:text-xl font-bold text-white">
+                        Sekai
+                    </span>
+                </Link>
 
-                    <span className='grow'></span>
+                <span className="grow" />
 
-                    {/* Search Button */}
-                    <SearchBar className='grow hidden sm:block' />
+                {/* Search Bar — desktop */}
+                <SearchBar className="grow hidden sm:block" />
 
-                    <button className="p-2 rounded-lg text-zinc-400 block sm:hidden"
-                        onClick={handleFilterClick}>
-                        <Search size={20} />
+                {/* Search icon — mobile, navigates to explore */}
+                <button
+                    type="button"
+                    className="p-2 rounded-lg text-zinc-400 block sm:hidden"
+                    onClick={() => navigate("/explore")}
+                    aria-label="Search"
+                >
+                    <Search size={20} />
+                </button>
+
+                {/* User Menu */}
+                {user ? (
+                    <ProfileMenu />
+                ) : (
+                    <button
+                        type="button"
+                        className="p-2 rounded-lg text-zinc-400 hover:bg-zinc-800"
+                        onClick={() => navigate("/login")}
+                        aria-label="Log in"
+                    >
+                        <LogIn size={20} />
                     </button>
-
-                    {/* User Menu */}
-                    {user ? (
-                        <ProfileMenu />
-                    ) : (
-                        <button className="p-2 rounded-lg text-zinc-400 hover:bg-zinc-800" onClick={handleLogin}>
-                            <LogIn size={20} />
-                        </button>
-                    )}
-                </div>
-            </header>
-        </>
+                )}
+            </div>
+        </header>
     );
 };
 
-export default Header
+export default Header;

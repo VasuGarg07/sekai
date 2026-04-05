@@ -10,35 +10,34 @@ interface AnimeGalleryCardProps {
 
 export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const hoverTimeout = useRef<any>(null);
+    const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const previewRef = useRef<HTMLDivElement | null>(null);
     const { goToAnime } = useAnimeNavigation();
 
     const handleMouseEnter = () => {
         hoverTimeout.current = setTimeout(() => {
             setIsHovered(true);
-        }, 400); // 400ms delay
+        }, 400);
     };
 
     const handleMouseLeave = () => {
         if (hoverTimeout.current) {
             clearTimeout(hoverTimeout.current);
+            hoverTimeout.current = null;
         }
         setIsHovered(false);
     };
 
-    const previewRef = useRef<HTMLDivElement | null>(null);
-
+    // Reposition after render to prevent clipping at viewport edges
     useEffect(() => {
         if (isHovered && previewRef.current) {
             const rect = previewRef.current.getBoundingClientRect();
             const { innerWidth, innerHeight } = window;
 
-            // if overflowing right → stick left
             if (rect.right > innerWidth) {
                 previewRef.current.style.left = "auto";
                 previewRef.current.style.right = "50%";
             }
-            // if overflowing bottom → stick top
             if (rect.bottom > innerHeight) {
                 previewRef.current.style.top = "auto";
                 previewRef.current.style.bottom = "50%";
@@ -49,34 +48,36 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     return (
         <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             {anime.image && (
-                <div className="aspect-[4/5] relative cursor-pointer shadow-md"
-                    onClick={() => goToAnime(anime.id)}>
+                <div
+                    className="aspect-4/5 relative cursor-pointer shadow-md"
+                    onClick={() => goToAnime(anime.id)}
+                >
                     <img
                         src={anime.image}
                         alt={anime.title_english ?? ''}
                         className="w-full h-full object-cover rounded-md transition-all duration-300 hover:blur-xs hover:brightness-90"
                         loading="lazy"
                     />
+                </div>
+            )}
 
-                    {/* Overlay Preview Card */}
-                    {isHovered && (
-                        <div
-                            ref={previewRef}
-                            className="absolute z-50 w-auto max-w-xs min-w-64"
-                            style={{
-                                top: "50%",
-                                left: "50%",
-                            }}
-                        >
-                            <AnimePreviewCard anime={anime} />
-                        </div>
-                    )}
+            {/* Preview card — outside the clickable image div so WatchlistButton clicks
+                don't trigger navigation, positioned to overlap like the original */}
+            {isHovered && (
+                <div
+                    ref={previewRef}
+                    className="absolute z-50 w-auto max-w-xs min-w-64"
+                    style={{ top: "50%", left: "50%" }}
+                >
+                    <AnimePreviewCard anime={anime} />
                 </div>
             )}
 
             <div className="py-2">
-                <h3 className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight cursor-pointer"
-                    onClick={() => goToAnime(anime.id)}>
+                <h3
+                    className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight cursor-pointer"
+                    onClick={() => goToAnime(anime.id)}
+                >
                     {anime.title_english ?? anime.title_romaji}
                 </h3>
 
@@ -102,5 +103,5 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
                 </div>
             </div>
         </div>
-    )
+    );
 }

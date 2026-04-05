@@ -13,8 +13,18 @@ interface AnimeListProps {
 export function ShowcaseStrip({ title, path, queryKey, sort, status }: AnimeListProps) {
     const { data, isLoading, error } = useAnimeList(queryKey, sort, status, 1, 5);
 
-    if (isLoading) return <div className="text-white">Loading {title}...</div>;
-    if (error) return <div className="text-white">Failed to load {title}</div>;
+    if (isLoading) return (
+        <div className="bg-zinc-900 p-4">
+            <h2 className="text-xl font-semibold mb-4 text-accent-500">{title}</h2>
+            <p className="text-zinc-400 text-sm">Loading...</p>
+        </div>
+    );
+    if (error) return (
+        <div className="bg-zinc-900 p-4">
+            <h2 className="text-xl font-semibold mb-4 text-accent-500">{title}</h2>
+            <p className="text-red-400 text-sm">{error.message}</p>
+        </div>
+    );
 
     return (
         <div className="bg-zinc-900 p-4">

@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { Link } from "react-router";
 import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
 import { WatchlistButton } from "../ui/WatchlistButton";
@@ -14,7 +15,7 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                 {anime.title_english ?? anime.title_romaji}
             </h3>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
                 {anime.score && (
                     <div className="flex items-center bg-yellow-500/20 px-2 py-1 rounded">
                         <Star className="w-3 h-3 text-yellow-400 mr-1 fill-current" />
@@ -67,14 +68,14 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                     <div>
                         <span className="text-gray-300">Genres:</span>{" "}
                         {anime.genres.map((genre, index) => (
-                            <a
-                                key={index}
-                                href={`/genre/${encodeURIComponent(genre)}`}
-                                className="text-white hover:text-accent-300 cursor-pointer"
+                            <Link
+                                key={genre}
+                                to={`/genre/${encodeURIComponent(genre)}`}
+                                className="text-white hover:text-accent-300"
                             >
                                 {genre}
                                 {index < anime.genres.length - 1 && ", "}
-                            </a>
+                            </Link>
                         ))}
                     </div>
                 )}

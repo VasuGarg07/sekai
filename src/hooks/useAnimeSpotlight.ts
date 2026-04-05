@@ -33,16 +33,16 @@ const QUERY = /* GraphQL */ `
 `;
 
 export function useAnimeSpotlight() {
-  const { season, year } = getCurrentSeasonYear();
+    const { season, year } = getCurrentSeasonYear();
 
-  return useQuery<AnimeSpotlight[], Error>({
-    queryKey: ["animeSpotlightList", season, year],
-    queryFn: async () => {
-      const data = await apiClient<AnimeSpotlightResponse>(QUERY, { season, seasonYear: year, perPage: 10 });
-      const media = data.Page?.media ?? [];
-      return media.map(m => mapMediaToAnimeSpotlight(m as any));
-    },
-    staleTime: 60 * 60 * 1000,
-    retry: false,
-  });
+    return useQuery<AnimeSpotlight[], Error>({
+        queryKey: ["animeSpotlightList", season, year],
+        queryFn: async () => {
+            const data = await apiClient<AnimeSpotlightResponse>(QUERY, { season, seasonYear: year, perPage: 10 });
+            const media = data.Page?.media ?? [];
+            return media.map(m => mapMediaToAnimeSpotlight(m as Record<string, unknown>));
+        },
+        staleTime: 60 * 60 * 1000,
+        retry: false,
+    });
 }

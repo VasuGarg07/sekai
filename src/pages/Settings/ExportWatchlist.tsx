@@ -2,6 +2,7 @@ import { Download, FileText, FileJson, FileCode } from "lucide-react";
 import { SectionLayout } from "./SectionLayout";
 import { WatchlistExporter } from "../../shared/download";
 import { useGetWatchlist } from "../../hooks/useGetWatchlist";
+import { toastService } from "../../ui/toastService";
 
 const EXPORT_OPTIONS = [
     { format: "csv", label: "CSV", description: "Comma-separated values", icon: FileText },
@@ -13,11 +14,15 @@ export const ExportWatchlist = () => {
     const { data: items = [] } = useGetWatchlist();
 
     const handleExport = (format: string) => {
+        if (items.length === 0) {
+            toastService.warning("Your watchlist is empty — nothing to export.");
+            return;
+        }
+
         switch (format) {
             case "csv": WatchlistExporter.toCSV(items); break;
             case "json": WatchlistExporter.toJSON(items); break;
             case "xml": WatchlistExporter.toXML(items); break;
-            default: console.error(`Unknown format: ${format}`);
         }
     };
 
@@ -33,6 +38,7 @@ export const ExportWatchlist = () => {
                     return (
                         <button
                             key={option.format}
+                            type="button"
                             onClick={() => handleExport(option.format)}
                             className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-md border
                                 hover:bg-zinc-800/50 transition-colors group border-zinc-700 hover:border-zinc-500"

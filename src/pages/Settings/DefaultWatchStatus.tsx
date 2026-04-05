@@ -1,4 +1,5 @@
 import { Eye } from "lucide-react";
+import { useState } from "react";
 import { useDefaultWatchStatus } from "../../hooks/useDefaultWatchStatus";
 import { useAppSelector } from "../../store/reduxHooks";
 import type { WatchStatus } from "../../shared/interfaces";
@@ -14,13 +15,18 @@ const WATCH_STATUS_OPTIONS: { value: WatchStatus; label: string }[] = [
 ];
 
 export const DefaultWatchStatus = () => {
-    const { mutate: setStatus, isPending } = useDefaultWatchStatus();
+    const { mutate: setStatus } = useDefaultWatchStatus();
+    const [isPending, setIsPending] = useState(false);
     const currentStatus = useAppSelector(
         (state) => state.preferences.default_watch_status
     );
 
     const handleChange = (newStatus: WatchStatus) => {
-        if (!isPending) setStatus(newStatus);
+        if (isPending) return;
+        setIsPending(true);
+        setStatus(newStatus, {
+            onSettled: () => setIsPending(false),
+        });
     };
 
     return (
@@ -33,10 +39,11 @@ export const DefaultWatchStatus = () => {
                 {WATCH_STATUS_OPTIONS.map((option) => (
                     <button
                         key={option.value}
+                        type="button"
                         disabled={isPending}
                         onClick={() => handleChange(option.value)}
                         className={`px-4 py-2 text-sm font-medium rounded-md border transition-all
-              ${currentStatus === option.value
+                            ${currentStatus === option.value
                                 ? "bg-accent-500 text-white border-transparent"
                                 : "bg-zinc-800 text-zinc-300 border-zinc-700 hover:border-zinc-500 hover:text-white"
                             }`}

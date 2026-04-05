@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { toastService } from './toastService';
 import type { ToastType } from '../shared/interfaces';
@@ -13,13 +13,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     const [toasts, setToasts] = useState<Toast[]>([]);
     const timeoutsRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-    const addToast = (message: string, type: ToastType) => {
+    const addToast = useCallback((message: string, type: ToastType) => {
         const id = Math.random().toString(36).substring(2, 9);
         const newToast = { id, message, type };
 
         setToasts((prev) => {
             const updated = [...prev, newToast];
-            // If we're removing the oldest toast, clear its timeout
             if (updated.length > 3) {
                 const removedToast = prev[0];
                 const timeout = timeoutsRef.current.get(removedToast.id);
@@ -31,17 +30,15 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             return updated.slice(-3);
         });
 
-        // Store timeout reference
         const timeout = setTimeout(() => {
             setToasts((prev) => prev.filter((t) => t.id !== id));
             timeoutsRef.current.delete(id);
         }, 5000);
 
         timeoutsRef.current.set(id, timeout);
-    };
+    }, []);
 
     const removeToast = (id: string) => {
-        // Clear timeout when manually closed
         const timeout = timeoutsRef.current.get(id);
         if (timeout) {
             clearTimeout(timeout);
@@ -52,8 +49,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         toastService._setAddToast(addToast);
+    }, [addToast]);
 
-        // Cleanup all timeouts on unmount
+    useEffect(() => {
         return () => {
             timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
             timeoutsRef.current.clear();
@@ -86,14 +84,14 @@ const ToastItem = ({ toast, onClose }: { toast: Toast; onClose: () => void }) =>
 
     return (
         <div className="animate-slide-up pointer-events-auto">
-            <div className="bg-zinc-800 border border-zinc-700 rounded-full shadow-lg flex items-center gap-3 pl-4 pr-2 py-2.5 min-w-[280px] max-w-[400px]">
-                <div className={`w-1.5 h-1.5 rounded-full ${color} flex-shrink-0`} />
+            <div className="bg-zinc-800 border border-zinc-700 rounded-full shadow-lg flex items-center gap-3 pl-4 pr-2 py-2.5 min-w-70 max-w-100">
+                <div className={`w-1.5 h-1.5 rounded-full ${color} shrink-0`} />
                 <span className="text-sm text-white flex-1 truncate">{toast.message}</span>
                 <button
                     onClick={onClose}
                     type="button"
-                    className="text-zinc-400 hover:text-white transition-colors flex-shrink-0 p-1 hover:bg-zinc-800 rounded-full"
-                    aria-label="Close"
+                    className="text-zinc-400 hover:text-white transition-colors shrink-0 p-1 hover:bg-zinc-800 rounded-full"
+                    aria-label="Close notification"
                 >
                     <X className="w-4 h-4" />
                 </button>

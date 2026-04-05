@@ -4,7 +4,7 @@ interface LoadingStateProps {
 
 const LoadingState = ({ text = 'Loading...' }: LoadingStateProps) => {
     return (
-        <div className="flex items-center justify-center min-h-64 w-full max-w-6xl mx-auto p-10">
+        <div className="flex items-center justify-center min-h-80 w-full max-w-6xl mx-auto p-10">
             <div className="flex flex-col items-center">
                 {/* Dual ring spinner */}
                 <div className="relative w-16 h-16 mb-4">

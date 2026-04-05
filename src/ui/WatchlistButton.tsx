@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Loader2, Check, Plus } from "lucide-react";
 import { useSaveAnime } from "../hooks/useSaveAnime";
 import { useGetWatchlist } from "../hooks/useGetWatchlist";
@@ -9,10 +10,19 @@ interface WatchlistButtonProps {
 }
 
 export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps) {
-    const { mutate, isPending } = useSaveAnime();
+    const [isPending, setIsPending] = useState(false);
+    const { mutate } = useSaveAnime();
     const { data: watchlistItems = [] } = useGetWatchlist();
 
     const isInWatchlist = watchlistItems.some(item => item.id === anime.id);
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsPending(true);
+        mutate(anime, {
+            onSettled: () => setIsPending(false),
+        });
+    };
 
     let content;
     if (isPending) {
@@ -40,7 +50,7 @@ export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps)
 
     return (
         <button
-            onClick={(e) => { e.stopPropagation(); mutate(anime); }}
+            onClick={handleClick}
             disabled={isPending || isInWatchlist}
             className={className}
         >

@@ -1,4 +1,3 @@
-// hooks/useTheme.ts
 import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { setTheme } from "../store/slices/preferencesSlice";
@@ -10,26 +9,28 @@ export const useTheme = () => {
     const uid = useAppSelector(state => state.auth.user?.uid);
     const dispatch = useAppDispatch();
 
-
     return useMutation({
         mutationFn: async (newTheme: string) => {
-            if (!uid) {
-                toastService.error("User ID is required.");
-                return;
-            }
-            await updatePreferences(uid, { app_theme: newTheme });
-            return newTheme;
+            if (!uid) return { success: false as const, reason: 'not-logged-in' as const };
+            return updatePreferences(uid, { app_theme: newTheme });
         },
-        onMutate: async (newTheme) => {
+        onMutate: (newTheme) => {
             dispatch(setTheme(newTheme));
             applyThemeClass(newTheme);
         },
-        onError: (error) => {
-            console.error(error);
+        onSuccess: (result, newTheme) => {
+            if (result.success) {
+                toastService.success(`Theme changed to ${newTheme}.`);
+                return;
+            }
+            if (result.reason === 'not-logged-in') {
+                toastService.info("Please login first.");
+                return;
+            }
             toastService.error("Failed to update theme.");
         },
-        onSuccess: (newTheme) => {
-            toastService.success(`Theme changed to ${newTheme}`);
+        onError: () => {
+            toastService.error("Failed to update theme.");
         },
     });
 };

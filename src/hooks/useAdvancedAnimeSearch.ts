@@ -1,13 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import type { AnimeListItem, Pagination } from "../shared/interfaces";
+import type { AnimeListItem, AnimeListResponse, PagedResult } from "../shared/interfaces";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
-
-export interface PagedResult {
-  items: AnimeListItem[];
-  pageInfo: Pagination;
-}
-
 
 const QUERY = /* GraphQL */ `
   query (
@@ -111,38 +105,30 @@ export function useAdvancedAnimeSearch(
         ...(sort?.length && { sort }),
       }
     ],
-    queryFn: async ({ signal }) => {
-      const data = await apiClient.post(
-        "",
-        {
-          query: QUERY,
-          variables: {
-            page,
-            perPage,
-            search,
-            genreIn,
-            genreNotIn,
-            formatIn,
-            statusIn,
-            season,
-            year,
-            country,
-            sort,
-          },
-        },
-        { signal }
-      );
+    queryFn: async () => {
+      const data = await apiClient<AnimeListResponse>(QUERY, {
+        page,
+        perPage,
+        search,
+        genreIn,
+        genreNotIn,
+        formatIn,
+        statusIn,
+        season,
+        year,
+        country,
+        sort,
+      });
 
-      const pageData = (data as any)?.Page;
-      const media = pageData?.media ?? [];
-      const pageInfo = pageData?.pageInfo ?? {};
+      const media = data.Page?.media ?? [];
+      const pageInfo = data.Page?.pageInfo ?? {};
 
       return {
-        items: media.map(mapMediaToAnimeListItem),
+        items: media.map(m => mapMediaToAnimeListItem(m as AnimeListItem)),
         pageInfo,
-      };
+      } as PagedResult;
     },
-    staleTime: 60 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
     retry: false,
   });
 }

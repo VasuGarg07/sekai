@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import type { AnimeDetail } from "../shared/interfaces";
+import type { AnimeDetail, AnimeDetailResponse } from "../shared/interfaces";
 import { mapMediaToAnimeDetail } from "../shared/utilities";
 
 const QUERY = /* GraphQL */ `
@@ -90,17 +90,10 @@ const QUERY = /* GraphQL */ `
 export function useAnimeDetail(id: number) {
   return useQuery<AnimeDetail, Error>({
     queryKey: ["animeDetail", id],
-    queryFn: async ({ signal }) => {
-      const data = await apiClient.post(
-        "",
-        { query: QUERY, variables: { id } },
-        { signal }
-      );
-
-      const m = (data as any)?.Media;
-      if (!m) throw new Error("Anime not found");
-
-      return mapMediaToAnimeDetail(m);
+    queryFn: async () => {
+      const data = await apiClient<AnimeDetailResponse>(QUERY, { id });
+      if (!data.Media) throw new Error("Anime not found");
+      return mapMediaToAnimeDetail(data.Media as AnimeDetail);
     },
     staleTime: 30 * 60 * 1000,
     retry: false,

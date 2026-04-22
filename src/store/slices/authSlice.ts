@@ -6,7 +6,6 @@ import {
     signOut
 } from "firebase/auth";
 import { fireAuth } from "../../shared/firebase";
-import { registerProfile } from "../../shared/firestore";
 import { serializeUser } from "../../shared/utilities";
 import type { SekaiUser } from "../../shared/interfaces";
 
@@ -22,21 +21,17 @@ const initialState: AuthState = {
     error: null,
 };
 
-// --- Async Thunks ---
 export const loginWithGoogle = createAsyncThunk("auth/loginWithGoogle", async () => {
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(fireAuth, provider);
-    await registerProfile(user);
     return serializeUser(user);
 });
 
 export const loginWithGitHub = createAsyncThunk("auth/loginWithGitHub", async () => {
     const provider = new GithubAuthProvider();
     const { user } = await signInWithPopup(fireAuth, provider);
-    await registerProfile(user);
     return serializeUser(user);
 });
-
 
 export const logout = createAsyncThunk("auth/logout", async () => {
     await signOut(fireAuth);
@@ -54,7 +49,6 @@ const getAuthErrorMessage = (errorCode?: string) => {
     }
 };
 
-// --- Slice ---
 const authSlice = createSlice({
     name: "auth",
     initialState,

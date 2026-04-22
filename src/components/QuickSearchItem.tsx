@@ -10,31 +10,26 @@ interface QuickSearchItemProps {
 export default function QuickSearchItem({ anime, handleClick }: QuickSearchItemProps) {
     return (
         <div
-            key={anime.id}
             onClick={() => handleClick(anime.id)}
             className="flex items-start space-x-3 p-3 hover:bg-zinc-700 cursor-pointer border-b border-zinc-600 last:border-b-0 transition-colors"
         >
             <img
                 src={anime.image ?? ""}
                 alt={anime.title_english ?? anime.title_romaji ?? "Poster"}
-                className="w-14 h-20 object-cover rounded bg-zinc-700 flex-shrink-0"
+                className="w-14 h-20 object-cover rounded bg-zinc-700 shrink-0"
                 loading="lazy"
             />
 
             <div className="flex-1 min-w-0">
-                {/* Title */}
                 <h3 className="text-sm font-semibold text-accent-500 truncate">
                     {anime.title_english ?? anime.title_romaji ?? "Untitled"}
                 </h3>
 
-                {/* Synopsis */}
                 <p className="mt-1 text-xs text-zinc-400 line-clamp-2">
                     {anime.synopsis || getSynopsisFallback(anime.id)}
                 </p>
 
-                {/* Info Row + Watchlist */}
                 <div className="mt-2 flex items-center justify-between">
-                    {/* Anime Info */}
                     <div className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-200">
                         {anime.score && (
                             <>
@@ -69,7 +64,6 @@ export default function QuickSearchItem({ anime, handleClick }: QuickSearchItemP
                         )}
                     </div>
 
-                    {/* Watchlist Button */}
                     <WatchlistButton
                         anime={anime}
                         className="text-xs px-2 py-1 bg-accent-600 hover:bg-accent-800 rounded-md text-zinc-200 flex items-center gap-1 transition-colors"

@@ -15,14 +15,14 @@ export default function AnimeGallery({ tileView, data }: AnimeGalleryProps) {
                     <AnimeTile key={anime.id} anime={anime} />
                 ))}
             </div>
-        )
-    } else {
-        return (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {data.map((anime) => (
-                    <AnimeGalleryCard key={anime.id} anime={anime} />
-                ))}
-            </div>
-        )
+        );
     }
+
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {data.map((anime) => (
+                <AnimeGalleryCard key={anime.id} anime={anime} />
+            ))}
+        </div>
+    );
 }

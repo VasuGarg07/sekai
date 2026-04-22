@@ -6,7 +6,6 @@ export function useAnimeNavigation() {
     const goToAnime = (id: number) => {
         if (!id) return;
         navigate(`/anime/${id}`);
-        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return { goToAnime };

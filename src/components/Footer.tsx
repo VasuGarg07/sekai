@@ -1,15 +1,36 @@
-import { Github, Heart, Instagram, Twitter } from "lucide-react";
+import { Heart } from "lucide-react";
 import { navigationLinks } from "../shared/constants";
 import Logo from '/logo_white.png';
 
+const socialLinks = [
+    {
+        icon: '/icons/x.svg',
+        label: 'X (formerly Twitter)',
+        href: 'https://x.com/_vasugarg_',
+        color: 'hover:bg-blue-500/20'
+    },
+    {
+        icon: '/icons/github.svg',
+        label: 'GitHub',
+        href: 'https://github.com/VasuGarg07',
+        color: 'hover:bg-zinc-500/20'
+    },
+    {
+        icon: '/icons/instagram.svg',
+        label: 'Instagram',
+        href: 'https://www.instagram.com/_.vasugarg.07._',
+        color: 'hover:bg-pink-500/20'
+    },
+    {
+        icon: '/icons/portfolio.svg',
+        label: 'Portfolio',
+        href: 'https://vasu-garg.vercel.app/',
+        color: 'hover:bg-purple-500/20'
+    },
+];
+
 const Footer = () => {
     const currentYear = new Date().getFullYear();
-
-    const socialLinks = [
-        { icon: Twitter, label: 'X (formerly Twitter)', href: 'https://x.com/', color: 'hover:text-blue-400' },
-        { icon: Github, label: 'GitHub', href: 'https://github.com/', color: 'hover:text-zinc-300' },
-        { icon: Instagram, label: 'Website', href: 'https://www.instagram.com/', color: 'hover:text-red-400' }
-    ];
 
     return (
         <footer className="mt-auto bg-zinc-900 border-t border-zinc-800">
@@ -31,7 +52,7 @@ const Footer = () => {
                             </span>
                         </div>
 
-                        {/* Description - Hidden on mobile, show on tablet+ */}
+                        {/* Description */}
                         <p className="text-sm leading-relaxed text-zinc-400">
                             Your ultimate destination for anime discovery. Explore thousands of titles,
                             get personalized recommendations, and stay updated with the latest releases.
@@ -41,29 +62,37 @@ const Footer = () => {
                         <div className="hidden sm:flex items-center gap-3">
                             <span className="text-xs text-zinc-400 sm:text-sm">Socials:</span>
                             <div className="flex gap-2">
-                                {socialLinks.map((social, index) => (
+                                {socialLinks.map((social) => (
                                     <a
-                                        key={index}
+                                        key={social.label}
                                         href={social.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className={`rounded-full bg-zinc-800 p-1.5 text-zinc-400 transition-colors duration-200 ${social.color} sm:p-2`}
                                         aria-label={social.label}
                                     >
-                                        <social.icon size={16} className="sm:w-[18px] sm:h-[18px]" />
+                                        <img
+                                            src={social.icon}
+                                            alt={social.label}
+                                            width={16}
+                                            height={16}
+                                            className="sm:w-4.5 sm:h-4.5 opacity-70 group-hover:opacity-100"
+                                        />
                                     </a>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    {/* Quick Links - Hidden on mobile, show on tablet+ */}
-                    <div className="flex flex-col flex-shrink-0 md:text-right">
+                    {/* Quick Links */}
+                    <div className="flex flex-col shrink-0 md:text-right">
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white sm:text-sm">
                             Quick Links
                         </h3>
                         <nav className="flex flex-col gap-1.5 sm:gap-3">
-                            {navigationLinks.map((link, index) => (
+                            {navigationLinks.map((link) => (
                                 <a
-                                    key={index}
+                                    key={link.path}
                                     href={link.path}
                                     className="text-xs text-zinc-400 transition-colors duration-200 hover:text-white sm:text-sm"
                                 >
@@ -76,27 +105,21 @@ const Footer = () => {
             </div>
 
             {/* Divider */}
-            <div className="border-t border-zinc-800"></div>
+            <div className="border-t border-zinc-800" />
 
             {/* Bottom Section */}
             <div className="px-4 py-4 sm:px-6">
                 <div className="flex flex-col gap-2 sm:gap-3">
-
-                    {/* Copyright & Made with Love */}
                     <div className="flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
                         <p className="text-xs text-zinc-400 sm:text-sm">
                             Copyright © Sekai {currentYear}. All Rights Reserved
                         </p>
-
-                        {/* Made with love - Hidden on mobile, show on tablet+ */}
                         <div className="hidden sm:flex items-center gap-1 text-xs text-zinc-500 sm:text-sm">
                             <span>Made with</span>
-                            <Heart size={12} className="fill-current text-red-500 sm:w-[14px] sm:h-[14px]" />
+                            <Heart size={12} className="fill-current text-red-500 sm:w-3.5 sm:h-3.5" />
                             <span>for anime fans</span>
                         </div>
                     </div>
-
-                    {/* Disclaimer - Hidden on mobile, show on tablet+ */}
                     <p className="hidden sm:block text-xs leading-relaxed text-zinc-500">
                         This site does not store any files on its server. All contents are provided by non-affiliated third parties.
                     </p>

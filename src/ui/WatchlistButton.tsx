@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Loader2, Check, Plus } from "lucide-react";
 import { useSaveAnime } from "../hooks/useSaveAnime";
-import { useAppSelector } from "../store/reduxHooks";
+import { useGetWatchlist } from "../hooks/useGetWatchlist";
 import type { AnimeListItem } from "../shared/interfaces";
 
 interface WatchlistButtonProps {
@@ -9,10 +10,19 @@ interface WatchlistButtonProps {
 }
 
 export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps) {
-    const { mutate, isPending } = useSaveAnime();
-    const watchlistIds = useAppSelector((state) => state.watchlist.items);
+    const [isPending, setIsPending] = useState(false);
+    const { mutate } = useSaveAnime();
+    const { data: watchlistItems = [] } = useGetWatchlist();
 
-    const isInWatchlist = watchlistIds.findIndex(item => item.id == anime.id) >= 0;
+    const isInWatchlist = watchlistItems.some(item => item.id === anime.id);
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsPending(true);
+        mutate(anime, {
+            onSettled: () => setIsPending(false),
+        });
+    };
 
     let content;
     if (isPending) {
@@ -36,11 +46,6 @@ export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps)
                 Add to Watchlist
             </span>
         );
-    }
-
-    const handleClick = (event: any) => {
-        event.stopPropagation()
-        mutate(anime)
     }
 
     return (

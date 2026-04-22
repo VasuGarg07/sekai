@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
@@ -8,41 +8,55 @@ import WatchlistTile from "./WatchlistTile";
 import WatchlistGrid from "./WatchlistGrid";
 import WatchlistTable from "./WatchlistTable";
 import { RefreshCw, Grid3x3, LayoutList, TableIcon } from "lucide-react";
-import { useAppSelector } from "../../store/reduxHooks";
 
 type ViewMode = 'grid' | 'tile' | 'table';
 
+const VIEW_MODE_KEY = 'sekai-watchlist-view';
+
 export default function Watchlist() {
-    const { isLoading, error, refetch, isFetching } = useGetWatchlist();
-    const { items: watchlistItems } = useAppSelector(state => state.watchlist);
-    const [viewMode, setViewMode] = useState<ViewMode>('grid');
+    const { isLoading, error, refetch, isFetching, data: watchlistItems } = useGetWatchlist();
 
-    const handleRefresh = () => {
-        refetch();
-    };
+    const [viewMode, setViewMode] = useState<ViewMode>(() => {
+        const saved = localStorage.getItem(VIEW_MODE_KEY);
+        return (saved as ViewMode) ?? 'grid';
+    });
 
-    if (isLoading || isFetching) {
+    useEffect(() => {
+        localStorage.setItem(VIEW_MODE_KEY, viewMode);
+    }, [viewMode]);
+
+    // Initial load only — don't replace content with spinner on background refetches
+    if (isLoading) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <LoadingState text='Loading your watchlist...' />
-            </div>
-        )
+            <>
+                <ProfileBanner />
+                <div className="bg-zinc-900 py-8 px-4">
+                    <LoadingState text='Loading your watchlist...' />
+                </div>
+            </>
+        );
     }
 
     if (error) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <ErrorState message={error.message} />
-            </div>
-        )
+            <>
+                <ProfileBanner />
+                <div className="bg-zinc-900 py-8 px-4">
+                    <ErrorState message={error.message} />
+                </div>
+            </>
+        );
     }
 
     if (!watchlistItems || watchlistItems.length === 0) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <EmptyState message='Guess you have yet to add shows in your list.' />
-            </div>
-        )
+            <>
+                <ProfileBanner />
+                <div className="bg-zinc-900 py-8 px-4">
+                    <EmptyState message='Guess you have yet to add shows in your list.' />
+                </div>
+            </>
+        );
     }
 
     return (
@@ -50,56 +64,45 @@ export default function Watchlist() {
             <ProfileBanner />
             <div className="bg-zinc-900 px-4 sm:px-6 lg:px-8 py-4">
                 <div className="max-w-7xl mx-auto flex items-center gap-2 justify-center mb-4">
-                    <h2 className="text-xl sm:text-2xl font-bold text-white">Watchlist ({watchlistItems.length})</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white">
+                        Watchlist ({watchlistItems.length})
+                    </h2>
                     <span className="grow" />
-
                     <button
-                        onClick={handleRefresh}
+                        type="button"
+                        onClick={() => refetch()}
                         disabled={isFetching}
                         className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Refresh watchlist"
                     >
-                        <RefreshCw
-                            className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`}
-                        />
+                        <RefreshCw className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`} />
                     </button>
-                    {/* View Mode Selector */}
                     <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
                         <button
+                            type="button"
                             onClick={() => setViewMode('grid')}
-                            className={`p-2 rounded transition-colors ${viewMode === 'grid'
-                                ? 'bg-accent-700 text-white'
-                                : 'text-gray-400 hover:text-white'
-                                }`}
+                            className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Grid view"
                         >
                             <Grid3x3 className="w-4 h-4" />
                         </button>
                         <button
+                            type="button"
                             onClick={() => setViewMode('table')}
-                            className={`p-2 rounded transition-colors ${viewMode === 'table'
-                                ? 'bg-accent-700 text-white'
-                                : 'text-gray-400 hover:text-white'
-                                }`}
+                            className={`p-2 rounded transition-colors ${viewMode === 'table' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Table view"
                         >
                             <TableIcon className="w-4 h-4" />
                         </button>
                         <button
+                            type="button"
                             onClick={() => setViewMode('tile')}
-                            className={`p-2 rounded transition-colors ${viewMode === 'tile'
-                                ? 'bg-accent-700 text-white'
-                                : 'text-gray-400 hover:text-white'
-                                }`}
+                            className={`p-2 rounded transition-colors ${viewMode === 'tile' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Tile view"
                         >
                             <LayoutList className="w-4 h-4" />
                         </button>
                     </div>
-                </div>
-
-                {/* Watchlist Filters */}
-                <div className="max-w-7xl mx-auto flex items-center justify-between mb-4">
                 </div>
 
                 <div className="max-w-7xl mx-auto">
@@ -110,7 +113,6 @@ export default function Watchlist() {
                             ))}
                         </div>
                     )}
-
                     {viewMode === 'tile' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {watchlistItems.map((anime) => (
@@ -118,12 +120,11 @@ export default function Watchlist() {
                             ))}
                         </div>
                     )}
-
                     {viewMode === 'table' && (
                         <WatchlistTable items={watchlistItems} />
                     )}
                 </div>
             </div>
         </>
-    )
+    );
 }

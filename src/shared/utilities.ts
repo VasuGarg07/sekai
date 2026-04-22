@@ -58,7 +58,7 @@ export function mapMediaToAnimeListItem(m: any): AnimeListItem {
         synopsis:
             typeof m.description === "string"
                 ? m.description.replace(/<[^>]+>/g, "").trim()
-                : null,
+            : null,
         synonyms: m.synonyms ?? [],
         status: m.status ?? null,
         genres: m.genres ?? [],
@@ -96,6 +96,13 @@ export function mapMediaToAnimeDetail(m: any): AnimeDetail {
     }
 }
 
+export function mapMediaToAnimeSpotlight(m: Record<string, unknown>): AnimeSpotlight {
+    return {
+        ...mapMediaToAnimeListItem(m),
+        banner: (m.bannerImage as string) ?? null,
+    };
+}
+
 export function formatKey(key: string): string {
     if (!key) return "";
     return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");
@@ -103,58 +110,30 @@ export function formatKey(key: string): string {
 
 export const cleanAnimeForWatchlist = (anime: AnimeListItem | AnimeDetail | AnimeSpotlight): AnimeListItem => {
     const {
-        id,
-        image,
-        title_english,
-        title_romaji,
-        type,
-        duration,
-        score,
-        startDateText,
-        synopsis,
-        synonyms,
-        status,
-        genres,
-        episodes,
-        season,
-        seasonYear
+        id, image, title_english, title_romaji, type, duration,
+        score, startDateText, synopsis, synonyms, status,
+        genres, episodes, season, seasonYear,
     } = anime;
 
     return {
-        id,
-        image,
-        title_english,
-        title_romaji,
-        type,
-        duration,
-        score,
-        startDateText,
-        synopsis,
-        synonyms,
-        status,
-        genres,
-        episodes,
-        season,
-        seasonYear
+        id, image, title_english, title_romaji, type, duration,
+        score, startDateText, synopsis, synonyms, status,
+        genres, episodes, season, seasonYear,
     };
 };
 
 export const formatDateEpoch = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+    return new Date(timestamp).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 };
 
 export const applyThemeClass = (themeClass: string) => {
     const body = document.body;
-
-    // Remove all existing theme classes
     Array.from(body.classList)
         .filter(cls => cls.startsWith("theme-"))
         .forEach(cls => body.classList.remove(cls));
-
-    // Add new theme
     body.classList.add(`theme-${themeClass}`);
 };

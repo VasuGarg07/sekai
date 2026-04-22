@@ -1,117 +1,170 @@
-import { collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import {
+    collection, deleteDoc, doc, getCountFromServer,
+    getDoc, getDocs, limit, orderBy, query,
+    serverTimestamp, setDoc, updateDoc
+} from "firebase/firestore";
 import type { AnimeListItem, AnimeWatchList, UserPreferences, WatchStatus } from "./interfaces";
-import { toastService } from "../ui/toastService";
 import { fireStore } from "./firebase";
 import type { User } from "firebase/auth";
 import { cleanAnimeForWatchlist } from "./utilities";
 import { DEFAULT_PREFERENCES, MAX_USER_DOCUMENTS } from "./constants";
 
-export const registerProfile = async (user?: User) => {
-    if (!user) return;
+// --- Result types ---
 
-    const ref = doc(fireStore, "profiles", user.uid);
-    const snapshot = await getDoc(ref);
+type SaveResult =
+    | { success: true; item: AnimeWatchList }
+    | { success: false; reason: 'not-logged-in' | 'already-exists' | 'limit-reached' | 'error'; error?: unknown };
 
-    if (snapshot.exists()) return;
+type DeleteResult =
+    | { success: true; id: string }
+    | { success: false; reason: 'not-logged-in' | 'error'; error?: unknown };
 
-    await setDoc(ref, {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        createdAt: serverTimestamp()
-    })
-}
+type UpdateStatusResult =
+    | { success: true; id: string; status: WatchStatus }
+    | { success: false; reason: 'not-logged-in' | 'error'; error?: unknown };
 
-export const registerPreferences = async (uid: string): Promise<UserPreferences> => {
-    const ref = doc(fireStore, "preferences", uid);
-    const snapshot = await getDoc(ref);
+type PreferencesResult =
+    | { success: true; data: UserPreferences }
+    | { success: false; reason: 'error'; error?: unknown };
 
-    if (!snapshot.exists()) {
-        await setDoc(ref, DEFAULT_PREFERENCES);
-        return DEFAULT_PREFERENCES;
+type VoidResult =
+    | { success: true }
+    | { success: false; reason: 'error'; error?: unknown };
+
+// --- Profile ---
+
+export const registerProfile = async (user?: User): Promise<VoidResult> => {
+    if (!user) return { success: true }; // no-op, not an error
+
+    try {
+        const ref = doc(fireStore, "profiles", user.uid);
+        const snapshot = await getDoc(ref);
+        if (snapshot.exists()) return { success: true };
+
+        await setDoc(ref, {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            createdAt: serverTimestamp(),
+        });
+
+        return { success: true };
+    } catch (error) {
+        return { success: false, reason: 'error', error };
     }
-
-    return snapshot.data() as UserPreferences;
 };
 
-export const updatePreferences = async (uid: string, updates: Partial<UserPreferences>) => {
-    const ref = doc(fireStore, "preferences", uid);
-    await updateDoc(ref, updates);
+// --- Preferences ---
+
+/**
+ * Fetches preferences for a user. Creates a default doc if one doesn't exist yet.
+ * Called on every login via useAuthListener.
+ */
+export const upsertPreferences = async (uid: string): Promise<PreferencesResult> => {
+    try {
+        const ref = doc(fireStore, "preferences", uid);
+        const snapshot = await getDoc(ref);
+
+        if (!snapshot.exists()) {
+            await setDoc(ref, DEFAULT_PREFERENCES);
+            return { success: true, data: DEFAULT_PREFERENCES };
+        }
+
+        return { success: true, data: snapshot.data() as UserPreferences };
+    } catch (error) {
+        return { success: false, reason: 'error', error };
+    }
 };
 
-export const fetchWatchlistIds = async (uid: string) => {
+export const updatePreferences = async (
+    uid: string,
+    updates: Partial<UserPreferences>
+): Promise<VoidResult> => {
+    try {
+        const ref = doc(fireStore, "preferences", uid);
+        await updateDoc(ref, updates);
+        return { success: true };
+    } catch (error) {
+        return { success: false, reason: 'error', error };
+    }
+};
+
+// --- Watchlist ---
+
+export const fetchUserWatchList = async (uid: string): Promise<AnimeWatchList[]> => {
     const ref = collection(fireStore, "users", uid, "watchlist");
-    const snapshot = await getDocs(ref);
-    return snapshot.docs.map((doc) => doc.id);
-};
-
-export const fetchUserWatchList = async (uid: string) => {
-    const ref = collection(fireStore, "users", uid, "watchlist");
-    const q = query(ref, orderBy("addedAt", "desc"), limit(MAX_USER_DOCUMENTS)); // Hard limit
-
+    const q = query(ref, orderBy("addedAt", "desc"), limit(MAX_USER_DOCUMENTS));
     const snapshot = await getDocs(q);
-    const list: AnimeWatchList[] = snapshot.docs
-        .map((doc) => doc.data() as AnimeWatchList);
-    return list;
-}
+    return snapshot.docs.map((doc) => doc.data() as AnimeWatchList);
+};
 
 export const saveAnimeToWatchlist = async (
     anime: AnimeListItem,
     userId?: string,
     watchStatus: WatchStatus = 'plan-to-watch',
-) => {
-    if (!userId) {
-        toastService.info("Please Login First");
-        return { success: false };
+): Promise<SaveResult> => {
+    if (!userId) return { success: false, reason: 'not-logged-in' };
+
+    try {
+        const ref = collection(fireStore, "users", userId, "watchlist");
+        const countSnapshot = await getCountFromServer(ref);
+
+        if (countSnapshot.data().count >= MAX_USER_DOCUMENTS) {
+            return { success: false, reason: 'limit-reached' };
+        }
+
+        const docId = anime.id.toString();
+        const docRef = doc(fireStore, "users", userId, "watchlist", docId);
+        const snapshot = await getDoc(docRef);
+
+        if (snapshot.exists()) {
+            return { success: false, reason: 'already-exists' };
+        }
+
+        const item: AnimeWatchList = {
+            ...cleanAnimeForWatchlist(anime),
+            watchStatus,
+            addedAt: Date.now(),
+        };
+
+        await setDoc(docRef, item);
+        return { success: true, item };
+
+    } catch (error) {
+        return { success: false, reason: 'error', error };
     }
+};
 
-    // Check count with aggregation (FREE - doesn't count toward reads!)
-    const ref = collection(fireStore, "users", userId, "watchlist");
-    const countSnapshot = await getCountFromServer(ref);
+export const deleteAnimeFromWatchlist = async (
+    anime: AnimeListItem,
+    uid?: string,
+): Promise<DeleteResult> => {
+    if (!uid) return { success: false, reason: 'not-logged-in' };
 
-    if (countSnapshot.data().count >= 2000) {
-        toastService.error("Watchlist limit reached. Please remove some items first.");
-        return { success: false };
+    try {
+        const docId = anime.id.toString();
+        const ref = doc(fireStore, "users", uid, "watchlist", docId);
+        await deleteDoc(ref);
+        return { success: true, id: docId };
+    } catch (error) {
+        return { success: false, reason: 'error', error };
     }
+};
 
-    const docId = anime.id.toString();
-    const docRef = doc(fireStore, "users", userId, "watchlist", docId);
-    const snapshot = await getDoc(docRef);
+export const updateWatchStatus = async (
+    anime: AnimeListItem,
+    newStatus: WatchStatus,
+    uid?: string,
+): Promise<UpdateStatusResult> => {
+    if (!uid) return { success: false, reason: 'not-logged-in' };
 
-    if (snapshot.exists()) {
-        toastService.error(`${anime.title_english ?? anime.title_romaji} already exists in watchlist`);
-        return { success: false };
+    try {
+        const docId = anime.id.toString();
+        const ref = doc(fireStore, "users", uid, "watchlist", docId);
+        await updateDoc(ref, { watchStatus: newStatus });
+        return { success: true, id: docId, status: newStatus };
+    } catch (error) {
+        return { success: false, reason: 'error', error };
     }
-
-    const item = {
-        ...cleanAnimeForWatchlist(anime),
-        watchStatus,
-        addedAt: Date.now()
-    }
-    await setDoc(docRef, item);
-
-    toastService.success(`${anime.title_english ?? anime.title_romaji} is added to watchlist`);
-    return { success: true, item };
-}
-
-export const deleteAnimeFromWatchlist = async (anime: AnimeListItem, uid?: string) => {
-    if (!uid) return { success: false };
-
-    const docId = anime.id.toString();
-    const ref = doc(fireStore, "users", uid, "watchlist", docId);
-    await deleteDoc(ref);
-    return { success: true, id: docId };
-}
-
-export const updateWatchStatus = async (anime: AnimeListItem, newStatus: WatchStatus, uid?: string) => {
-    if (!uid) return { success: false };
-
-    const docId = anime.id.toString();
-    const ref = doc(fireStore, "users", uid, "watchlist", docId);
-    await updateDoc(ref, {
-        watchStatus: newStatus
-    });
-
-    return { success: true, id: docId, status: newStatus };
-}
+};

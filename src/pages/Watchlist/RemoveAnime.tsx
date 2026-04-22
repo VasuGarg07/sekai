@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Trash, X, AlertTriangle } from "lucide-react";
+import { Trash, X, AlertTriangle, Star } from "lucide-react";
 import type { AnimeWatchList } from "../../shared/interfaces";
 import { useRemoveAnime } from "../../hooks/useRemoveAnime";
-import { Star } from "lucide-react";
 
 type RemoveAnimeProps = {
     anime: AnimeWatchList;
@@ -10,17 +9,22 @@ type RemoveAnimeProps = {
 
 export function RemoveAnime({ anime }: RemoveAnimeProps) {
     const [open, setOpen] = useState(false);
-    const { mutate, isPending } = useRemoveAnime();
+    const [isPending, setIsPending] = useState(false);
+
+    const { mutate } = useRemoveAnime();
 
     const handleConfirm = () => {
+        setIsPending(true);
         mutate(anime, {
             onSuccess: () => setOpen(false),
+            onSettled: () => setIsPending(false),
         });
     };
 
     return (
         <>
             <button
+                type="button"
                 onClick={() => setOpen(true)}
                 title="Remove"
                 className="p-1 rounded-md hover:bg-zinc-700 transition-colors"
@@ -92,6 +96,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                                 {/* Actions */}
                                 <div className="flex gap-2">
                                     <button
+                                        type="button"
                                         onClick={() => setOpen(false)}
                                         disabled={isPending}
                                         className="flex-1 px-3 py-2 rounded-lg bg-zinc-700 text-white text-sm hover:bg-zinc-600 disabled:opacity-50 flex items-center justify-center gap-1.5"
@@ -100,6 +105,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                                         Cancel
                                     </button>
                                     <button
+                                        type="button"
                                         onClick={handleConfirm}
                                         disabled={isPending}
                                         className="flex-1 px-3 py-2 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-1.5"

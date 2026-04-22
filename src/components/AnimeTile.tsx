@@ -1,4 +1,5 @@
 import { Star, Tags } from "lucide-react";
+import { Link } from "react-router";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
@@ -23,8 +24,8 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                         loading="lazy"
                     />
                 )}
-                {/* Title Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-2 pt-3 pb-1">
+                {/* Season Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/40 to-transparent px-2 pt-3 pb-1">
                     <h3 className="text-white font-semibold text-sm">
                         {anime.season} {anime.seasonYear}
                     </h3>
@@ -33,7 +34,7 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
 
             {/* Content */}
             <div className="w-2/3 p-4 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-md">
-                {/* Season & Score */}
+                {/* Title & Score */}
                 <div className="flex items-center justify-between gap-2">
                     <h3
                         onClick={() => goToAnime(anime.id)}
@@ -42,12 +43,13 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                         {anime.title_english ?? anime.title_romaji}
                     </h3>
                     {anime.score && (
-                        <div className="flex items-center text-yellow-500 gap-1">
+                        <div className="flex items-center text-yellow-500 gap-1 shrink-0">
                             <Star className="w-4 h-4" />
                             <span className="font-medium">{anime.score / 10}</span>
                         </div>
                     )}
                 </div>
+
                 <div className="text-sm text-gray-300 flex flex-wrap gap-2">
                     {anime.type && (
                         <>
@@ -65,25 +67,29 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                         <div className="font-medium">{anime.status}</div>
                     )}
                 </div>
+
                 {anime.genres && anime.genres.length > 0 && (
                     <div className="text-xs flex items-center gap-2 my-1 flex-wrap">
-                        <Tags className="text-accent-500 w-4 h-4" />
+                        <Tags className="text-accent-500 w-4 h-4 shrink-0" />
                         {anime.genres.map((genre, index) => (
-                            <a
-                                key={index}
-                                href={`/genre/${encodeURIComponent(genre)}`}
-                                className="text-gray-300 hover:text-accent-300 cursor-pointer"
+                            <Link
+                                key={genre}
+                                to={`/genre/${encodeURIComponent(genre)}`}
+                                className="text-gray-300 hover:text-accent-300"
                             >
                                 {genre}
-                                {index < anime.genres.length - 1 && ", "}
-                            </a>
+                                {index < anime.genres.length - 1 && ","}
+                            </Link>
                         ))}
                     </div>
                 )}
+
                 <p className="text-gray-400 line-clamp-4 leading-relaxed text-xs">
                     {anime.synopsis || getSynopsisFallback(anime.id)}
                 </p>
+
                 <span className="grow" />
+
                 <WatchlistButton
                     anime={anime}
                     className="bg-accent-500 hover:bg-accent-600 disabled:bg-accent-800 
@@ -93,5 +99,5 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
                 />
             </div>
         </div>
-    )
+    );
 }

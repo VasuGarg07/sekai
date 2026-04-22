@@ -13,15 +13,18 @@ const SearchBar = ({ className = "" }: Props) => {
     const [query, setQuery] = useState("");
     const deferredQuery = useDeferredValue(query);
     const q = useMemo(() => deferredQuery.trim(), [deferredQuery]);
+
+    // Ref on the OUTER wrapper so clicks on both the input and dropdown
+    // are correctly detected as "inside" — fixing the bug where clicking
+    // the input was treated as outside and cleared the query
     const widgetRef = useRef<HTMLDivElement | null>(null);
 
     const shouldFetch = q.length >= 3;
     const { data: results = [], isLoading } = useAnimeSearch(q, shouldFetch);
 
-    // Close menu when clicking outside
     useEffect(() => {
-        const handleClickOutside = (e: any) => {
-            if (widgetRef.current && !widgetRef.current.contains(e.target)) {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (widgetRef.current && !widgetRef.current.contains(e.target as Node)) {
                 setQuery("");
             }
         };
@@ -30,22 +33,23 @@ const SearchBar = ({ className = "" }: Props) => {
     }, []);
 
     const handleResultClick = (anilistId: number) => {
-        goToAnime(anilistId)
+        goToAnime(anilistId);
         setQuery("");
     };
 
     const handleFilterClick = () => {
         setQuery("");
         navigate("/explore");
-    }
+    };
 
     const handleViewAllResults = () => {
         navigate(`/search?q=${encodeURIComponent(q)}`);
         setQuery("");
-    }
+    };
 
     return (
-        <div className={`relative max-w-xl ${className}`}>
+        // widgetRef on outer wrapper — covers both input and dropdown
+        <div ref={widgetRef} className={`relative max-w-xl ${className}`}>
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Search className="h-4 w-4 text-zinc-400" />
@@ -64,14 +68,14 @@ const SearchBar = ({ className = "" }: Props) => {
                 <button
                     type="button"
                     onClick={handleFilterClick}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-accent-400 hover:text-white hover:cursor-pointer transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-accent-400 hover:text-white transition-colors"
                 >
                     <Filter size={16} />
                     <span className="text-xs font-medium hidden sm:inline">FILTER</span>
                 </button>
             </div>
 
-            <div ref={widgetRef} className="absolute left-0 right-0">
+            <div className="absolute left-0 right-0">
                 {query.length > 0 && query.length < 3 && (
                     <div className="mt-1 p-4 text-center text-zinc-400 bg-zinc-800 rounded-lg border border-zinc-700 z-50">
                         Type at least 3 characters to search
@@ -86,16 +90,16 @@ const SearchBar = ({ className = "" }: Props) => {
                             <>
                                 {results.map((anime) => (
                                     <QuickSearchItem
+                                        key={anime.id}
                                         anime={anime}
                                         handleClick={handleResultClick}
                                     />
                                 ))}
-
                                 <div className="p-3 text-center border-t border-zinc-600">
                                     <button
                                         type="button"
                                         onClick={handleViewAllResults}
-                                        className="text-sm text-blue-400 hover:underline hover:cursor-pointer"
+                                        className="text-sm text-blue-400 hover:underline"
                                     >
                                         View all results →
                                     </button>

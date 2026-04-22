@@ -11,20 +11,27 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
 
     return (
         <div className="flex items-center gap-3 py-3 border-b border-gray-700">
-            {/* Poster */}
+            {/* Poster — wrapped in button for accessibility */}
             {anime.image && (
-                <img
-                    src={anime.image}
-                    alt={anime.title_english ?? anime.title_romaji ?? "Anime"}
-                    className="w-16 h-20 object-cover rounded-md"
+                <button
+                    type="button"
                     onClick={() => goToAnime(anime.id)}
-                />
+                    className="shrink-0 cursor-pointer"
+                >
+                    <img
+                        src={anime.image}
+                        alt={anime.title_english ?? anime.title_romaji ?? "Anime"}
+                        className="w-16 h-20 object-cover rounded-md"
+                    />
+                </button>
             )}
 
             {/* Info */}
             <div className="flex flex-col grow">
-                <span className="text-white text-sm font-semibold hover:text-accent-400 hover:cursor-pointer transition mb-1 line-clamp-2"
-                    onClick={() => goToAnime(anime.id)}>
+                <span
+                    onClick={() => goToAnime(anime.id)}
+                    className="text-white text-sm font-semibold hover:text-accent-400 cursor-pointer transition mb-1 line-clamp-2"
+                >
                     {anime.title_english ?? anime.title_romaji}
                 </span>
                 <div className="flex flex-wrap justify-start items-center gap-2 text-xs">

@@ -15,29 +15,37 @@ const statuses: WatchStatus[] = [
     "on-hold",
     "plan-to-watch",
     "dropped",
-    'rewatch'
+    "rewatch",
 ];
 
 export function EditAnime({ anime }: EditAnimeProps) {
     const [open, setOpen] = useState(false);
     const [status, setStatus] = useState<WatchStatus>(anime.watchStatus);
+    const [isPending, setIsPending] = useState(false);
 
-    const { mutate, isPending } = useUpdateAnime();
+    const { mutate } = useUpdateAnime();
+
+    const handleOpen = () => {
+        setStatus(anime.watchStatus);
+        setOpen(true);
+    };
 
     const handleSave = () => {
+        setIsPending(true);
         mutate(
             { anime, watchStatus: status },
-            { onSuccess: () => setOpen(false) }
+            {
+                onSuccess: () => setOpen(false),
+                onSettled: () => setIsPending(false),
+            }
         );
     };
 
     return (
         <>
             <button
-                onClick={() => {
-                    setStatus(anime.watchStatus);
-                    setOpen(true);
-                }}
+                type="button"
+                onClick={handleOpen}
                 title="Edit"
                 className="p-1 rounded-md hover:bg-zinc-700 transition-colors"
             >
@@ -95,7 +103,6 @@ export function EditAnime({ anime }: EditAnimeProps) {
 
                                 {/* Current -> New */}
                                 <div className="flex items-center gap-3 mb-5">
-                                    {/* Current Status */}
                                     <div className="flex-1">
                                         <label className="block text-xs text-gray-400 mb-1.5">Current</label>
                                         <div className={`px-3 py-2 rounded-lg text-sm border ${WatchStatusColor[anime.watchStatus]}`}>
@@ -103,10 +110,8 @@ export function EditAnime({ anime }: EditAnimeProps) {
                                         </div>
                                     </div>
 
-                                    {/* Arrow */}
                                     <ArrowRight className="w-5 h-5 text-gray-500 mt-5" />
 
-                                    {/* New Status */}
                                     <div className="flex-1">
                                         <label className="block text-xs text-gray-400 mb-1.5">New</label>
                                         <select
@@ -126,6 +131,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                                 {/* Actions */}
                                 <div className="flex gap-2">
                                     <button
+                                        type="button"
                                         onClick={() => setOpen(false)}
                                         disabled={isPending}
                                         className="flex-1 px-3 py-2 rounded-lg bg-zinc-700 text-white text-sm hover:bg-zinc-600 disabled:opacity-50 flex items-center justify-center gap-1.5"
@@ -134,6 +140,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                                         Cancel
                                     </button>
                                     <button
+                                        type="button"
                                         onClick={handleSave}
                                         disabled={isPending || status === anime.watchStatus}
                                         className="flex-1 px-3 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-1.5"

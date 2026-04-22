@@ -1,4 +1,5 @@
 import { Star, Tags } from "lucide-react";
+import { Link } from "react-router";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { getSynopsisFallback, WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
@@ -7,7 +8,7 @@ import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
 
 interface WatchlistTileProps {
-    anime: AnimeWatchList
+    anime: AnimeWatchList;
 }
 
 export default function WatchlistTile({ anime }: WatchlistTileProps) {
@@ -16,7 +17,6 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
     return (
         <div className="flex items-center shadow-xl">
             <div className="w-1/3 h-full relative group cursor-pointer" onClick={() => goToAnime(anime.id)}>
-                {/* Image */}
                 {anime.image && (
                     <img
                         src={anime.image}
@@ -25,9 +25,8 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
                         loading="lazy"
                     />
                 )}
-                {/* Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 rounded-l-lg px-2 pt-3 pb-1
-                    bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                    bg-linear-to-t from-black/80 via-black/40 to-transparent">
                     <h3 className="text-white font-semibold text-sm">
                         {anime.season} {anime.seasonYear}
                     </h3>
@@ -36,10 +35,11 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
 
             {/* Content */}
             <div className="w-2/3 p-3 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-lg">
-                {/* Title */}
-                <h3 onClick={() => goToAnime(anime.id)}
+                <h3
+                    onClick={() => goToAnime(anime.id)}
                     className="font-semibold text-accent-500 truncate leading-tight cursor-pointer
-                            hover:underline hover:text-accent-600">
+                        hover:underline hover:text-accent-600"
+                >
                     {anime.title_english ?? anime.title_romaji}
                 </h3>
 
@@ -72,22 +72,24 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
 
                 {anime.genres && anime.genres.length > 0 && (
                     <div className="text-xs flex items-center gap-1 my-1 flex-wrap">
-                        <Tags className="text-accent-500 w-4 h-4" />
+                        <Tags className="text-accent-500 w-4 h-4 shrink-0" />
                         {anime.genres.map((genre, index) => (
-                            <a
-                                key={index}
-                                href={`/genre/${encodeURIComponent(genre)}`}
-                                className="text-gray-300 hover:text-accent-300 cursor-pointer"
+                            <Link
+                                key={genre}
+                                to={`/genre/${encodeURIComponent(genre)}`}
+                                className="text-gray-300 hover:text-accent-300"
                             >
                                 {genre}
-                                {index < anime.genres.length - 1 && ", "}
-                            </a>
+                                {index < anime.genres.length - 1 && ","}
+                            </Link>
                         ))}
                     </div>
                 )}
-                <p className="text-gray-400 line-clamp-5 leading-relaxed text-xs">
+
+                <p className="text-gray-400 line-clamp-3 leading-relaxed text-xs">
                     {anime.synopsis || getSynopsisFallback(anime.id)}
                 </p>
+
                 <span className="grow" />
 
                 <div className="flex items-center gap-2">
@@ -97,11 +99,10 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
                         </div>
                     )}
                     <span className="grow" />
-
                     <EditAnime anime={anime} />
                     <RemoveAnime anime={anime} />
                 </div>
             </div>
         </div>
-    )
+    );
 }

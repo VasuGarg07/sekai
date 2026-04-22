@@ -29,9 +29,10 @@ export default function LoginPage() {
 
                 {/* Google Login */}
                 <button
+                    type="button"
                     onClick={() => dispatch(loginWithGoogle())}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-300 transition py-2 rounded-lg font-medium cursor-pointer mb-4"
+                    className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-300 transition py-2 rounded-lg font-medium cursor-pointer mb-4 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                     <img
                         src="https://www.svgrepo.com/show/355037/google.svg"
@@ -43,9 +44,10 @@ export default function LoginPage() {
 
                 {/* GitHub Login */}
                 <button
+                    type="button"
                     onClick={() => dispatch(loginWithGitHub())}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 transition py-2 rounded-lg font-medium cursor-pointer"
+                    className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 transition py-2 rounded-lg font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                     <img
                         src="https://www.svgrepo.com/show/475654/github-color.svg"
@@ -55,10 +57,10 @@ export default function LoginPage() {
                     Continue with GitHub
                 </button>
 
-                {/* Error */}
-                {error && <p className="mt-4 text-sm text-accent-400 text-center">{error}</p>}
+                {error && (
+                    <p className="mt-4 text-sm text-accent-400 text-center">{error}</p>
+                )}
 
-                {/* Footer */}
                 <p className="mt-6 text-xs text-zinc-500 text-center">
                     © {new Date().getFullYear()} Sekai. All rights reserved.
                 </p>

@@ -16,18 +16,20 @@ export default function WatchlistGrid({ anime }: WatchlistGridProps) {
     return (
         <div className="relative">
             {anime.image && (
-                <div className="aspect-[4/5] relative cursor-pointer shadow-md"
-                    onClick={() => goToAnime(anime.id)}>
+                <div
+                    className="aspect-4/5 relative cursor-pointer shadow-md group"
+                    onClick={() => goToAnime(anime.id)}
+                >
                     <img
                         src={anime.image}
                         alt={anime.title_english ?? ''}
-                        className="w-full h-full object-cover rounded-md"
+                        className="w-full h-full object-cover rounded-md transition-all duration-300 group-hover:brightness-75"
                         loading="lazy"
                     />
                     {/* Overlay */}
                     <div className="absolute bottom-0 left-0 right-0 rounded-b-sm px-2 pt-3 pb-1
-                        bg-gradient-to-t from-black/80 via-black/60 to-transparent">
-                        <h3 className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight cursor-pointer">
+                        bg-linear-to-t from-black/80 via-black/60 to-transparent">
+                        <h3 className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight">
                             {anime.title_english ?? anime.title_romaji}
                         </h3>
                         <div className="text-xs text-gray-200 flex flex-wrap gap-2">
@@ -61,10 +63,9 @@ export default function WatchlistGrid({ anime }: WatchlistGridProps) {
                     </div>
                 )}
                 <span className="grow" />
-
                 <EditAnime anime={anime} />
                 <RemoveAnime anime={anime} />
             </div>
         </div>
-    )
+    );
 }

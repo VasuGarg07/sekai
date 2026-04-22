@@ -15,7 +15,7 @@ export const ThemeSelector = () => {
 
     return (
         <SectionLayout
-            icon={<Palette size={32} className="text-accent-500" />}
+            icon={<Palette size={24} className="text-accent-500" />}
             title="App Theme"
             description="Personalize your experience by selecting your preferred accent color."
         >
@@ -23,6 +23,7 @@ export const ThemeSelector = () => {
                 {AVAILABLE_THEMES.map((theme) => (
                     <div key={theme.name} className="flex flex-col items-center gap-2">
                         <button
+                            type="button"
                             onClick={() => handleThemeChange(theme.name)}
                             disabled={isPending}
                             aria-label={`Select ${theme.label} theme`}

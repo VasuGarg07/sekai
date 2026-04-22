@@ -6,25 +6,25 @@ const socialLinks = [
     {
         icon: '/icons/x.svg',
         label: 'X (formerly Twitter)',
-        href: 'https://x.com/',
+        href: 'https://x.com/_vasugarg_',
         color: 'hover:bg-blue-500/20'
     },
     {
         icon: '/icons/github.svg',
         label: 'GitHub',
-        href: 'https://github.com/',
+        href: 'https://github.com/VasuGarg07',
         color: 'hover:bg-zinc-500/20'
     },
     {
         icon: '/icons/instagram.svg',
         label: 'Instagram',
-        href: 'https://www.instagram.com/',
+        href: 'https://www.instagram.com/_.vasugarg.07._',
         color: 'hover:bg-pink-500/20'
     },
     {
         icon: '/icons/portfolio.svg',
         label: 'Portfolio',
-        href: 'https://vasugarg.dev/',
+        href: 'https://vasu-garg.vercel.app/',
         color: 'hover:bg-purple-500/20'
     },
 ];
@@ -76,7 +76,7 @@ const Footer = () => {
                                             alt={social.label}
                                             width={16}
                                             height={16}
-                                            className="sm:w-[18px] sm:h-[18px] opacity-70 group-hover:opacity-100"
+                                            className="sm:w-4.5 sm:h-4.5 opacity-70 group-hover:opacity-100"
                                         />
                                     </a>
                                 ))}
@@ -85,7 +85,7 @@ const Footer = () => {
                     </div>
 
                     {/* Quick Links */}
-                    <div className="flex flex-col flex-shrink-0 md:text-right">
+                    <div className="flex flex-col shrink-0 md:text-right">
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white sm:text-sm">
                             Quick Links
                         </h3>
@@ -116,7 +116,7 @@ const Footer = () => {
                         </p>
                         <div className="hidden sm:flex items-center gap-1 text-xs text-zinc-500 sm:text-sm">
                             <span>Made with</span>
-                            <Heart size={12} className="fill-current text-red-500 sm:w-[14px] sm:h-[14px]" />
+                            <Heart size={12} className="fill-current text-red-500 sm:w-3.5 sm:h-3.5" />
                             <span>for anime fans</span>
                         </div>
                     </div>

@@ -10,7 +10,7 @@ export default function EmptyState({
     message,
 }: EmptyStateProps) {
     return (
-        <div className="w-full min-h-80 max-w-4xl mx-auto p-8 flex flex-col md:flex-row items-center gap-6">
+        <div className="w-full min-h-120g max-w-4xl mx-auto p-8 flex flex-col md:flex-row items-center gap-6">
             <div className="shrink-0 w-56 md:w-64 lg:w-72">
                 <img
                     src="/empty.png"

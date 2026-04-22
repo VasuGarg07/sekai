@@ -10,7 +10,7 @@ export default function ErrorState({
     message,
 }: ErrorStateProps) {
     return (
-        <div className="w-full min-h-80 max-w-4xl mx-auto p-8 flex flex-col sm:flex-row items-center gap-6">
+        <div className="w-full min-h-120 max-w-4xl mx-auto p-8 flex flex-col sm:flex-row items-center gap-6">
             <div className="shrink-0 w-44 md:w-52 lg:w-60">
                 <img
                     src="/not_found.png"

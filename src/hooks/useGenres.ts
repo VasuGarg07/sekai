@@ -13,7 +13,9 @@ export function useGenres() {
     queryKey: ["genres"],
     queryFn: async () => {
       const data = await apiClient<GenreCollectionResponse>(GENRES_QUERY);
-      return data.GenreCollection ?? [];
+      return (data.GenreCollection ?? []).filter(
+        (genre) => genre.toLowerCase() !== "hentai"
+      );
     },
     staleTime: Infinity,
     gcTime: Infinity,

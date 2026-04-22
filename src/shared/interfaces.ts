@@ -111,6 +111,7 @@ export interface SekaiUser {
 export interface UserPreferences {
     app_theme: string;
     default_watch_status: string;
+    lastSyncedAt?: number;
 }
 
 export interface ThemeColor {

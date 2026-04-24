@@ -9,12 +9,19 @@ import WatchlistGrid from "./WatchlistGrid";
 import WatchlistTable from "./WatchlistTable";
 import { RefreshCw, Grid3x3, LayoutList, TableIcon } from "lucide-react";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
-
 type ViewMode = 'grid' | 'tile' | 'table';
-
 const VIEW_MODE_KEY = 'sekai-watchlist-view';
 
 export default function Watchlist() {
+    const [viewMode, setViewMode] = useState<ViewMode>(() => {
+        const saved = localStorage.getItem(VIEW_MODE_KEY);
+        return (saved as ViewMode) ?? 'grid';
+    });
+
+    useEffect(() => {
+        localStorage.setItem(VIEW_MODE_KEY, viewMode);
+    }, [viewMode]);
+
     const {
         isLoading,
         error,
@@ -24,15 +31,6 @@ export default function Watchlist() {
         watchlistItems,
         refresh
     } = useGetWatchlist();
-
-    const [viewMode, setViewMode] = useState<ViewMode>(() => {
-        const saved = localStorage.getItem(VIEW_MODE_KEY);
-        return (saved as ViewMode) ?? 'grid';
-    });
-
-    useEffect(() => {
-        localStorage.setItem(VIEW_MODE_KEY, viewMode);
-    }, [viewMode]);
 
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
     useInfiniteScroll(loadMoreRef, fetchNextPage, isFetchingNextPage, hasNextPage);

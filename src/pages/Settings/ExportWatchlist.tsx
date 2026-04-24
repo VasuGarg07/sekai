@@ -11,18 +11,18 @@ const EXPORT_OPTIONS = [
 ];
 
 export const ExportWatchlist = () => {
-    const { data: items = [] } = useGetWatchlist();
+    const { watchlistItems } = useGetWatchlist();
 
     const handleExport = (format: string) => {
-        if (items.length === 0) {
+        if (watchlistItems.length === 0) {
             toastService.warning("Your watchlist is empty — nothing to export.");
             return;
         }
 
         switch (format) {
-            case "csv": WatchlistExporter.toCSV(items); break;
-            case "json": WatchlistExporter.toJSON(items); break;
-            case "xml": WatchlistExporter.toXML(items); break;
+            case "csv": WatchlistExporter.toCSV(watchlistItems); break;
+            case "json": WatchlistExporter.toJSON(watchlistItems); break;
+            case "xml": WatchlistExporter.toXML(watchlistItems); break;
         }
     };
 

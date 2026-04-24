@@ -1,13 +1,16 @@
-import {
-    collection, deleteDoc, doc, getCountFromServer,
-    getDoc, getDocs, limit, orderBy, query,
-    serverTimestamp, setDoc, updateDoc
-} from "firebase/firestore";
-import type { AnimeListItem, AnimeWatchList, UserPreferences, WatchStatus } from "./interfaces";
-import { fireStore } from "./firebase";
 import type { User } from "firebase/auth";
-import { cleanAnimeForWatchlist } from "./utilities";
+import {
+    collection,
+    deleteDoc, doc, getCountFromServer,
+    getDoc, getDocs, limit, orderBy,
+    query,
+    QueryDocumentSnapshot,
+    serverTimestamp, setDoc, startAfter, updateDoc
+} from "firebase/firestore";
 import { DEFAULT_PREFERENCES, MAX_USER_DOCUMENTS } from "./constants";
+import { fireStore } from "./firebase";
+import type { AnimeListItem, AnimeWatchList, UserPreferences, WatchStatus } from "./interfaces";
+import { cleanAnimeForWatchlist } from "./utilities";
 
 // --- Result types ---
 
@@ -91,13 +94,22 @@ export const updatePreferences = async (
 };
 
 // --- Watchlist ---
-
-export const fetchUserWatchList = async (uid: string): Promise<AnimeWatchList[]> => {
+export async function fetchUserWatchList(uid: string, lastDoc?: QueryDocumentSnapshot): Promise<{
+    data: AnimeWatchList[];
+    lastDoc: QueryDocumentSnapshot | null;
+}> {
     const ref = collection(fireStore, "users", uid, "watchlist");
-    const q = query(ref, orderBy("addedAt", "desc"), limit(MAX_USER_DOCUMENTS));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => doc.data() as AnimeWatchList);
-};
+    const q = lastDoc
+        ? query(ref, orderBy("addedAt", "desc"), startAfter(lastDoc), limit(24))
+        : query(ref, orderBy("addedAt", "desc"), limit(24));
+
+    const { docs } = await getDocs(q);
+
+    return {
+        data: docs.map(doc => doc.data() as AnimeWatchList),
+        lastDoc: docs.length > 0 ? docs[docs.length - 1] : null,
+    };
+}
 
 export const saveAnimeToWatchlist = async (
     anime: AnimeListItem,

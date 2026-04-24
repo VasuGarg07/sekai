@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
@@ -8,13 +8,22 @@ import WatchlistTile from "./WatchlistTile";
 import WatchlistGrid from "./WatchlistGrid";
 import WatchlistTable from "./WatchlistTable";
 import { RefreshCw, Grid3x3, LayoutList, TableIcon } from "lucide-react";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 type ViewMode = 'grid' | 'tile' | 'table';
 
 const VIEW_MODE_KEY = 'sekai-watchlist-view';
 
 export default function Watchlist() {
-    const { isLoading, error, refetch, isFetching, data: watchlistItems } = useGetWatchlist();
+    const {
+        isLoading,
+        error,
+        isFetchingNextPage,
+        hasNextPage,
+        fetchNextPage,
+        watchlistItems,
+        refresh
+    } = useGetWatchlist();
 
     const [viewMode, setViewMode] = useState<ViewMode>(() => {
         const saved = localStorage.getItem(VIEW_MODE_KEY);
@@ -24,6 +33,9 @@ export default function Watchlist() {
     useEffect(() => {
         localStorage.setItem(VIEW_MODE_KEY, viewMode);
     }, [viewMode]);
+
+    const loadMoreRef = useRef<HTMLDivElement | null>(null);
+    useInfiniteScroll(loadMoreRef, fetchNextPage, isFetchingNextPage, hasNextPage);
 
     // Initial load only — don't replace content with spinner on background refetches
     if (isLoading) {
@@ -70,12 +82,12 @@ export default function Watchlist() {
                     <span className="grow" />
                     <button
                         type="button"
-                        onClick={() => refetch()}
-                        disabled={isFetching}
+                        onClick={refresh}
+                        disabled={isFetchingNextPage}
                         className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Refresh watchlist"
                     >
-                        <RefreshCw className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`} />
+                        <RefreshCw className={`w-5 h-5 ${isFetchingNextPage ? 'animate-spin' : ''}`} />
                     </button>
                     <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
                         <button
@@ -122,6 +134,14 @@ export default function Watchlist() {
                     )}
                     {viewMode === 'table' && (
                         <WatchlistTable items={watchlistItems} />
+                    )}
+                    {hasNextPage ? (
+                        <div ref={loadMoreRef} className="flex justify-center items-center gap-2 py-8">
+                            <span className="text-md text-zinc-300">Loading</span>
+                            <span className="w-6 h-6 rounded-full border-4 border-zinc-600 border-t-zinc-300 animate-spin" />
+                        </div>
+                    ) : (
+                        <div ref={loadMoreRef} />
                     )}
                 </div>
             </div>

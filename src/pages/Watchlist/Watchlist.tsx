@@ -75,7 +75,7 @@ export default function Watchlist() {
             <div className="bg-zinc-900 px-4 sm:px-6 lg:px-8 py-4">
                 <div className="max-w-7xl mx-auto flex items-center gap-2 justify-center mb-4">
                     <h2 className="text-xl sm:text-2xl font-bold text-white">
-                        Watchlist ({watchlistItems.length})
+                        My Watchlist
                     </h2>
                     <span className="grow" />
                     <button

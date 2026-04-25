@@ -21,16 +21,15 @@ export const Modal = ({ children, ref }: ModalProps) => {
         close: handleClose
     }));
 
+    if(!isOpen) return null
+
     return createPortal(
         <div
             onClick={(e) => {
                 if (e.target === e.currentTarget) handleClose();
             }}
-            className={`fixed inset-0 z-50 flex items-end md:items-center justify-center p-4 bg-black/50 transition-all duration-200 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}`}>
-            <div
-                className={`transition-all duration-300 ${isOpen ? "translate-y-0 scale-100" : "translate-y-full md:translate-y-0 md:scale-95"}`}>
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50`}>
                 {children}
-            </div>
         </div>,
         document.getElementById("portal-root")!
     );

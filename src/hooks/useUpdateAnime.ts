@@ -14,9 +14,7 @@ export function useUpdateAnime() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ anime, watchStatus }: UpdateAnimeProps) => {
-            return updateWatchStatus(anime, watchStatus, userId);
-        },
+        mutationFn: async ({ anime, watchStatus }: UpdateAnimeProps) => updateWatchStatus(anime, watchStatus, userId),
         onSuccess: (result, { anime, watchStatus }) => {
             const title = anime.title_english ?? anime.title_romaji ?? "Anime";
 

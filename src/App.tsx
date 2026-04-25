@@ -5,11 +5,9 @@ import router from './Router';
 import { queryClient } from './shared/queryClient';
 import { store } from './store/store';
 import { useAuthListener } from './hooks/useAuthListener';
-import { ModalProvider } from './ui/ModalContext';
 import { ToastProvider } from './ui/ToastProvider';
 
 function AuthSync() {
-  // A small helper component to run useAuthListener once
   useAuthListener();
   return null;
 }
@@ -21,11 +19,8 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <ToastProvider>
-            {/* Sync Firebase -> Redux state */}
             <AuthSync />
-            <ModalProvider>
-              <RouterProvider router={router} />
-            </ModalProvider>
+            <RouterProvider router={router} />
           </ToastProvider>
         </Provider>
       </QueryClientProvider>

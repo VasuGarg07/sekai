@@ -30,6 +30,11 @@ interface AnimeFiltersProps {
 
 const currentYear = new Date().getFullYear();
 
+const yearOptions = Array.from(
+    { length: currentYear - 1980 + 1 },
+    (_, i) => 1980 + i
+).reverse();
+
 const DEFAULT_FILTERS: Filters = { sort: ["SEARCH_MATCH"] };
 
 export default function AnimeFilters({ onApply, setPage }: AnimeFiltersProps) {
@@ -88,11 +93,6 @@ export default function AnimeFilters({ onApply, setPage }: AnimeFiltersProps) {
         e.preventDefault();
         applyFilters();
     };
-
-    const yearOptions = Array.from(
-        { length: currentYear - 1980 + 1 },
-        (_, i) => 1980 + i
-    ).reverse();
 
     return (
         <form onSubmit={handleSubmit} className="bg-zinc-800 rounded-lg shadow-md sm:rounded-xl">

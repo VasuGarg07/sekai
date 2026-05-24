@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import AnimePreviewCard from "./AnimePreviewCard";
 import type { AnimeListItem } from "../shared/interfaces";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
@@ -8,7 +8,7 @@ interface AnimeGalleryCardProps {
     anime: AnimeListItem;
 }
 
-export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
+function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const previewRef = useRef<HTMLDivElement | null>(null);
@@ -105,3 +105,5 @@ export default function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
         </div>
     );
 }
+
+export default memo(AnimeGalleryCard);

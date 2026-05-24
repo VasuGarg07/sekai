@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Star } from "lucide-react";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
@@ -10,7 +11,7 @@ interface WatchlistGridProps {
     anime: AnimeWatchList;
 }
 
-export default function WatchlistGrid({ anime }: WatchlistGridProps) {
+function WatchlistGrid({ anime }: WatchlistGridProps) {
     const { goToAnime } = useAnimeNavigation();
 
     return (
@@ -69,3 +70,5 @@ export default function WatchlistGrid({ anime }: WatchlistGridProps) {
         </div>
     );
 }
+
+export default memo(WatchlistGrid);

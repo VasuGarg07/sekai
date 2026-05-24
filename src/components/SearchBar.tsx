@@ -1,4 +1,4 @@
-import { useState, useDeferredValue, useMemo, useRef, useEffect } from "react";
+import { useState, useDeferredValue, useMemo, useRef, useEffect, useCallback } from "react";
 import { Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAnimeSearch } from "../hooks/useAnimeSearch";
@@ -14,38 +14,37 @@ const SearchBar = ({ className = "" }: Props) => {
     const deferredQuery = useDeferredValue(query);
     const q = useMemo(() => deferredQuery.trim(), [deferredQuery]);
 
-    // Ref on the OUTER wrapper so clicks on both the input and dropdown
-    // are correctly detected as "inside" — fixing the bug where clicking
-    // the input was treated as outside and cleared the query
     const widgetRef = useRef<HTMLDivElement | null>(null);
 
     const shouldFetch = q.length >= 3;
     const { data: results = [], isLoading } = useAnimeSearch(q, shouldFetch);
 
+    // Handler defined inside effect so it always closes over the latest
+    // widgetRef without needing to be listed as a dependency.
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (widgetRef.current && !widgetRef.current.contains(e.target as Node)) {
                 setQuery("");
             }
         };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleResultClick = (anilistId: number) => {
+    const handleResultClick = useCallback((anilistId: number) => {
         goToAnime(anilistId);
         setQuery("");
-    };
+    }, [goToAnime]);
 
-    const handleFilterClick = () => {
+    const handleFilterClick = useCallback(() => {
         setQuery("");
         navigate("/explore");
-    };
+    }, [navigate]);
 
-    const handleViewAllResults = () => {
+    const handleViewAllResults = useCallback(() => {
         navigate(`/search?q=${encodeURIComponent(q)}`);
         setQuery("");
-    };
+    }, [navigate, q]);
 
     return (
         // widgetRef on outer wrapper — covers both input and dropdown

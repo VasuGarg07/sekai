@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
 import { WatchlistButton } from "../ui/WatchlistButton";
@@ -7,7 +8,7 @@ interface QuickSearchItemProps {
     handleClick: (anilistId: number) => void;
 }
 
-export default function QuickSearchItem({ anime, handleClick }: QuickSearchItemProps) {
+function QuickSearchItem({ anime, handleClick }: QuickSearchItemProps) {
     return (
         <div
             onClick={() => handleClick(anime.id)}
@@ -73,3 +74,5 @@ export default function QuickSearchItem({ anime, handleClick }: QuickSearchItemP
         </div>
     );
 }
+
+export default memo(QuickSearchItem);

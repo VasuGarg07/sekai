@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
@@ -62,7 +62,7 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
         }));
     };
 
-    const sortedItems = [...items].sort((a, b) => {
+    const sortedItems = useMemo(() => [...items].sort((a, b) => {
         if (!sortConfig.key) return 0;
 
         // Title sort falls back to romaji when english is null
@@ -100,7 +100,7 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
         }
 
         return 0;
-    });
+    }), [items, sortConfig]);
 
     const sharedHeaderProps = { sortConfig, onSort: handleSort };
 

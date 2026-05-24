@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Star, Tags } from "lucide-react";
 import { Link } from "react-router";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
@@ -9,7 +10,7 @@ interface AnimeTileProps {
     anime: AnimeListItem;
 }
 
-export default function AnimeTile({ anime }: AnimeTileProps) {
+function AnimeTile({ anime }: AnimeTileProps) {
     const { goToAnime } = useAnimeNavigation();
 
     return (
@@ -101,3 +102,5 @@ export default function AnimeTile({ anime }: AnimeTileProps) {
         </div>
     );
 }
+
+export default memo(AnimeTile);

@@ -1,10 +1,11 @@
 import { useId, useRef, useState } from "react";
-import { Pencil, ArrowRight, X, Check, Star } from "lucide-react";
+import { Pencil, ArrowRight, X, Check } from "lucide-react";
 import type { AnimeWatchList, WatchStatus } from "../../shared/interfaces";
 import { useUpdateAnime } from "../../hooks/useUpdateAnime";
-import { formatKey, formatScore } from "../../shared/utilities";
+import { formatKey } from "../../shared/utilities";
 import { WatchStatusColor } from "../../shared/constants";
 import { Dialog, type DialogHandle } from "../../ui/Dialog";
+import AnimeMeta from "../../components/AnimeMeta";
 
 type EditAnimeProps = {
     anime: AnimeWatchList;
@@ -75,26 +76,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                                     <span className="sr-only">Change watch status: </span>
                                     {anime.title_english ?? anime.title_romaji}
                                 </h2>
-                                <div className="text-xs text-gray-400 flex flex-wrap gap-2">
-                                    {!!anime.score && (
-                                        <>
-                                            <div className="flex items-center">
-                                                <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                                <span className="font-medium">{formatScore(anime.score)}</span>
-                                            </div>
-                                            <span>•</span>
-                                        </>
-                                    )}
-                                    {anime.type && (
-                                        <>
-                                            <div className="font-medium">{anime.type}</div>
-                                            <span>•</span>
-                                        </>
-                                    )}
-                                    {anime.status && (
-                                        <div className="font-medium">{anime.status}</div>
-                                    )}
-                                </div>
+                                <AnimeMeta anime={anime} className="text-xs text-gray-400 flex flex-wrap gap-2" starClassName="w-3 h-3 text-yellow-500" />
                             </div>
                         </div>
 

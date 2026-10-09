@@ -1,11 +1,12 @@
-import { Star, Tags } from "lucide-react";
+import { Tags } from "lucide-react";
 import { Link } from "react-router";
 import { animePath } from "../../hooks/useAnimeNavigation";
 import { getSynopsisFallback, WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
-import { formatKey, formatScore } from "../../shared/utilities";
+import { formatKey } from "../../shared/utilities";
 import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
+import AnimeMeta from "../../components/AnimeMeta";
 
 interface WatchlistTileProps {
     anime: AnimeWatchList;
@@ -39,32 +40,7 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
                     </Link>
                 </h3>
 
-                <div className="text-xs lg:text-sm text-gray-300 flex flex-wrap gap-1">
-                    {!!anime.score && (
-                        <>
-                            <div className="flex items-center gap-1">
-                                <Star className="w-3 h-3 text-yellow-500 fill-yellow-400" />
-                                <span className="font-medium">{formatScore(anime.score)}</span>
-                            </div>
-                            <span>•</span>
-                        </>
-                    )}
-                    {anime.type && (
-                        <>
-                            <div className="font-medium">{anime.type}</div>
-                            <span>•</span>
-                        </>
-                    )}
-                    {!!anime.episodes && (
-                        <>
-                            <span className="font-medium">{anime.episodes} EP</span>
-                            <span>•</span>
-                        </>
-                    )}
-                    {anime.status && (
-                        <div className="font-medium">{anime.status}</div>
-                    )}
-                </div>
+                <AnimeMeta anime={anime} className="text-xs lg:text-sm text-gray-300 flex flex-wrap gap-1" starClassName="w-3 h-3 text-yellow-500 fill-yellow-400" showEpisodes />
 
                 {anime.genres && anime.genres.length > 0 && (
                     <div className="text-xs flex items-center gap-1 my-1 flex-wrap">

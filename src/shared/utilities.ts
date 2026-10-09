@@ -41,6 +41,16 @@ export function formatDate(
     }).format(dt);
 }
 
+/**
+ * AniList descriptions contain <br>/<i> tags and HTML entities (&amp;, &quot;, &#039;...).
+ * DOMParser gives plain text with entities decoded; it never runs scripts or loads resources.
+ */
+function toPlainText(html: string): string {
+    const withBreaks = html.replace(/<br\s*\/?>/gi, "\n");
+    const text = new DOMParser().parseFromString(withBreaks, "text/html").body.textContent ?? "";
+    return text.replace(/\n{3,}/g, "\n\n").trim();
+}
+
 export function mapMediaToAnimeListItem(m: AniListMedia): AnimeListItem {
     return {
         id: m.id,
@@ -55,10 +65,7 @@ export function mapMediaToAnimeListItem(m: AniListMedia): AnimeListItem {
             m.startDate?.month ?? null,
             m.startDate?.day ?? null
         ),
-        synopsis:
-            typeof m.description === "string"
-                ? m.description.replace(/<[^>]+>/g, "").trim()
-            : null,
+        synopsis: typeof m.description === "string" ? toPlainText(m.description) : null,
         synonyms: m.synonyms ?? [],
         status: m.status ?? null,
         genres: m.genres ?? [],

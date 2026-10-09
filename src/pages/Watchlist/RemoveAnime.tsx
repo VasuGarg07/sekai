@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Trash, X, AlertTriangle, Star } from "lucide-react";
 import type { AnimeWatchList } from "../../shared/interfaces";
 import { useRemoveAnime } from "../../hooks/useRemoveAnime";
@@ -10,6 +10,7 @@ type RemoveAnimeProps = {
 
 export function RemoveAnime({ anime }: RemoveAnimeProps) {
     const dialogRef = useRef<DialogHandle>(null);
+    const titleId = useId();
     const [isPending, setIsPending] = useState(false);
 
     const { mutate } = useRemoveAnime();
@@ -33,7 +34,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                 <Trash className="w-4 h-4 text-red-500 transition-colors" />
             </button>
 
-            <Dialog ref={dialogRef}>
+            <Dialog ref={dialogRef} labelledBy={titleId}>
                 <div
                     className="bg-zinc-800 rounded-xl w-full max-w-md"
                     onClick={(e) => e.stopPropagation()}
@@ -44,7 +45,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                             <div className="p-2 bg-red-500/20 rounded-lg">
                                 <AlertTriangle className="w-5 h-5 text-red-400" />
                             </div>
-                            <h2 className="text-lg font-semibold text-white">Remove from Watchlist?</h2>
+                            <h2 id={titleId} className="text-lg font-semibold text-white">Remove from Watchlist?</h2>
                         </div>
 
                         {/* Anime Info */}

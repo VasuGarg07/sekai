@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Pencil, ArrowRight, X, Check, Star } from "lucide-react";
 import type { AnimeWatchList, WatchStatus } from "../../shared/interfaces";
 import { useUpdateAnime } from "../../hooks/useUpdateAnime";
 import { formatKey } from "../../shared/utilities";
 import { WatchStatusColor } from "../../shared/constants";
-import { Modal, type ModalHandle } from "../../ui/Modal";
+import { Dialog, type DialogHandle } from "../../ui/Dialog";
 
 type EditAnimeProps = {
     anime: AnimeWatchList;
@@ -22,13 +22,14 @@ const statuses: WatchStatus[] = [
 export function EditAnime({ anime }: EditAnimeProps) {
     const [status, setStatus] = useState<WatchStatus>(anime.watchStatus);
     const [isPending, setIsPending] = useState(false);
-    const modalRef = useRef<ModalHandle>(null);
+    const dialogRef = useRef<DialogHandle>(null);
+    const titleId = useId();
 
     const { mutate } = useUpdateAnime();
 
     const handleOpen = () => {
         setStatus(anime.watchStatus);
-        modalRef.current?.open();
+        dialogRef.current?.openDialog();
     };
 
     const handleSave = () => {
@@ -36,7 +37,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
         mutate(
             { anime, watchStatus: status },
             {
-                onSuccess: () => modalRef.current?.close(),
+                onSuccess: () => dialogRef.current?.closeDialog(),
                 onSettled: () => setIsPending(false),
             }
         );
@@ -53,7 +54,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                 <Pencil className="w-4 h-4 text-gray-400 hover:text-white" />
             </button>
 
-            <Modal ref={modalRef}>
+            <Dialog ref={dialogRef} labelledBy={titleId}>
                 <div
                     className="bg-zinc-800 rounded-xl w-full max-w-md"
                     onClick={(e) => e.stopPropagation()}
@@ -69,9 +70,10 @@ export function EditAnime({ anime }: EditAnimeProps) {
                                 />
                             )}
                             <div>
-                                <p className="font-medium text-white text-sm flex-1 line-clamp-2">
+                                <h2 id={titleId} className="font-medium text-white text-sm flex-1 line-clamp-2">
+                                    <span className="sr-only">Change watch status: </span>
                                     {anime.title_english ?? anime.title_romaji}
-                                </p>
+                                </h2>
                                 <div className="text-xs text-gray-400 flex flex-wrap gap-2">
                                     {!!anime.score && (
                                         <>
@@ -126,7 +128,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                         <div className="flex gap-2">
                             <button
                                 type="button"
-                                onClick={() => modalRef.current?.close()}
+                                onClick={() => dialogRef.current?.closeDialog()}
                                 disabled={isPending}
                                 className="flex-1 px-3 py-2 rounded-lg bg-zinc-700 text-white text-sm hover:bg-zinc-600 disabled:opacity-50 flex items-center justify-center gap-1.5"
                             >
@@ -145,7 +147,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                         </div>
                     </div>
                 </div>
-            </Modal>
+            </Dialog>
         </>
     );
 }

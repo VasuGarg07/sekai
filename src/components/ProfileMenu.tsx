@@ -1,5 +1,6 @@
 import { Bookmark, LogOut, Settings } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useDismiss } from "../hooks/useDismiss";
 import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { logout } from "../store/slices/authSlice";
@@ -14,15 +15,7 @@ const ProfileMenu = ({ className = "" }) => {
     const [avatarError, setAvatarError] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    useDismiss(menuRef, () => setOpen(false), open);
 
     useEffect(() => {
         setAvatarError(false);

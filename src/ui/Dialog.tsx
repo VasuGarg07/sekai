@@ -8,9 +8,15 @@ export interface DialogHandle {
 interface DialogProps {
     children: ReactNode,
     ref: RefObject<DialogHandle | null>
+    /** id of the heading that names the dialog, for screen readers */
+    labelledBy?: string;
 }
 
-export const Dialog = ({ children, ref }: DialogProps) => {
+/**
+ * Modal popup built on the native <dialog>: Escape closes it, focus stays inside
+ * while open, and the browser returns focus to the opener when it closes.
+ */
+export const Dialog = ({ children, ref, labelledBy }: DialogProps) => {
 
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -22,6 +28,7 @@ export const Dialog = ({ children, ref }: DialogProps) => {
     return (
         <dialog
             ref={dialogRef}
+            aria-labelledby={labelledBy}
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent p-0 backdrop:bg-black/50"
             onClick={(e) => {
                 // React events bubble through the component tree, not the DOM, so without this a click

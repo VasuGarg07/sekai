@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Loader2, Check, Plus, Trash, X, AlertTriangle, Star } from "lucide-react";
 import { useSaveAnime } from "../hooks/useSaveAnime";
 import { useRemoveAnime } from "../hooks/useRemoveAnime";
@@ -14,6 +14,7 @@ interface WatchlistButtonProps {
 export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps) {
     const [isPending, setIsPending] = useState(false);
     const dialogRef = useRef<DialogHandle>(null);
+    const titleId = useId();
 
     const { mutate: saveAnime } = useSaveAnime();
     const { mutate: removeAnime } = useRemoveAnime();
@@ -78,7 +79,7 @@ export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps)
                 {content}
             </button>
 
-            <Dialog ref={dialogRef}>
+            <Dialog ref={dialogRef} labelledBy={titleId}>
                 <div
                     className="bg-zinc-800 rounded-xl w-full max-w-md"
                     onClick={(e) => e.stopPropagation()}
@@ -88,7 +89,7 @@ export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps)
                             <div className="p-2 bg-red-500/20 rounded-lg">
                                 <AlertTriangle className="w-5 h-5 text-red-400" />
                             </div>
-                            <h2 className="text-lg font-semibold text-white">Remove from Watchlist?</h2>
+                            <h2 id={titleId} className="text-lg font-semibold text-white">Remove from Watchlist?</h2>
                         </div>
 
                         <div className="flex items-center gap-3 mb-5">

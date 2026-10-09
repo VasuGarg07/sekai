@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import { useDismiss } from '../hooks/useDismiss';
 import { Menu as MenuIcon } from 'lucide-react';
 import { Link } from 'react-router';
 import { navigationLinks } from '../shared/constants';
@@ -7,15 +8,7 @@ const NavMenu = ({ className = '' }) => {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    useDismiss(menuRef, () => setOpen(false), open);
 
     return (
         <div className={className} ref={menuRef}>

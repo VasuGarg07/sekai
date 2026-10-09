@@ -1,9 +1,10 @@
-import { useState, useDeferredValue, useMemo, useRef, useEffect, useCallback } from "react";
+import { useState, useDeferredValue, useMemo, useRef, useCallback } from "react";
 import { Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAnimeSearch } from "../hooks/useAnimeSearch";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 import QuickSearchItem from "./QuickSearchItem";
+import { useDismiss } from "../hooks/useDismiss";
 
 type Props = { className?: string };
 
@@ -19,17 +20,8 @@ const SearchBar = ({ className = "" }: Props) => {
     const shouldFetch = q.length >= 3;
     const { data: results = [], isLoading } = useAnimeSearch(q, shouldFetch);
 
-    // Handler defined inside effect so it always closes over the latest
-    // widgetRef without needing to be listed as a dependency.
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (widgetRef.current && !widgetRef.current.contains(e.target as Node)) {
-                setQuery("");
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    // Clicking outside the search box or pressing Escape closes the results
+    useDismiss(widgetRef, () => setQuery(""), query.length > 0);
 
     const handleResultClick = useCallback((anilistId: number) => {
         goToAnime(anilistId);

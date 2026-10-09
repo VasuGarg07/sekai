@@ -111,6 +111,17 @@ export function formatKey(key: string): string {
 /** AniList scores are 0-100; the app always shows them out of 10 with one decimal (84 -> "8.4"). */
 export const formatScore = (score: number) => (score / 10).toFixed(1);
 
+/** e.g. "Sat, Oct 12, 9:30 PM IST" — shown in the viewer's own time zone */
+export const formatAiringTime = (timestamp: number) =>
+    new Date(timestamp).toLocaleString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+    });
+
 export const formatDateEpoch = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString("en-US", {
         year: "numeric",

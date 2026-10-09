@@ -9,7 +9,7 @@ import { useAnimeDetail } from "../../hooks/useAnimeDetail";
 import { ApiError } from "../../shared/apiClient";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import Fallback from "/default-banner.jpg";
-import { formatDateEpoch, formatScore } from "../../shared/utilities";
+import { formatAiringTime, formatScore } from "../../shared/utilities";
 import { useAdultMode } from "../../hooks/useUpdatePreferences";
 import { useAppSelector } from "../../store/reduxHooks";
 import StatusState from "../../ui/StatusState";
@@ -189,7 +189,7 @@ const AnimeDetail = () => {
                                 Episode{" "}
                                 <span className="font-semibold text-blue-50">{data.nextEpisode.episode}</span>
                                 {" "}airing at{" "}
-                                <span className="font-semibold text-blue-50">{formatDateEpoch(data.nextEpisode.airingAt)}</span>
+                                <span className="font-semibold text-blue-50">{formatAiringTime(data.nextEpisode.airingAt)}</span>
                             </span>
                         </div>
                     )}

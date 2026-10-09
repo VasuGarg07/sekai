@@ -3,6 +3,14 @@
 
 html {
   font-family: 'Poppins', sans-serif;
+  color-scheme: dark;
+}
+
+/* Dark base so nothing flashes white while lazy pages and images load */
+html,
+body {
+  background-color: var(--color-zinc-900);
+  color: var(--color-zinc-100);
 }
 
 #root {

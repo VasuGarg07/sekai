@@ -11,9 +11,9 @@ export default function Layout() {
     }, [pathname]);
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-zinc-900">
             <Header />
-            <main className="flex-1">
+            <main className="flex-1 bg-zinc-900">
                 <Suspense fallback={<LoadingState />}>
                     <Outlet />
                 </Suspense>

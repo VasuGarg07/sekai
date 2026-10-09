@@ -9,7 +9,7 @@ import { useAnimeDetail } from "../../hooks/useAnimeDetail";
 import { ApiError } from "../../shared/apiClient";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import Fallback from "/default-banner.jpg";
-import { formatDateEpoch } from "../../shared/utilities";
+import { formatDateEpoch, formatScore } from "../../shared/utilities";
 import { useAdultMode } from "../../hooks/useUpdatePreferences";
 import { useAppSelector } from "../../store/reduxHooks";
 import StatusState from "../../ui/StatusState";
@@ -152,7 +152,7 @@ const AnimeDetail = () => {
                     <div className="flex items-center gap-8 mb-2 text-sm">
                         {!!data.score && (
                             <span className="flex items-center gap-2 text-yellow-400 font-medium">
-                                <Star className="w-5 h-5" /> {(data.score / 10).toFixed(1)}
+                                <Star className="w-5 h-5" /> {formatScore(data.score)}
                             </span>
                         )}
                         {!!data.popularity && (

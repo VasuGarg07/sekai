@@ -5,6 +5,7 @@ import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
 import { WatchlistButton } from "../ui/WatchlistButton";
+import { formatScore } from "../shared/utilities";
 
 interface AnimeTileProps {
     anime: AnimeListItem;
@@ -46,7 +47,7 @@ function AnimeTile({ anime }: AnimeTileProps) {
                     {!!anime.score && (
                         <div className="flex items-center text-yellow-500 gap-1 shrink-0">
                             <Star className="w-4 h-4" />
-                            <span className="font-medium">{anime.score / 10}</span>
+                            <span className="font-medium">{formatScore(anime.score)}</span>
                         </div>
                     )}
                 </div>

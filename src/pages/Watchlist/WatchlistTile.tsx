@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { getSynopsisFallback, WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
-import { formatKey } from "../../shared/utilities";
+import { formatKey, formatScore } from "../../shared/utilities";
 import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
 
@@ -48,7 +48,7 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
                         <>
                             <div className="flex items-center gap-1">
                                 <Star className="w-3 h-3 text-yellow-500 fill-yellow-400" />
-                                <span className="font-medium">{anime.score / 10}</span>
+                                <span className="font-medium">{formatScore(anime.score)}</span>
                             </div>
                             <span>•</span>
                         </>

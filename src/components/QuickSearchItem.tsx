@@ -2,6 +2,7 @@ import { memo } from "react";
 import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
 import { WatchlistButton } from "../ui/WatchlistButton";
+import { formatScore } from "../shared/utilities";
 
 interface QuickSearchItemProps {
     anime: AnimeListItem;
@@ -35,7 +36,7 @@ function QuickSearchItem({ anime, handleClick }: QuickSearchItemProps) {
                         {!!anime.score && (
                             <>
                                 <span className="bg-yellow-500 text-white rounded px-1 font-medium">
-                                    ★ {anime.score}%
+                                    ★ {formatScore(anime.score)}
                                 </span>
                                 <span>•</span>
                             </>

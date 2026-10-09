@@ -2,7 +2,7 @@ import { useId, useRef, useState } from "react";
 import { Pencil, ArrowRight, X, Check, Star } from "lucide-react";
 import type { AnimeWatchList, WatchStatus } from "../../shared/interfaces";
 import { useUpdateAnime } from "../../hooks/useUpdateAnime";
-import { formatKey } from "../../shared/utilities";
+import { formatKey, formatScore } from "../../shared/utilities";
 import { WatchStatusColor } from "../../shared/constants";
 import { Dialog, type DialogHandle } from "../../ui/Dialog";
 
@@ -79,7 +79,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                                         <>
                                             <div className="flex items-center">
                                                 <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                                <span className="font-medium">{anime.score / 10}</span>
+                                                <span className="font-medium">{formatScore(anime.score)}</span>
                                             </div>
                                             <span>•</span>
                                         </>

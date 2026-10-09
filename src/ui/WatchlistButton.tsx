@@ -5,6 +5,7 @@ import { useRemoveAnime } from "../hooks/useRemoveAnime";
 import { useWatchlistSet } from "../hooks/useWatchlistSet";
 import { Dialog, type DialogHandle } from "./Dialog";
 import type { AnimeListItem } from "../shared/interfaces";
+import { formatScore } from "../shared/utilities";
 
 interface WatchlistButtonProps {
     anime: AnimeListItem;
@@ -107,7 +108,7 @@ export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps)
                                         <>
                                             <div className="flex items-center">
                                                 <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                                <span className="font-medium">{anime.score / 10}</span>
+                                                <span className="font-medium">{formatScore(anime.score)}</span>
                                             </div>
                                             <span>•</span>
                                         </>

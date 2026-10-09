@@ -3,6 +3,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import AnimePreviewCard from "./AnimePreviewCard";
 import type { AnimeListItem } from "../shared/interfaces";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
+import { formatScore } from "../shared/utilities";
 
 interface AnimeGalleryCardProps {
     anime: AnimeListItem;
@@ -86,7 +87,7 @@ function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
                         <>
                             <div className="flex items-center">
                                 <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                <span className="font-medium">{anime.score / 10}</span>
+                                <span className="font-medium">{formatScore(anime.score)}</span>
                             </div>
                             <span>•</span>
                         </>

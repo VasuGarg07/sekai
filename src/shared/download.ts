@@ -1,5 +1,5 @@
 import type { AnimeWatchList } from "./interfaces";
-import { formatDateEpoch, formatKey } from "./utilities";
+import { formatDateEpoch, formatKey, formatScore } from "./utilities";
 import Papa from 'papaparse';
 
 interface FormattedAnimeData {
@@ -29,7 +29,7 @@ const formatData = (items: AnimeWatchList[]): FormattedAnimeData[] => {
         type: item.type || "N/A",
         episodes: item.episodes?.toString() || "N/A",
         duration: item.duration ? `${item.duration} mins` : "N/A",
-        score: item.score?.toString() || "N/A",
+        score: item.score ? formatScore(item.score) : "N/A",
         status: item.status || "N/A",
         watchStatus: formatKey(item.watchStatus),
         season: item.season || "N/A",

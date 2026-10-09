@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
-import { formatDateEpoch, formatKey } from "../../shared/utilities";
+import { formatDateEpoch, formatKey, formatScore } from "../../shared/utilities";
 import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
 
@@ -176,7 +176,7 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                             {/* Score */}
                             <td className="px-3 py-1.5 border-r border-zinc-800 whitespace-nowrap text-center">
                                 {anime.score ? (
-                                    <span className="text-yellow-400 font-medium">{anime.score}</span>
+                                    <span className="text-yellow-400 font-medium">{formatScore(anime.score)}</span>
                                 ) : (
                                     <span className="text-gray-500">-</span>
                                 )}

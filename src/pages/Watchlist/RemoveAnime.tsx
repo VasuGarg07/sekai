@@ -3,6 +3,7 @@ import { Trash, X, AlertTriangle, Star } from "lucide-react";
 import type { AnimeWatchList } from "../../shared/interfaces";
 import { useRemoveAnime } from "../../hooks/useRemoveAnime";
 import { Dialog, type DialogHandle } from "../../ui/Dialog";
+import { formatScore } from "../../shared/utilities";
 
 type RemoveAnimeProps = {
     anime: AnimeWatchList;
@@ -66,7 +67,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                                         <>
                                             <div className="flex items-center">
                                                 <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                                <span className="font-medium">{anime.score / 10}</span>
+                                                <span className="font-medium">{formatScore(anime.score)}</span>
                                             </div>
                                             <span>•</span>
                                         </>

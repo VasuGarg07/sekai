@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
-import { formatKey } from "../../shared/utilities";
+import { formatKey, formatScore } from "../../shared/utilities";
 import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
 
@@ -38,7 +38,7 @@ function WatchlistGrid({ anime }: WatchlistGridProps) {
                                 <>
                                     <div className="flex items-center">
                                         <Star className="w-3 h-3 text-yellow-500 fill-yellow-500 mr-1" />
-                                        <span className="font-medium">{anime.score / 10}</span>
+                                        <span className="font-medium">{formatScore(anime.score)}</span>
                                     </div>
                                     <span>•</span>
                                 </>

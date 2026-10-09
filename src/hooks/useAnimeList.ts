@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
+import { isAdultFilter, MEDIA_LIST_FIELDS } from "../shared/anilistFields";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
-import type { AnimeListItem, AnimeListResponse, PagedResult } from "../shared/interfaces";
+import type { AnimeListResponse, PagedResult } from "../shared/interfaces";
+import { useAdultMode } from "./useUpdatePreferences";
 
 const QUERY = /* GraphQL */ `
-  query ($page: Int, $perPage: Int, $sort: [MediaSort], $status: MediaStatus) {
+  query ($page: Int, $perPage: Int, $sort: [MediaSort], $status: MediaStatus, $isAdult: Boolean) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
         total
@@ -17,46 +19,33 @@ const QUERY = /* GraphQL */ `
         type: ANIME
         sort: $sort
         status: $status
-        isAdult: false
+        isAdult: $isAdult
       ) {
-        id
-        title { english romaji }
-        coverImage { large }
-        format
-        duration
-        averageScore
-        startDate { year month day }
-        description(asHtml: false)
-        synonyms
-        status
-        genres
-        episodes
-        season
-        seasonYear
+        ${MEDIA_LIST_FIELDS}
       }
     }
   }
 `;
 
 export function useAnimeList(
-  key: string,
   sort: string[],
   status?: string,
   page: number = 1,
   perPage: number = 30,
 ) {
+  const adultMode = useAdultMode();
+
   return useQuery<PagedResult, Error>({
-    queryKey: ["animeList", key, sort.join('-'), status, page, perPage],
+    queryKey: ["animeList", sort.join('-'), status, page, perPage, adultMode],
     queryFn: async () => {
-      const data = await apiClient<AnimeListResponse>(QUERY, { page, perPage, sort, status });
-      const media = data.Page?.media ?? [];
-      const pageInfo = data.Page?.pageInfo ?? {};
+      const data = await apiClient<AnimeListResponse>(QUERY, {
+        page, perPage, sort, status, isAdult: isAdultFilter(adultMode),
+      });
       return {
-        items: media.map(m => mapMediaToAnimeListItem(m as AnimeListItem)),
-        pageInfo,
-      } as PagedResult;
+        items: (data.Page?.media ?? []).map(mapMediaToAnimeListItem),
+        pageInfo: data.Page.pageInfo,
+      };
     },
     staleTime: 60 * 60 * 1000,
-    retry: false,
   });
 }

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
 import type { AnimeDetail, AnimeDetailResponse } from "../shared/interfaces";
 import { mapMediaToAnimeDetail } from "../shared/utilities";
+import { MEDIA_LIST_FIELDS } from "../shared/anilistFields";
 
 const QUERY = /* GraphQL */ `
   query ($id: Int) {
@@ -36,6 +37,8 @@ const QUERY = /* GraphQL */ `
       favourites
       season
       seasonYear
+      startDate { year month day }
+      isAdult
       relations {
         edges {
           relationType
@@ -52,6 +55,7 @@ const QUERY = /* GraphQL */ `
             }
             format
             status
+            isAdult
           }
         }
       }
@@ -59,17 +63,7 @@ const QUERY = /* GraphQL */ `
         edges {
           node {
             mediaRecommendation {
-              id
-              title { romaji english }
-              coverImage { large }
-              format
-              status
-              averageScore
-              seasonYear
-              duration
-              description(asHtml: false)
-              synonyms
-              genres
+              ${MEDIA_LIST_FIELDS}
             }
           }
         }
@@ -92,10 +86,10 @@ export function useAnimeDetail(id: number) {
     queryKey: ["animeDetail", id],
     queryFn: async () => {
       const data = await apiClient<AnimeDetailResponse>(QUERY, { id });
-      if (!data.Media) throw new Error("Anime not found");
-      return mapMediaToAnimeDetail(data.Media as AnimeDetail);
+      if (!data.Media) throw new Error("We couldn't find this anime.");
+      return mapMediaToAnimeDetail(data.Media);
     },
+    enabled: Number.isFinite(id),
     staleTime: 30 * 60 * 1000,
-    retry: false,
   });
 }

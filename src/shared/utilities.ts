@@ -1,5 +1,5 @@
 import type { User } from "firebase/auth";
-import type { AnimeDetail, AnimeListItem, AnimeRelation, AnimeSpotlight, AnimeTag, SekaiUser } from "./interfaces";
+import type { AniListMedia, AnimeDetail, AnimeListItem, AnimeSpotlight, SekaiUser } from "./interfaces";
 
 /** Helpers */
 export function serializeUser(user: User): SekaiUser {
@@ -41,7 +41,7 @@ export function formatDate(
     }).format(dt);
 }
 
-export function mapMediaToAnimeListItem(m: any): AnimeListItem {
+export function mapMediaToAnimeListItem(m: AniListMedia): AnimeListItem {
     return {
         id: m.id,
         image: m.coverImage?.large ?? null,
@@ -65,10 +65,11 @@ export function mapMediaToAnimeListItem(m: any): AnimeListItem {
         episodes: m.episodes ?? null,
         season: m.season ?? null,
         seasonYear: m.seasonYear ?? null,
+        isAdult: !!m.isAdult,
     };
 }
 
-export function mapMediaToAnimeDetail(m: any): AnimeDetail {
+export function mapMediaToAnimeDetail(m: AniListMedia): AnimeDetail {
     const base = mapMediaToAnimeListItem(m);
 
     return {
@@ -79,27 +80,26 @@ export function mapMediaToAnimeDetail(m: any): AnimeDetail {
         },
         bannerImage: m.bannerImage ?? null,
         countryOfOrigin: m.countryOfOrigin ?? null,
-        tags: (m.tags ?? []) as AnimeTag[],
+        tags: m.tags ?? [],
         popularity: m.popularity ?? null,
         favourites: m.favourites ?? null,
-        relations: (m.relations?.edges ?? []) as AnimeRelation[],
-        recommendations:
-            m.recommendations?.edges
-                ?.map((e: any) => e.node?.mediaRecommendation)
-                .filter(Boolean)
-                .map(mapMediaToAnimeListItem) ?? [],
+        relations: m.relations?.edges ?? [],
+        recommendations: (m.recommendations?.edges ?? [])
+            .map(e => e.node?.mediaRecommendation)
+            .filter((r): r is AniListMedia => !!r)
+            .map(mapMediaToAnimeListItem),
         trailer: m.trailer ?? null,
         nextEpisode: m.nextAiringEpisode ? {
             episode: m.nextAiringEpisode.episode,
             airingAt: m.nextAiringEpisode.airingAt * 1000
-        } : null
+        } : null,
     }
 }
 
-export function mapMediaToAnimeSpotlight(m: Record<string, unknown>): AnimeSpotlight {
+export function mapMediaToAnimeSpotlight(m: AniListMedia): AnimeSpotlight {
     return {
         ...mapMediaToAnimeListItem(m),
-        banner: (m.bannerImage as string) ?? null,
+        banner: m.bannerImage ?? null,
     };
 }
 

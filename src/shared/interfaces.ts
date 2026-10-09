@@ -14,6 +14,8 @@ export interface AnimeListItem {
     episodes: number | null;
     season: string | null;
     seasonYear: number | null;
+    /** From AniList; not stored in the watchlist */
+    isAdult?: boolean;
 }
 
 export interface AnimeSpotlight extends AnimeListItem {
@@ -61,7 +63,7 @@ export interface AnimeRelation {
         };
         format: string | null;
         status: string | null;
-        meta: string | null
+        isAdult: boolean | null;
     };
 }
 
@@ -135,26 +137,48 @@ export interface PagedResult {
 
 // Raw GraphQL response wrappers — used to type apiClient<T> calls
 
+/** Media object as returned by AniList. Every field is optional because each query selects a subset. */
+export interface AniListMedia {
+    id: number;
+    title?: { english?: string | null; romaji?: string | null } | null;
+    coverImage?: { large?: string | null; extraLarge?: string | null } | null;
+    bannerImage?: string | null;
+    format?: string | null;
+    duration?: number | null;
+    averageScore?: number | null;
+    startDate?: { year?: number | null; month?: number | null; day?: number | null } | null;
+    description?: string | null;
+    synonyms?: string[] | null;
+    status?: string | null;
+    genres?: string[] | null;
+    episodes?: number | null;
+    season?: string | null;
+    seasonYear?: number | null;
+    isAdult?: boolean | null;
+    countryOfOrigin?: string | null;
+    tags?: AnimeTag[] | null;
+    popularity?: number | null;
+    favourites?: number | null;
+    relations?: { edges?: AnimeRelation[] | null } | null;
+    recommendations?: { edges?: { node?: { mediaRecommendation?: AniListMedia | null } | null }[] | null } | null;
+    trailer?: AnimeTrailer | null;
+    nextAiringEpisode?: { episode: number; airingAt: number } | null;
+}
+
 export interface AnimeListResponse {
     Page: {
         pageInfo: Pagination;
-        media: unknown[];
+        media: AniListMedia[];
     };
 }
 
 export interface AnimeDetailResponse {
-    Media: unknown;
+    Media: AniListMedia | null;
 }
 
-export interface AnimeSpotlightResponse {
+export interface AnimeMediaPageResponse {
     Page: {
-        media: unknown[];
-    };
-}
-
-export interface AnimeSearchResponse {
-    Page: {
-        media: unknown[];
+        media: AniListMedia[];
     };
 }
 

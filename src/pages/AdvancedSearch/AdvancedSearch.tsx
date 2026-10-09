@@ -20,7 +20,7 @@ const AdvancedSearch = () => {
     useEffect(() => setPage(1), [q]);
 
     const effectiveFilters: Filters = q ? { ...filters, search: q } : { ...filters };
-    const { data, isLoading, error } = useAdvancedAnimeSearch("advanced", { ...effectiveFilters, page });
+    const { data, isLoading, error } = useAdvancedAnimeSearch({ ...effectiveFilters, page });
 
     if (isLoading) {
         return (

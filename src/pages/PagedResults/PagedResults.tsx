@@ -23,7 +23,7 @@ const PagedResults = ({ title, queryKey, sort, status }: PagedResultsProps) => {
         setPage(1);
     }, [queryKey, status]);
 
-    const { data, isLoading, error } = useAnimeList(queryKey, sort, status, page);
+    const { data, isLoading, error } = useAnimeList(sort, status, page);
 
     if (isLoading) {
         return (

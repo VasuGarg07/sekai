@@ -1,6 +1,6 @@
 import { Star, Tags } from "lucide-react";
 import { Link } from "react-router";
-import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
+import { animePath } from "../../hooks/useAnimeNavigation";
 import { getSynopsisFallback, WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
 import { formatKey, formatScore } from "../../shared/utilities";
@@ -12,15 +12,13 @@ interface WatchlistTileProps {
 }
 
 export default function WatchlistTile({ anime }: WatchlistTileProps) {
-    const { goToAnime } = useAnimeNavigation();
-
     return (
         <div className="flex items-center shadow-xl">
-            <div className="w-1/3 h-full relative group cursor-pointer" onClick={() => goToAnime(anime.id)}>
+            <Link to={animePath(anime.id)} tabIndex={-1} aria-hidden="true" className="block w-1/3 h-full relative group">
                 {anime.image && (
                     <img
                         src={anime.image}
-                        alt={anime.title_english ?? ''}
+                        alt=""
                         className="w-full h-full object-cover rounded-l-lg"
                         loading="lazy"
                     />
@@ -31,16 +29,14 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
                         {anime.season} {anime.seasonYear}
                     </h3>
                 </div>
-            </div>
+            </Link>
 
             {/* Content */}
             <div className="w-2/3 p-3 bg-zinc-800 h-full flex flex-col gap-1 rounded-r-lg">
-                <h3
-                    onClick={() => goToAnime(anime.id)}
-                    className="font-semibold text-accent-500 truncate leading-tight cursor-pointer
-                        hover:underline hover:text-accent-600"
-                >
-                    {anime.title_english ?? anime.title_romaji}
+                <h3 className="font-semibold text-accent-500 truncate leading-tight">
+                    <Link to={animePath(anime.id)} className="hover:underline hover:text-accent-600 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500">
+                        {anime.title_english ?? anime.title_romaji}
+                    </Link>
                 </h3>
 
                 <div className="text-xs lg:text-sm text-gray-300 flex flex-wrap gap-1">

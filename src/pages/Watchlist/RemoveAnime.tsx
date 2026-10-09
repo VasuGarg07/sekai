@@ -30,6 +30,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                 type="button"
                 onClick={() => dialogRef.current?.openDialog()}
                 title="Remove"
+                aria-label={`Remove ${anime.title_english ?? anime.title_romaji ?? "this anime"} from watchlist`}
                 className="p-1 rounded-md hover:bg-zinc-700 transition-colors"
             >
                 <Trash className="w-4 h-4 text-red-500 transition-colors" />

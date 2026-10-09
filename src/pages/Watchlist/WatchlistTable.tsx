@@ -40,13 +40,18 @@ function SortableHeader({
 }) {
     return (
         <th
-            className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap cursor-pointer hover:bg-zinc-700 transition-colors select-none"
-            onClick={() => onSort(sortKey)}
+            className="border-r border-zinc-700 whitespace-nowrap p-0"
+            aria-sort={sortConfig.key !== sortKey ? "none" : sortConfig.direction === "asc" ? "ascending" : "descending"}
         >
-            <div className="flex items-center justify-between gap-1">
+            <button
+                type="button"
+                onClick={() => onSort(sortKey)}
+                className="w-full px-3 py-2 flex items-center justify-between gap-1 uppercase cursor-pointer
+                    hover:bg-zinc-700 transition-colors select-none focus-visible:outline-2 focus-visible:outline-accent-500"
+            >
                 {label}
                 <SortIcon columnKey={sortKey} sortConfig={sortConfig} />
-            </div>
+            </button>
         </th>
     );
 }

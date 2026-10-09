@@ -150,6 +150,7 @@ export default function AnimeFilters({ search, onApply }: AnimeFiltersProps) {
                                         key={key}
                                         type="button"
                                         onClick={() => toggleFilter("formatIn", key)}
+                                        aria-pressed={!!filters.formatIn?.includes(key)}
                                         className={`px-2.5 py-1 rounded-full text-xs transition sm:px-3 sm:text-sm ${filters.formatIn?.includes(key)
                                             ? "bg-accent-500 text-white"
                                             : "bg-zinc-700 text-gray-300 hover:bg-zinc-600"
@@ -172,6 +173,7 @@ export default function AnimeFilters({ search, onApply }: AnimeFiltersProps) {
                                         key={key}
                                         type="button"
                                         onClick={() => toggleFilter("statusIn", key)}
+                                        aria-pressed={!!filters.statusIn?.includes(key)}
                                         className={`px-2.5 py-1 rounded-full text-xs transition sm:px-3 sm:text-sm ${filters.statusIn?.includes(key)
                                             ? "bg-accent-500 text-white"
                                             : "bg-zinc-700 text-gray-300 hover:bg-zinc-600"
@@ -202,6 +204,7 @@ export default function AnimeFilters({ search, onApply }: AnimeFiltersProps) {
                                         key={g}
                                         type="button"
                                         onClick={() => toggleGenre(g)}
+                                        aria-label={`${g}: ${included ? "included" : excluded ? "excluded" : "not filtered"}`}
                                         className={`px-2.5 py-1 rounded-full text-xs transition sm:px-3 sm:text-sm ${included
                                             ? "bg-green-600 text-white"
                                             : excluded

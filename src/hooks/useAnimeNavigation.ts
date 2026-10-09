@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router";
 
+/** URL of an anime's detail page */
+export const animePath = (id: number) => `/anime/${id}`;
+
 export function useAnimeNavigation() {
     const navigate = useNavigate();
 

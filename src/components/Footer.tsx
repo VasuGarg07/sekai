@@ -73,7 +73,7 @@ const Footer = () => {
                                     >
                                         <img
                                             src={social.icon}
-                                            alt={social.label}
+                                            alt=""
                                             width={16}
                                             height={16}
                                             className="sm:w-4.5 sm:h-4.5 opacity-70 group-hover:opacity-100"

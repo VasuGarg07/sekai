@@ -49,6 +49,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                 type="button"
                 onClick={handleOpen}
                 title="Edit"
+                aria-label={`Change watch status of ${anime.title_english ?? anime.title_romaji ?? "this anime"}`}
                 className="p-1 rounded-md hover:bg-zinc-700 transition-colors"
             >
                 <Pencil className="w-4 h-4 text-gray-400 hover:text-white" />

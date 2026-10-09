@@ -2,7 +2,8 @@ import { Star } from "lucide-react";
 import { memo, useEffect, useRef, useState } from "react";
 import AnimePreviewCard from "./AnimePreviewCard";
 import type { AnimeListItem } from "../shared/interfaces";
-import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
+import { Link } from "react-router";
+import { animePath } from "../hooks/useAnimeNavigation";
 import { formatScore } from "../shared/utilities";
 
 interface AnimeGalleryCardProps {
@@ -13,7 +14,6 @@ function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const previewRef = useRef<HTMLDivElement | null>(null);
-    const { goToAnime } = useAnimeNavigation();
 
     const handleMouseEnter = () => {
         hoverTimeout.current = setTimeout(() => {
@@ -47,19 +47,31 @@ function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
     }, [isHovered]);
 
     return (
-        <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            // Keyboard users get the same preview (with its watchlist button) when they tab in
+            onFocus={() => setIsHovered(true)}
+            onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) handleMouseLeave();
+            }}
+        >
             {anime.image && (
-                <div
-                    className="aspect-4/5 relative cursor-pointer shadow-md"
-                    onClick={() => goToAnime(anime.id)}
+                // Same destination as the title link below, so it's skipped by Tab and screen readers
+                <Link
+                    to={animePath(anime.id)}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    className="block aspect-4/5 relative shadow-md"
                 >
                     <img
                         src={anime.image}
-                        alt={anime.title_english ?? ''}
+                        alt=""
                         className="w-full h-full object-cover rounded-md transition-all duration-300 hover:blur-xs hover:brightness-90"
                         loading="lazy"
                     />
-                </div>
+                </Link>
             )}
 
             {/* Preview card — outside the clickable image div so WatchlistButton clicks
@@ -75,11 +87,10 @@ function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
             )}
 
             <div className="py-2">
-                <h3
-                    className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight cursor-pointer"
-                    onClick={() => goToAnime(anime.id)}
-                >
-                    {anime.title_english ?? anime.title_romaji}
+                <h3 className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight">
+                    <Link to={animePath(anime.id)} className="hover:text-accent-400 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500">
+                        {anime.title_english ?? anime.title_romaji}
+                    </Link>
                 </h3>
 
                 <div className="text-xs text-gray-400 flex flex-wrap gap-2">

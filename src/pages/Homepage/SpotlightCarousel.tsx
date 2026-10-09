@@ -113,7 +113,7 @@ const SpotlightCarousel: React.FC = () => {
                 style={{ transform: `translateX(-${current * 100}%)` }}
             >
                 {animeSpotlights.map((anime, idx) => (
-                    <div key={anime.id ?? idx} className="w-full h-full shrink-0">
+                    <div key={anime.id ?? idx} className="w-full h-full shrink-0" inert={idx !== current} aria-hidden={idx !== current}>
                         <SpotlightItem anime={anime} index={idx} />
                     </div>
                 ))}

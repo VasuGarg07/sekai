@@ -51,7 +51,7 @@ const SearchBar = ({ className = "" }: Props) => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search anime..."
-                    className="block w-full pl-8 pr-10 sm:pr-20 py-2 text-xs bg-zinc-800 border border-transparent rounded-lg text-white placeholder-zinc-400 focus:outline-none"
+                    className="block w-full pl-8 pr-10 sm:pr-20 py-2 text-xs bg-zinc-800 border border-transparent rounded-lg text-white placeholder-zinc-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                     autoComplete="off"
                     aria-label="Search anime"
                 />
@@ -59,6 +59,7 @@ const SearchBar = ({ className = "" }: Props) => {
                 <button
                     type="button"
                     onClick={handleFilterClick}
+                    aria-label="Advanced search filters"
                     className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-accent-400 hover:text-white transition-colors"
                 >
                     <Filter size={16} />

@@ -1,39 +1,34 @@
 import { Clapperboard, Clock, Monitor } from "lucide-react";
 import type { AnimeListItem } from "../shared/interfaces";
-import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
+import { Link } from "react-router";
+import { animePath } from "../hooks/useAnimeNavigation";
 
 interface ShowcaseItemProps {
     anime: AnimeListItem;
 }
 
 export function ShowcaseItem({ anime }: ShowcaseItemProps) {
-    const { goToAnime } = useAnimeNavigation();
-
     return (
         <div className="flex items-center gap-3 py-3 border-b border-gray-700">
-            {/* Poster — wrapped in button for accessibility */}
+            {/* Poster — same link as the title, so skipped by Tab */}
             {anime.image && (
-                <button
-                    type="button"
-                    onClick={() => goToAnime(anime.id)}
-                    className="shrink-0 cursor-pointer"
-                >
+                <Link to={animePath(anime.id)} tabIndex={-1} aria-hidden="true" className="shrink-0">
                     <img
                         src={anime.image}
-                        alt={anime.title_english ?? anime.title_romaji ?? "Anime"}
+                        alt=""
                         className="w-16 h-20 object-cover rounded-md"
                     />
-                </button>
+                </Link>
             )}
 
             {/* Info */}
             <div className="flex flex-col grow">
-                <span
-                    onClick={() => goToAnime(anime.id)}
-                    className="text-white text-sm font-semibold hover:text-accent-400 cursor-pointer transition mb-1 line-clamp-2"
+                <Link
+                    to={animePath(anime.id)}
+                    className="text-white text-sm font-semibold hover:text-accent-400 transition mb-1 line-clamp-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
                 >
                     {anime.title_english ?? anime.title_romaji}
-                </span>
+                </Link>
                 <div className="flex flex-wrap justify-start items-center gap-2 text-xs">
                     <span className="flex items-center gap-1 text-gray-400">
                         <Monitor size={14} className="sm:w-4 sm:h-4" />

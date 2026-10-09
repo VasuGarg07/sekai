@@ -1,4 +1,4 @@
-import { useState, type Dispatch, type SetStateAction, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import {
     FORMATS,
     STATUSES,
@@ -24,8 +24,9 @@ import {
 import Tooltip from "../../ui/Tooltip";
 
 interface AnimeFiltersProps {
+    /** Search text currently in the URL; kept in sync with the search box */
+    search: string;
     onApply: (filters: Filters) => void;
-    setPage: Dispatch<SetStateAction<number>>;
 }
 
 const currentYear = new Date().getFullYear();
@@ -37,10 +38,17 @@ const yearOptions = Array.from(
 
 const DEFAULT_FILTERS: Filters = { sort: ["SEARCH_MATCH"] };
 
-export default function AnimeFilters({ onApply, setPage }: AnimeFiltersProps) {
+export default function AnimeFilters({ search, onApply }: AnimeFiltersProps) {
     const { data: genres = [] } = useGenres();
-    const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+    const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, search });
     const [isExpanded, setIsExpanded] = useState(true);
+
+    // A new search from the header bar updates the URL; reflect it in the search box
+    const [syncedSearch, setSyncedSearch] = useState(search);
+    if (search !== syncedSearch) {
+        setSyncedSearch(search);
+        setFilters(prev => ({ ...prev, search }));
+    }
 
     const toggleFilter = (field: keyof Filters, value: string) => {
         setFilters((prev) => {
@@ -78,13 +86,11 @@ export default function AnimeFilters({ onApply, setPage }: AnimeFiltersProps) {
     };
 
     const applyFilters = () => {
-        setPage(1);
         onApply(filters);
     };
 
     // Reset to same state as initial so they're consistent
     const resetFilters = () => {
-        setPage(1);
         setFilters(DEFAULT_FILTERS);
         onApply(DEFAULT_FILTERS);
     };

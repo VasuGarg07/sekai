@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router";
 import AnimeGallery from "../../components/AnimeGallery";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
 import { useAdvancedAnimeSearch } from "../../hooks/useAdvancedAnimeSearch";
+import { usePageParam } from "../../hooks/usePageParam";
 import type { Filters } from "../../shared/interfaces";
 import Pagination from "../../ui/Pagination";
 import ToggleButton from "../../ui/ToggleButton";
@@ -12,70 +13,71 @@ import AnimeFilters from "./AnimeFilters";
 
 const AdvancedSearch = () => {
     const [showTiles, setShowTiles] = useState<boolean>(false);
+    // Applied filters, except the search text which lives in the URL (?q=)
     const [filters, setFilters] = useState<Filters>({});
-    const [page, setPage] = useState(1);
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [page, setPage] = usePageParam();
     const q = searchParams.get("q")?.trim() || "";
 
-    useEffect(() => setPage(1), [q]);
+    const { data, isLoading, error, refetch } = useAdvancedAnimeSearch({
+        ...filters,
+        search: q || undefined,
+        page,
+    });
 
-    const effectiveFilters: Filters = q ? { ...filters, search: q } : { ...filters };
-    const { data, isLoading, error } = useAdvancedAnimeSearch({ ...effectiveFilters, page });
+    const handleApply = ({ search, ...rest }: Filters) => {
+        setFilters(rest);
+        // New filters always start from page 1; search text goes to the URL so it can be shared
+        setSearchParams(prev => {
+            const params = new URLSearchParams(prev);
+            const text = search?.trim();
+            if (text) params.set("q", text);
+            else params.delete("q");
+            params.delete("page");
+            return params;
+        });
+    };
 
+    let body: ReactNode;
     if (isLoading) {
-        return (
-            <div className="bg-zinc-900 min-h-screen py-8 px-4 flex flex-col justify-center items-center">
-                <div className="max-w-6xl mx-auto mb-4 sm:mb-6 w-full">
-                    <AnimeFilters onApply={setFilters} setPage={setPage} />
-                </div>
-                <LoadingState text="Loading anime..." />
-            </div>
+        body = <LoadingState text="Searching anime..." />;
+    } else if (error) {
+        body = <ErrorState title="Search failed" message={error.message} onRetry={() => refetch()} />;
+    } else if (!data || data.items.length === 0) {
+        body = (
+            <EmptyState
+                title="No anime found"
+                message="Nothing matches these filters. Try removing a few, or search for a different title."
+            />
         );
-    }
-
-    if (error) {
-        return (
-            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex flex-col justify-center items-center">
-                <div className="max-w-6xl mx-auto mb-4 sm:mb-6 w-full">
-                    <AnimeFilters onApply={setFilters} setPage={setPage} />
-                </div>
-                <ErrorState message={error.message} />
-            </div>
-        );
-    }
-
-    if (!data || data.items.length === 0) {
-        return (
-            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex flex-col justify-center items-center">
-                <div className="max-w-6xl mx-auto mb-8 w-full">
-                    <AnimeFilters onApply={setFilters} setPage={setPage} />
-                </div>
-                <EmptyState message="Try adjusting your filters and search again." />
-            </div>
-        );
-    }
-
-    return (
-        <div className="bg-zinc-900 min-h-screen py-8 px-4">
-            <div className="max-w-6xl mx-auto mb-4 sm:mb-6">
-                <AnimeFilters onApply={setFilters} setPage={setPage} />
-            </div>
-
-            <div className="max-w-6xl mx-auto">
+    } else {
+        body = (
+            <>
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-white">Search Results</h2>
+                    <h2 className="text-2xl font-bold text-white">
+                        {q ? <>Results for <span className="text-accent-400">“{q}”</span></> : "Search Results"}
+                    </h2>
                     <ToggleButton showTiles={showTiles} setShowTiles={setShowTiles} />
                 </div>
 
                 <AnimeGallery data={data.items} tileView={showTiles} />
 
-                {data.pageInfo.lastPage > 1 && (
-                    <Pagination
-                        currentPage={data.pageInfo.currentPage}
-                        totalPages={data.pageInfo.lastPage}
-                        onPageChange={setPage}
-                    />
-                )}
+                <Pagination
+                    currentPage={data.pageInfo.currentPage}
+                    totalPages={data.pageInfo.lastPage}
+                    onPageChange={setPage}
+                />
+            </>
+        );
+    }
+
+    return (
+        <div className="py-8 px-4">
+            <div className="max-w-6xl mx-auto mb-4 sm:mb-6">
+                <AnimeFilters search={q} onApply={handleApply} />
+            </div>
+            <div className="max-w-6xl mx-auto">
+                {body}
             </div>
         </div>
     );

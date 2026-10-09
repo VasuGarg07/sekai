@@ -74,7 +74,8 @@ export const upsertPreferences = async (uid: string): Promise<PreferencesResult>
             return { success: true, data: DEFAULT_PREFERENCES };
         }
 
-        return { success: true, data: snapshot.data() as UserPreferences };
+        // Fill in fields added after the doc was created (e.g. adult_mode)
+        return { success: true, data: { ...DEFAULT_PREFERENCES, ...(snapshot.data() as Partial<UserPreferences>) } };
     } catch (error) {
         return { success: false, reason: 'error', error };
     }

@@ -110,7 +110,9 @@ export interface SekaiUser {
 
 export interface UserPreferences {
     app_theme: string;
-    default_watch_status: string;
+    default_watch_status: WatchStatus;
+    /** 18+ Mode — when true, adult titles are not filtered out */
+    adult_mode: boolean;
     lastSyncedAt?: number;
 }
 

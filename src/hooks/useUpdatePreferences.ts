@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { applyPreferences } from "../store/slices/preferencesSlice";
 import { toastService } from "../ui/toastService";
 
-type EditablePreferences = Omit<UserPreferences, "lastSyncedAt">;
+type EditablePreferences = UserPreferences;
 type PreferenceUpdates = Partial<EditablePreferences>;
 
 interface UpdateMessages {

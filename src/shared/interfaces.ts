@@ -96,9 +96,27 @@ export interface AnimeDetail extends AnimeListItem {
 
 export type WatchStatus = 'watching' | 'on-hold' | 'plan-to-watch' | 'dropped' | 'completed' | 'rewatch';
 
-export interface AnimeWatchList extends AnimeListItem {
+/**
+ * What is stored in Firestore for each watchlist item (users/{uid}/watchlist/{animeId}).
+ * The user's own data (watchStatus, addedAt) plus AniList data that practically never changes
+ * (titles, format) — kept so the list stays readable and has a fallback if AniList is down.
+ * Everything else (score, airing status, episodes, image...) is fetched fresh from AniList.
+ * Older documents may still carry a full AnimeListItem snapshot; it is used only as a fallback.
+ */
+export interface WatchlistEntry {
+    id: number;
+    title_romaji: string | null;
+    title_english: string | null;
+    /** AniList media format (TV, MOVIE, OVA...) — called `type` on AnimeListItem */
+    format: string | null;
     watchStatus: WatchStatus;
     addedAt: number;
+}
+
+/** A watchlist item ready for display: the stored entry merged with fresh AniList data. */
+export interface AnimeWatchList extends AnimeListItem, WatchlistEntry {
+    /** True when AniList data couldn't be loaded and the item shows stored/placeholder data */
+    isStale?: boolean;
 }
 
 // ----------------------------
@@ -115,7 +133,6 @@ export interface UserPreferences {
     default_watch_status: WatchStatus;
     /** 18+ Mode — when true, adult titles are not filtered out */
     adult_mode: boolean;
-    lastSyncedAt?: number;
 }
 
 export interface ThemeColor {

@@ -3,6 +3,7 @@ import { Download, FileText, FileJson, FileCode, Loader2 } from "lucide-react";
 import { SectionLayout } from "./SectionLayout";
 import { WatchlistExporter } from "../../shared/download";
 import { fetchEntireWatchList } from "../../shared/firestore";
+import { hydrateWatchlist } from "../../shared/watchlistHydration";
 import { useAppSelector } from "../../store/reduxHooks";
 import { toastService } from "../../ui/toastService";
 
@@ -29,10 +30,15 @@ export const ExportWatchlist = () => {
         setExporting(format);
         try {
             // Fetch everything — the watchlist page only has the first few pages loaded
-            const items = await fetchEntireWatchList(uid);
-            if (items.length === 0) {
+            const entries = await fetchEntireWatchList(uid);
+            if (entries.length === 0) {
                 toastService.warning("Your watchlist is empty — nothing to export.");
                 return;
+            }
+            // Firestore only stores ids/status; titles, scores etc. come fresh from AniList
+            const { items, refreshFailed } = await hydrateWatchlist(entries);
+            if (refreshFailed) {
+                toastService.warning("Couldn't reach AniList, so some details in the export may be missing.");
             }
             EXPORTERS[format](items);
             toastService.success(`Exported ${items.length} ${items.length === 1 ? "title" : "titles"} as ${format.toUpperCase()}.`);

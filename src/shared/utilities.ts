@@ -108,20 +108,6 @@ export function formatKey(key: string): string {
     return key.split("-").map(k => k[0].toUpperCase() + k.slice(1)).join(" ");
 }
 
-export const cleanAnimeForWatchlist = (anime: AnimeListItem | AnimeDetail | AnimeSpotlight): AnimeListItem => {
-    const {
-        id, image, title_english, title_romaji, type, duration,
-        score, startDateText, synopsis, synonyms, status,
-        genres, episodes, season, seasonYear,
-    } = anime;
-
-    return {
-        id, image, title_english, title_romaji, type, duration,
-        score, startDateText, synopsis, synonyms, status,
-        genres, episodes, season, seasonYear,
-    };
-};
-
 export const formatDateEpoch = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString("en-US", {
         year: "numeric",

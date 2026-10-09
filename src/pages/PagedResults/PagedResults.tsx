@@ -10,13 +10,14 @@ interface PagedResultsProps {
 
 const PagedResults = ({ title, sort, status }: PagedResultsProps) => {
     const [page, setPage] = usePageParam();
-    const { data, isLoading, error, refetch } = useAnimeList(sort, status, page);
+    const { data, isLoading, isPlaceholderData, error, refetch } = useAnimeList(sort, status, page);
 
     return (
         <AnimeResults
             title={title}
             data={data}
             isLoading={isLoading}
+            isUpdating={isPlaceholderData}
             error={error}
             onRetry={() => refetch()}
             onPageChange={setPage}

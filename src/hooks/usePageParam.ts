@@ -13,6 +13,7 @@ export function usePageParam(): [number, (page: number) => void] {
     const page = Number.isInteger(raw) && raw > 0 ? raw : 1;
 
     const setPage = useCallback((next: number) => {
+        window.scrollTo({ top: 0 });
         setSearchParams(prev => {
             const params = new URLSearchParams(prev);
             if (next <= 1) params.delete("page");

@@ -11,6 +11,8 @@ interface AnimeResultsProps {
     title: ReactNode;
     data: PagedResult | undefined;
     isLoading: boolean;
+    /** True while newer results are loading and the previous ones are still shown */
+    isUpdating?: boolean;
     error: Error | null;
     onRetry: () => void;
     onPageChange: (page: number) => void;
@@ -22,6 +24,7 @@ export default function AnimeResults({
     title,
     data,
     isLoading,
+    isUpdating = false,
     error,
     onRetry,
     onPageChange,
@@ -39,7 +42,9 @@ export default function AnimeResults({
     } else {
         body = (
             <>
-                <AnimeGallery data={data.items} tileView={showTiles} />
+                <div aria-busy={isUpdating} className={`transition-opacity ${isUpdating ? "opacity-50 pointer-events-none" : ""}`}>
+                    <AnimeGallery data={data.items} tileView={showTiles} />
+                </div>
                 <Pagination
                     currentPage={data.pageInfo.currentPage}
                     totalPages={data.pageInfo.lastPage}

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
 import { isAdultFilter, MEDIA_LIST_FIELDS } from "../shared/anilistFields";
 import type { AnimeListResponse, PagedResult } from "../shared/interfaces";
@@ -106,5 +106,6 @@ export function useAdvancedAnimeSearch(options: AdvancedSearchOptions) {
       };
     },
     staleTime: 5 * 60 * 1000,
+    placeholderData: keepPreviousData,
   });
 }

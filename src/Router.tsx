@@ -1,6 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import Layout from "./ui/Layout";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
+import PrivateRoute from "./components/PrivateRoute";
+import LoadingState from "./ui/LoadingState";
 
 const Homepage = lazy(() => import("./pages/Homepage/Homepage"));
 const AdvancedSearch = lazy(() => import("./pages/AdvancedSearch/AdvancedSearch"));
@@ -27,14 +29,19 @@ const PAGED_ROUTES: PagedRouteConfig[] = [
 ];
 
 const router = createBrowserRouter([
-    { path: 'login', element: <LoginPage /> },
+    {
+        path: 'login',
+        element: (
+            <Suspense fallback={<LoadingState />}>
+                <LoginPage />
+            </Suspense>
+        ),
+    },
     {
         path: '/',
         element: <Layout />,
         children: [
             { index: true, element: <Homepage /> },
-            { path: 'settings', element: <Settings /> },
-            { path: 'watchlist', element: <Watchlist /> },
             { path: 'explore', element: <AdvancedSearch /> },
             { path: 'search', element: <AdvancedSearch /> },
             { path: 'anime/:id', element: <AnimeDetail /> },
@@ -42,6 +49,13 @@ const router = createBrowserRouter([
                 path,
                 element: <PagedResults {...props} />
             })),
+            {
+                element: <PrivateRoute />,
+                children: [
+                    { path: 'watchlist', element: <Watchlist /> },
+                    { path: 'settings', element: <Settings /> },
+                ],
+            },
         ],
     },
     { path: '*', element: <Navigate to="/" replace /> },

@@ -1,17 +1,22 @@
-import { useSelector } from "react-redux";
-import { Navigate, Outlet } from "react-router";
-import type { RootState } from "../store/store";
+import { Navigate, Outlet, useLocation } from "react-router";
+import { useAppSelector } from "../store/reduxHooks";
 import LoadingState from "../ui/LoadingState";
 
+/** Route guard: waits for Firebase to restore the session, then sends signed-out users to /login. */
 const PrivateRoute = () => {
-    const { user, loading } = useSelector((state: RootState) => state.auth);
+    const { user, initialized } = useAppSelector((state) => state.auth);
+    const location = useLocation();
 
-    if (loading) {
-        return <LoadingState />; // Or a spinner
+    if (!initialized) {
+        return <LoadingState text="Checking your session..." />;
     }
 
-    return user ? <Outlet /> : <Navigate to="/login" replace />;
+    if (!user) {
+        // Remember where the user was going so login can send them back
+        return <Navigate to="/login" replace state={{ from: location }} />;
+    }
 
-}
+    return <Outlet />;
+};
 
 export default PrivateRoute;

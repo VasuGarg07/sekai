@@ -1,4 +1,5 @@
 import { Heart } from "lucide-react";
+import { Link } from "react-router";
 import { navigationLinks } from "../shared/constants";
 import Logo from '/logo_white.png';
 
@@ -73,7 +74,7 @@ const Footer = () => {
                                     >
                                         <img
                                             src={social.icon}
-                                            alt={social.label}
+                                            alt=""
                                             width={16}
                                             height={16}
                                             className="sm:w-4.5 sm:h-4.5 opacity-70 group-hover:opacity-100"
@@ -91,13 +92,13 @@ const Footer = () => {
                         </h3>
                         <nav className="flex flex-col gap-1.5 sm:gap-3">
                             {navigationLinks.map((link) => (
-                                <a
+                                <Link
                                     key={link.path}
-                                    href={link.path}
+                                    to={link.path}
                                     className="text-xs text-zinc-400 transition-colors duration-200 hover:text-white sm:text-sm"
                                 >
                                     {link.name}
-                                </a>
+                                </Link>
                             ))}
                         </nav>
                     </div>
@@ -120,8 +121,17 @@ const Footer = () => {
                             <span>for anime fans</span>
                         </div>
                     </div>
-                    <p className="hidden sm:block text-xs leading-relaxed text-zinc-500">
-                        This site does not store any files on its server. All contents are provided by non-affiliated third parties.
+                    <p className="text-xs leading-relaxed text-zinc-500 text-center sm:text-left">
+                        Anime data and images come from{" "}
+                        <a
+                            href="https://anilist.co"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-2 hover:text-zinc-300"
+                        >
+                            AniList
+                        </a>
+                        . Sekai is a fan project and isn't affiliated with AniList or any studio. All titles and artwork belong to their respective owners.
                     </p>
                 </div>
             </div>

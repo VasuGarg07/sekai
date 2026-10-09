@@ -1,6 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from "react-redux";
-import { RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 import router from './Router';
 import { queryClient } from './shared/queryClient';
 import { store } from './store/store';

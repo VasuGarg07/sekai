@@ -54,7 +54,7 @@ export function useUpdatePreferences() {
 
     const update = (updates: PreferenceUpdates, messages: UpdateMessages) => {
         if (!uid) {
-            toastService.info("Please login first.");
+            toastService.info("Log in to change your settings.");
             return;
         }
         mutation.mutate({ updates, messages });

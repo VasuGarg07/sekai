@@ -1,9 +1,10 @@
-import { useState, useDeferredValue, useMemo, useRef, useEffect, useCallback } from "react";
+import { useState, useDeferredValue, useMemo, useRef, useCallback } from "react";
 import { Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAnimeSearch } from "../hooks/useAnimeSearch";
 import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
 import QuickSearchItem from "./QuickSearchItem";
+import { useDismiss } from "../hooks/useDismiss";
 
 type Props = { className?: string };
 
@@ -19,17 +20,8 @@ const SearchBar = ({ className = "" }: Props) => {
     const shouldFetch = q.length >= 3;
     const { data: results = [], isLoading } = useAnimeSearch(q, shouldFetch);
 
-    // Handler defined inside effect so it always closes over the latest
-    // widgetRef without needing to be listed as a dependency.
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (widgetRef.current && !widgetRef.current.contains(e.target as Node)) {
-                setQuery("");
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    // Clicking outside the search box or pressing Escape closes the results
+    useDismiss(widgetRef, () => setQuery(""), query.length > 0);
 
     const handleResultClick = useCallback((anilistId: number) => {
         goToAnime(anilistId);
@@ -59,7 +51,7 @@ const SearchBar = ({ className = "" }: Props) => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search anime..."
-                    className="block w-full pl-8 pr-10 sm:pr-20 py-2 text-xs bg-zinc-800 border border-transparent rounded-lg text-white placeholder-zinc-400 focus:outline-none"
+                    className="block w-full pl-8 pr-10 sm:pr-20 py-2 text-xs bg-zinc-800 border border-transparent rounded-lg text-white placeholder-zinc-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                     autoComplete="off"
                     aria-label="Search anime"
                 />
@@ -67,6 +59,7 @@ const SearchBar = ({ className = "" }: Props) => {
                 <button
                     type="button"
                     onClick={handleFilterClick}
+                    aria-label="Advanced search filters"
                     className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1 text-accent-400 hover:text-white transition-colors"
                 >
                     <Filter size={16} />

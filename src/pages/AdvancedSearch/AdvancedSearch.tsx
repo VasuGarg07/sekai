@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router";
 import AnimeGallery from "../../components/AnimeGallery";
 import EmptyState from "../../ui/EmptyState";
@@ -10,32 +10,23 @@ import type { Filters } from "../../shared/interfaces";
 import Pagination from "../../ui/Pagination";
 import ToggleButton from "../../ui/ToggleButton";
 import AnimeFilters from "./AnimeFilters";
+import { filtersFromParams, filtersToParams } from "./filterParams";
 
 const AdvancedSearch = () => {
     const [showTiles, setShowTiles] = useState<boolean>(false);
-    // Applied filters, except the search text which lives in the URL (?q=)
-    const [filters, setFilters] = useState<Filters>({});
+    // Applied filters live in the URL (see filterParams.ts): shareable, and Back/Forward restore them
     const [searchParams, setSearchParams] = useSearchParams();
     const [page, setPage] = usePageParam();
-    const q = searchParams.get("q")?.trim() || "";
+    const filters = useMemo(() => filtersFromParams(searchParams), [searchParams]);
+    const q = filters.search ?? "";
 
-    const { data, isLoading, error, refetch } = useAdvancedAnimeSearch({
-        ...filters,
-        search: q || undefined,
-        page,
-    });
+    // Changes whenever the applied filters change (but not the page), to re-sync the filter form
+    const filtersKey = filtersToParams(filters, new URLSearchParams()).toString();
 
-    const handleApply = ({ search, ...rest }: Filters) => {
-        setFilters(rest);
-        // New filters always start from page 1; search text goes to the URL so it can be shared
-        setSearchParams(prev => {
-            const params = new URLSearchParams(prev);
-            const text = search?.trim();
-            if (text) params.set("q", text);
-            else params.delete("q");
-            params.delete("page");
-            return params;
-        });
+    const { data, isLoading, error, refetch } = useAdvancedAnimeSearch({ ...filters, page });
+
+    const handleApply = (next: Filters) => {
+        setSearchParams(prev => filtersToParams(next, prev));
     };
 
     let body: ReactNode;
@@ -74,7 +65,7 @@ const AdvancedSearch = () => {
     return (
         <div className="py-8 px-4">
             <div className="max-w-6xl mx-auto mb-4 sm:mb-6">
-                <AnimeFilters search={q} onApply={handleApply} />
+                <AnimeFilters applied={filters} appliedKey={filtersKey} onApply={handleApply} />
             </div>
             <div className="max-w-6xl mx-auto">
                 {body}

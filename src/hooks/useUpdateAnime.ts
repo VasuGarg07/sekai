@@ -3,6 +3,7 @@ import { updateWatchStatus } from "../shared/firestore";
 import type { AnimeWatchList, WatchStatus } from "../shared/interfaces";
 import { useAppSelector } from "../store/reduxHooks";
 import { toastService } from "../ui/toastService";
+import { WATCH_STATUS_LABELS } from "../shared/constants";
 
 interface UpdateAnimeProps {
     anime: AnimeWatchList;
@@ -19,17 +20,17 @@ export function useUpdateAnime() {
             const title = anime.title_english ?? anime.title_romaji ?? "Anime";
 
             if (result.success) {
-                toastService.success(`${title} updated to ${watchStatus}.`);
+                toastService.success(`${title} moved to ${WATCH_STATUS_LABELS[watchStatus]}.`);
                 queryClient.invalidateQueries({ queryKey: ["watchlist", userId] });
                 return;
             }
 
             switch (result.reason) {
                 case 'not-logged-in':
-                    toastService.info("Please login first.");
+                    toastService.info("Log in to manage your watchlist.");
                     break;
                 case 'error':
-                    toastService.error("Failed to update watch status. Please try again.");
+                    toastService.error("Couldn't update the watch status. Please try again.");
                     break;
             }
         },

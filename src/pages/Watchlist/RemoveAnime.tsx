@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Trash, X, AlertTriangle, Star } from "lucide-react";
 import type { AnimeWatchList } from "../../shared/interfaces";
 import { useRemoveAnime } from "../../hooks/useRemoveAnime";
 import { Dialog, type DialogHandle } from "../../ui/Dialog";
+import { formatScore } from "../../shared/utilities";
 
 type RemoveAnimeProps = {
     anime: AnimeWatchList;
@@ -10,6 +11,7 @@ type RemoveAnimeProps = {
 
 export function RemoveAnime({ anime }: RemoveAnimeProps) {
     const dialogRef = useRef<DialogHandle>(null);
+    const titleId = useId();
     const [isPending, setIsPending] = useState(false);
 
     const { mutate } = useRemoveAnime();
@@ -28,12 +30,13 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                 type="button"
                 onClick={() => dialogRef.current?.openDialog()}
                 title="Remove"
+                aria-label={`Remove ${anime.title_english ?? anime.title_romaji ?? "this anime"} from watchlist`}
                 className="p-1 rounded-md hover:bg-zinc-700 transition-colors"
             >
                 <Trash className="w-4 h-4 text-red-500 transition-colors" />
             </button>
 
-            <Dialog ref={dialogRef}>
+            <Dialog ref={dialogRef} labelledBy={titleId}>
                 <div
                     className="bg-zinc-800 rounded-xl w-full max-w-md"
                     onClick={(e) => e.stopPropagation()}
@@ -44,7 +47,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                             <div className="p-2 bg-red-500/20 rounded-lg">
                                 <AlertTriangle className="w-5 h-5 text-red-400" />
                             </div>
-                            <h2 className="text-lg font-semibold text-white">Remove from Watchlist?</h2>
+                            <h2 id={titleId} className="text-lg font-semibold text-white">Remove from Watchlist?</h2>
                         </div>
 
                         {/* Anime Info */}
@@ -65,7 +68,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                                         <>
                                             <div className="flex items-center">
                                                 <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                                <span className="font-medium">{anime.score / 10}</span>
+                                                <span className="font-medium">{formatScore(anime.score)}</span>
                                             </div>
                                             <span>•</span>
                                         </>

@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
-import { formatDateEpoch, formatKey } from "../../shared/utilities";
+import { formatDateEpoch, formatKey, formatScore } from "../../shared/utilities";
 import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
 
@@ -40,13 +40,18 @@ function SortableHeader({
 }) {
     return (
         <th
-            className="px-3 py-2 border-r border-zinc-700 whitespace-nowrap cursor-pointer hover:bg-zinc-700 transition-colors select-none"
-            onClick={() => onSort(sortKey)}
+            className="border-r border-zinc-700 whitespace-nowrap p-0"
+            aria-sort={sortConfig.key !== sortKey ? "none" : sortConfig.direction === "asc" ? "ascending" : "descending"}
         >
-            <div className="flex items-center justify-between gap-1">
+            <button
+                type="button"
+                onClick={() => onSort(sortKey)}
+                className="w-full px-3 py-2 flex items-center justify-between gap-1 uppercase cursor-pointer
+                    hover:bg-zinc-700 transition-colors select-none focus-visible:outline-2 focus-visible:outline-accent-500"
+            >
                 {label}
                 <SortIcon columnKey={sortKey} sortConfig={sortConfig} />
-            </div>
+            </button>
         </th>
     );
 }
@@ -176,7 +181,7 @@ export default function WatchlistTable({ items }: WatchlistTableProps) {
                             {/* Score */}
                             <td className="px-3 py-1.5 border-r border-zinc-800 whitespace-nowrap text-center">
                                 {anime.score ? (
-                                    <span className="text-yellow-400 font-medium">{anime.score}</span>
+                                    <span className="text-yellow-400 font-medium">{formatScore(anime.score)}</span>
                                 ) : (
                                     <span className="text-gray-500">-</span>
                                 )}

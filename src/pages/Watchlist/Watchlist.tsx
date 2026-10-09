@@ -100,15 +100,18 @@ export default function Watchlist() {
                         disabled={isRefetching || isFetchingNextPage}
                         className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Refresh watchlist"
+                        aria-label="Refresh watchlist"
                     >
                         <RefreshCw className={`w-5 h-5 ${isRefetching ? 'animate-spin' : ''}`} />
                     </button>
-                    <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
+                    <div role="group" aria-label="View" className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
                         <button
                             type="button"
                             onClick={() => setViewMode('grid')}
                             className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Grid view"
+                            aria-label="Grid view"
+                            aria-pressed={viewMode === 'grid'}
                         >
                             <Grid3x3 className="w-4 h-4" />
                         </button>
@@ -117,6 +120,8 @@ export default function Watchlist() {
                             onClick={() => setViewMode('table')}
                             className={`p-2 rounded transition-colors ${viewMode === 'table' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Table view"
+                            aria-label="Table view"
+                            aria-pressed={viewMode === 'table'}
                         >
                             <TableIcon className="w-4 h-4" />
                         </button>
@@ -125,6 +130,8 @@ export default function Watchlist() {
                             onClick={() => setViewMode('tile')}
                             className={`p-2 rounded transition-colors ${viewMode === 'tile' ? 'bg-accent-700 text-white' : 'text-gray-400 hover:text-white'}`}
                             title="Tile view"
+                            aria-label="Tile view"
+                            aria-pressed={viewMode === 'tile'}
                         >
                             <LayoutList className="w-4 h-4" />
                         </button>

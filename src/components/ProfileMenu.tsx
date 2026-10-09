@@ -1,5 +1,6 @@
 import { Bookmark, LogOut, Settings } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useDismiss } from "../hooks/useDismiss";
 import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { logout } from "../store/slices/authSlice";
@@ -11,35 +12,28 @@ const ProfileMenu = ({ className = "" }) => {
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
-    const [avatarError, setAvatarError] = useState(false);
+    // Remember which photo URL failed, so a new photo is tried again automatically
+    const [failedPhotoURL, setFailedPhotoURL] = useState<string | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    useEffect(() => {
-        setAvatarError(false);
-    }, [user?.photoURL]);
+    useDismiss(menuRef, () => setOpen(false), open);
 
     if (!user) return null;
 
     const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=random&rounded=true&size=96`;
-    const avatarSrc = avatarError || !user.photoURL ? avatarFallback : user.photoURL;
+    const avatarSrc = !user.photoURL || failedPhotoURL === user.photoURL ? avatarFallback : user.photoURL;
 
-    const handleAvatarError = () => setAvatarError(true);
+    const handleAvatarError = () => setFailedPhotoURL(user.photoURL);
 
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleLogout = async () => {
         setOpen(false);
-        toastService.success("Logged Out!");
-        navigate("/");
+        try {
+            await dispatch(logout()).unwrap();
+            toastService.success("Logged out.");
+            navigate("/");
+        } catch {
+            toastService.error("Couldn't log out. Please try again.");
+        }
     };
 
     return (

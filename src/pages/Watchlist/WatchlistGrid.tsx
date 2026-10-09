@@ -1,9 +1,10 @@
 import { memo } from "react";
 import { Star } from "lucide-react";
-import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
+import { Link } from "react-router";
+import { animePath } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
-import { formatKey } from "../../shared/utilities";
+import { formatKey, formatScore } from "../../shared/utilities";
 import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
 
@@ -12,18 +13,16 @@ interface WatchlistGridProps {
 }
 
 function WatchlistGrid({ anime }: WatchlistGridProps) {
-    const { goToAnime } = useAnimeNavigation();
-
     return (
         <div className="relative">
             {anime.image && (
-                <div
-                    className="aspect-4/5 relative cursor-pointer shadow-md group"
-                    onClick={() => goToAnime(anime.id)}
+                <Link
+                    to={animePath(anime.id)}
+                    className="block aspect-4/5 relative shadow-md group rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
                 >
                     <img
                         src={anime.image}
-                        alt={anime.title_english ?? ''}
+                        alt=""
                         className="w-full h-full object-cover rounded-md transition-all duration-300 group-hover:brightness-75"
                         loading="lazy"
                     />
@@ -38,7 +37,7 @@ function WatchlistGrid({ anime }: WatchlistGridProps) {
                                 <>
                                     <div className="flex items-center">
                                         <Star className="w-3 h-3 text-yellow-500 fill-yellow-500 mr-1" />
-                                        <span className="font-medium">{anime.score / 10}</span>
+                                        <span className="font-medium">{formatScore(anime.score)}</span>
                                     </div>
                                     <span>•</span>
                                 </>
@@ -54,7 +53,7 @@ function WatchlistGrid({ anime }: WatchlistGridProps) {
                             )}
                         </div>
                     </div>
-                </div>
+                </Link>
             )}
 
             <div className="flex items-center gap-2 py-2">

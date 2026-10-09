@@ -1,5 +1,6 @@
 import { Calendar, Clapperboard, Clock, Monitor } from "lucide-react";
-import { useAnimeNavigation } from "../hooks/useAnimeNavigation";
+import { Link } from "react-router";
+import { animePath } from "../hooks/useAnimeNavigation";
 import type { AnimeSpotlight } from "../shared/interfaces";
 import Fallback from "/default-banner.jpg";
 import { getSynopsisFallback } from "../shared/constants";
@@ -11,8 +12,6 @@ interface SpotlightItemProps {
 }
 
 const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
-    const { goToAnime } = useAnimeNavigation();
-
     return (
         <div className="relative w-full h-full">
             {/* Background Banner Image */}
@@ -29,12 +28,13 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
             <div className="relative flex items-center z-10 h-full max-w-screen mx-auto p-4 sm:p-8 lg:p-16">
                 {/* Left side - Poster Image */}
                 <div className="hidden sm:flex shrink-0 mr-4 sm:mr-6 lg:mr-8">
-                    <img
-                        src={anime.image || Fallback}
-                        alt={anime.title_english ?? anime.title_romaji ?? "Anime Poster"}
-                        className="h-64 lg:h-80 w-auto rounded-lg shadow-2xl cursor-pointer transition-transform hover:scale-105"
-                        onClick={() => goToAnime(anime.id)}
-                    />
+                    <Link to={animePath(anime.id)} tabIndex={-1} aria-hidden="true">
+                        <img
+                            src={anime.image || Fallback}
+                            alt=""
+                            className="h-64 lg:h-80 w-auto rounded-lg shadow-2xl transition-transform hover:scale-105"
+                        />
+                    </Link>
                 </div>
 
                 {/* Right side - Content */}
@@ -47,9 +47,11 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                     </div>
 
                     {/* Title */}
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight line-clamp-2">
-                        {anime.title_english ?? anime.title_romaji}
-                    </h1>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight line-clamp-2">
+                        <Link to={animePath(anime.id)} className="hover:text-accent-300 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500">
+                            {anime.title_english ?? anime.title_romaji}
+                        </Link>
+                    </h2>
 
                     {/* Meta Information */}
                     <div className="flex flex-wrap items-center gap-2 text-xs text-gray-300">
@@ -91,15 +93,16 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                                 px-4 py-2 rounded-lg transition-all duration-200
                                 text-sm sm:text-base"
                         />
-                        <button
-                            type="button"
-                            onClick={() => goToAnime(anime.id)}
+                        <Link
+                            to={animePath(anime.id)}
+                            aria-hidden="true"
+                            tabIndex={-1}
                             className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border
                                 border-white/20 text-white font-semibold px-4 py-2 rounded-lg
                                 transition-all duration-200 text-sm sm:text-base hidden sm:block"
                         >
                             Details
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

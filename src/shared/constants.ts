@@ -82,15 +82,19 @@ export const synopsisFallbacks = [
     "Great stories don't need introductions. They speak for themselves.",
 ];
 
-// Function to get a random fallback message
-export const getRandomSynopsisFallback = (): string => {
-    return synopsisFallbacks[Math.floor(Math.random() * synopsisFallbacks.length)];
-};
-
 // Function to get a consistent fallback based on anime ID (same anime = same fallback)
 export const getSynopsisFallback = (animeId: string | number): string => {
     const index = Math.abs(String(animeId).split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % synopsisFallbacks.length;
     return synopsisFallbacks[index];
+};
+
+export const WATCH_STATUS_LABELS: Record<WatchStatus, string> = {
+    'watching': 'Watching',
+    'completed': 'Completed',
+    'on-hold': 'On Hold',
+    'plan-to-watch': 'Plan to Watch',
+    'dropped': 'Dropped',
+    'rewatch': 'Rewatch',
 };
 
 export const WatchStatusColor: Record<WatchStatus, string> = {

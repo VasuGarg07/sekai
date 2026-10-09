@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
 import { WatchlistButton } from "../ui/WatchlistButton";
+import { formatScore } from "../shared/utilities";
 
 interface AnimePreviewCardProps {
     anime: AnimeListItem;
@@ -19,7 +20,7 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                 {!!anime.score && (
                     <div className="flex items-center bg-yellow-500/20 px-2 py-1 rounded">
                         <Star className="w-3 h-3 text-yellow-400 mr-1 fill-current" />
-                        <span className="text-white font-medium">{(anime.score / 10).toFixed(1)}</span>
+                        <span className="text-white font-medium">{formatScore(anime.score)}</span>
                     </div>
                 )}
                 {anime.type && (

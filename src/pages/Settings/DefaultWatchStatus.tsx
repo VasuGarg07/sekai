@@ -3,15 +3,10 @@ import { useUpdatePreferences } from "../../hooks/useUpdatePreferences";
 import { useAppSelector } from "../../store/reduxHooks";
 import type { WatchStatus } from "../../shared/interfaces";
 import { SectionLayout } from "./SectionLayout";
+import { WATCH_STATUS_LABELS } from "../../shared/constants";
 
-const WATCH_STATUS_OPTIONS: { value: WatchStatus; label: string }[] = [
-    { value: "watching", label: "Watching" },
-    { value: "on-hold", label: "On Hold" },
-    { value: "plan-to-watch", label: "Plan to Watch" },
-    { value: "dropped", label: "Dropped" },
-    { value: "completed", label: "Completed" },
-    { value: "rewatch", label: "Rewatch" },
-];
+const WATCH_STATUS_ORDER: WatchStatus[] = ["watching", "on-hold", "plan-to-watch", "dropped", "completed", "rewatch"];
+const WATCH_STATUS_OPTIONS = WATCH_STATUS_ORDER.map(value => ({ value, label: WATCH_STATUS_LABELS[value] }));
 
 export const DefaultWatchStatus = () => {
     const { update, isPending } = useUpdatePreferences();

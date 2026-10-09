@@ -88,6 +88,15 @@ export const getSynopsisFallback = (animeId: string | number): string => {
     return synopsisFallbacks[index];
 };
 
+export const WATCH_STATUS_LABELS: Record<WatchStatus, string> = {
+    'watching': 'Watching',
+    'completed': 'Completed',
+    'on-hold': 'On Hold',
+    'plan-to-watch': 'Plan to Watch',
+    'dropped': 'Dropped',
+    'rewatch': 'Rewatch',
+};
+
 export const WatchStatusColor: Record<WatchStatus, string> = {
     'watching': 'bg-blue-900/60 text-blue-200 border-blue-600',
     'completed': 'bg-green-900/60 text-green-200 border-green-600',

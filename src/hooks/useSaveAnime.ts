@@ -3,6 +3,7 @@ import { useAppSelector } from "../store/reduxHooks";
 import type { AnimeListItem, WatchStatus } from "../shared/interfaces";
 import { saveAnimeToWatchlist } from "../shared/firestore";
 import { toastService } from "../ui/toastService";
+import { MAX_USER_DOCUMENTS } from "../shared/constants";
 import { updateCachedWatchlistIds } from "./useWatchlistSet";
 
 export function useSaveAnime() {
@@ -26,13 +27,13 @@ export function useSaveAnime() {
 
             switch (result.reason) {
                 case 'not-logged-in':
-                    toastService.info("Please login first.");
+                    toastService.info("Log in to add anime to your watchlist.");
                     break;
                 case 'already-exists':
-                    toastService.error(`${title} is already in your watchlist.`);
+                    toastService.info(`${title} is already in your watchlist.`);
                     break;
                 case 'limit-reached':
-                    toastService.error("Watchlist limit reached. Please remove some items first.");
+                    toastService.error(`Your watchlist is full (${MAX_USER_DOCUMENTS.toLocaleString()} titles). Remove some to add more.`);
                     break;
                 case 'error':
                     toastService.error("Something went wrong. Please try again.");

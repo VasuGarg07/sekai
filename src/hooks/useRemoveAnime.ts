@@ -25,10 +25,10 @@ export function useRemoveAnime() {
 
             switch (result.reason) {
                 case 'not-logged-in':
-                    toastService.info("Please login first.");
+                    toastService.info("Log in to manage your watchlist.");
                     break;
                 case 'error':
-                    toastService.error("Failed to remove from watchlist. Please try again.");
+                    toastService.error("Couldn't remove it from your watchlist. Please try again.");
                     break;
             }
         },

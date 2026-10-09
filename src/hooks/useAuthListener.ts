@@ -28,7 +28,7 @@ export const useAuthListener = () => {
                     const { app_theme } = await dispatch(initPreferences(user.uid)).unwrap();
                     applyThemeClass(app_theme);
                 } catch {
-                    toastService.error("Failed to load preferences. Defaults will be used.");
+                    toastService.error("Couldn't load your settings, so defaults are being used.");
                     applyThemeClass("rose");
                 }
 

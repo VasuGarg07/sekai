@@ -28,11 +28,15 @@ const ProfileMenu = ({ className = "" }) => {
 
     const handleAvatarError = () => setAvatarError(true);
 
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleLogout = async () => {
         setOpen(false);
-        toastService.success("Logged Out!");
-        navigate("/");
+        try {
+            await dispatch(logout()).unwrap();
+            toastService.success("Logged out.");
+            navigate("/");
+        } catch {
+            toastService.error("Couldn't log out. Please try again.");
+        }
     };
 
     return (

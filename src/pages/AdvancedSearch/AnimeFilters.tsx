@@ -24,8 +24,10 @@ import {
 import Tooltip from "../../ui/Tooltip";
 
 interface AnimeFiltersProps {
-    /** Search text currently in the URL; kept in sync with the search box */
-    search: string;
+    /** Filters currently applied (from the URL) */
+    applied: Filters;
+    /** Changes whenever `applied` changes, so the form can re-sync (e.g. after Back or a header search) */
+    appliedKey: string;
     onApply: (filters: Filters) => void;
 }
 
@@ -36,18 +38,17 @@ const yearOptions = Array.from(
     (_, i) => 1980 + i
 ).reverse();
 
-const DEFAULT_FILTERS: Filters = { sort: ["SEARCH_MATCH"] };
-
-export default function AnimeFilters({ search, onApply }: AnimeFiltersProps) {
+export default function AnimeFilters({ applied, appliedKey, onApply }: AnimeFiltersProps) {
     const { data: genres = [] } = useGenres();
-    const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, search });
+    // Form edits stay local until "Apply Filters"
+    const [filters, setFilters] = useState<Filters>(applied);
     const [isExpanded, setIsExpanded] = useState(true);
 
-    // A new search from the header bar updates the URL; reflect it in the search box
-    const [syncedSearch, setSyncedSearch] = useState(search);
-    if (search !== syncedSearch) {
-        setSyncedSearch(search);
-        setFilters(prev => ({ ...prev, search }));
+    // When the applied filters change from outside (Back/Forward, header search), show them in the form
+    const [syncedKey, setSyncedKey] = useState(appliedKey);
+    if (appliedKey !== syncedKey) {
+        setSyncedKey(appliedKey);
+        setFilters(applied);
     }
 
     const toggleFilter = (field: keyof Filters, value: string) => {
@@ -89,10 +90,9 @@ export default function AnimeFilters({ search, onApply }: AnimeFiltersProps) {
         onApply(filters);
     };
 
-    // Reset to same state as initial so they're consistent
     const resetFilters = () => {
-        setFilters(DEFAULT_FILTERS);
-        onApply(DEFAULT_FILTERS);
+        setFilters({});
+        onApply({});
     };
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

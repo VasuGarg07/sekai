@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router";
+import { statusActionClass } from "../../ui/statusActionClass";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
@@ -10,21 +12,33 @@ import WatchlistTable from "./WatchlistTable";
 import { RefreshCw, Grid3x3, LayoutList, TableIcon } from "lucide-react";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 type ViewMode = 'grid' | 'tile' | 'table';
+const VIEW_MODES: ViewMode[] = ['grid', 'tile', 'table'];
 const VIEW_MODE_KEY = 'sekai-watchlist-view';
 
+const readViewMode = (): ViewMode => {
+    try {
+        const saved = localStorage.getItem(VIEW_MODE_KEY) as ViewMode | null;
+        return saved && VIEW_MODES.includes(saved) ? saved : 'grid';
+    } catch {
+        return 'grid';
+    }
+};
+
 export default function Watchlist() {
-    const [viewMode, setViewMode] = useState<ViewMode>(() => {
-        const saved = localStorage.getItem(VIEW_MODE_KEY);
-        return (saved as ViewMode) ?? 'grid';
-    });
+    const [viewMode, setViewMode] = useState<ViewMode>(readViewMode);
 
     useEffect(() => {
-        localStorage.setItem(VIEW_MODE_KEY, viewMode);
+        try {
+            localStorage.setItem(VIEW_MODE_KEY, viewMode);
+        } catch {
+            // Storage unavailable (private mode) — the choice just won't persist
+        }
     }, [viewMode]);
 
     const {
         isLoading,
         error,
+        isRefetching,
         isFetchingNextPage,
         hasNextPage,
         fetchNextPage,
@@ -40,9 +54,7 @@ export default function Watchlist() {
         return (
             <>
                 <ProfileBanner />
-                <div className="bg-zinc-900 py-8 px-4">
-                    <LoadingState text='Loading your watchlist...' />
-                </div>
+                <LoadingState text='Loading your watchlist...' />
             </>
         );
     }
@@ -51,9 +63,11 @@ export default function Watchlist() {
         return (
             <>
                 <ProfileBanner />
-                <div className="bg-zinc-900 py-8 px-4">
-                    <ErrorState message={error.message} />
-                </div>
+                <ErrorState
+                    title="Couldn't load your watchlist"
+                    message={error.message}
+                    onRetry={refresh}
+                />
             </>
         );
     }
@@ -62,9 +76,11 @@ export default function Watchlist() {
         return (
             <>
                 <ProfileBanner />
-                <div className="bg-zinc-900 py-8 px-4">
-                    <EmptyState message='Guess you have yet to add shows in your list.' />
-                </div>
+                <EmptyState
+                    title="Your watchlist is empty"
+                    message="Shows you add will appear here. Find something to watch and hit “Add to Watchlist”."
+                    actions={<Link to="/explore" className={statusActionClass.primary}>Explore anime</Link>}
+                />
             </>
         );
     }
@@ -72,7 +88,7 @@ export default function Watchlist() {
     return (
         <>
             <ProfileBanner />
-            <div className="bg-zinc-900 px-4 sm:px-6 lg:px-8 py-4">
+            <div className="px-4 sm:px-6 lg:px-8 py-4">
                 <div className="max-w-7xl mx-auto flex items-center gap-2 justify-center mb-4">
                     <h2 className="text-xl sm:text-2xl font-bold text-white">
                         My Watchlist
@@ -81,11 +97,11 @@ export default function Watchlist() {
                     <button
                         type="button"
                         onClick={refresh}
-                        disabled={isFetchingNextPage}
+                        disabled={isRefetching || isFetchingNextPage}
                         className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Refresh watchlist"
                     >
-                        <RefreshCw className={`w-5 h-5 ${isFetchingNextPage ? 'animate-spin' : ''}`} />
+                        <RefreshCw className={`w-5 h-5 ${isRefetching ? 'animate-spin' : ''}`} />
                     </button>
                     <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
                         <button

@@ -19,5 +19,5 @@ export const useInfiniteScroll = (
         observer.observe(element);
 
         return () => observer.unobserve(element);
-    }, [fetchFn, isFetching, hasMore]);
+    }, [ref, fetchFn, isFetching, hasMore]);
 }

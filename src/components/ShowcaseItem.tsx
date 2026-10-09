@@ -39,13 +39,13 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
                         <Monitor size={14} className="sm:w-4 sm:h-4" />
                         {anime.type}
                     </span>
-                    {anime.duration && (
+                    {!!anime.duration && (
                         <span className="flex items-center gap-1 text-gray-400">
                             <Clock size={14} className="sm:w-4 sm:h-4" />
                             {anime.duration} min
                         </span>
                     )}
-                    {anime.episodes && (
+                    {!!anime.episodes && (
                         <span className="flex items-center gap-1 text-gray-400">
                             <Clapperboard size={14} className="sm:w-4 sm:h-4" />
                             {anime.episodes} ep

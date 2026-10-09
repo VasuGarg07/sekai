@@ -32,7 +32,7 @@ function QuickSearchItem({ anime, handleClick }: QuickSearchItemProps) {
 
                 <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-200">
-                        {anime.score && (
+                        {!!anime.score && (
                             <>
                                 <span className="bg-yellow-500 text-white rounded px-1 font-medium">
                                     ★ {anime.score}%
@@ -48,7 +48,7 @@ function QuickSearchItem({ anime, handleClick }: QuickSearchItemProps) {
                                 <span>•</span>
                             </>
                         )}
-                        {anime.seasonYear && (
+                        {!!anime.seasonYear && (
                             <>
                                 <span className="bg-lime-500 text-white rounded px-1 font-medium uppercase">
                                     {anime.seasonYear}
@@ -56,7 +56,7 @@ function QuickSearchItem({ anime, handleClick }: QuickSearchItemProps) {
                                 <span>•</span>
                             </>
                         )}
-                        {anime.duration && (
+                        {!!anime.duration && (
                             <span className="bg-purple-500 text-white rounded px-1 font-medium">
                                 {anime.duration >= 60
                                     ? `${Math.floor(anime.duration / 60)}h ${anime.duration % 60}m`

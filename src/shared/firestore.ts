@@ -112,6 +112,13 @@ export async function fetchUserWatchList(uid: string, lastDoc?: QueryDocumentSna
     };
 }
 
+/** Every watchlist item, newest first. Used for exports, where a paginated view isn't enough. */
+export async function fetchEntireWatchList(uid: string): Promise<AnimeWatchList[]> {
+    const ref = collection(fireStore, "users", uid, "watchlist");
+    const { docs } = await getDocs(query(ref, orderBy("addedAt", "desc")));
+    return docs.map(doc => doc.data() as AnimeWatchList);
+}
+
 export const saveAnimeToWatchlist = async (
     anime: AnimeListItem,
     userId?: string,

@@ -1,5 +1,5 @@
 import { Bookmark, LogOut, Settings } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDismiss } from "../hooks/useDismiss";
 import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
@@ -12,21 +12,18 @@ const ProfileMenu = ({ className = "" }) => {
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
-    const [avatarError, setAvatarError] = useState(false);
+    // Remember which photo URL failed, so a new photo is tried again automatically
+    const [failedPhotoURL, setFailedPhotoURL] = useState<string | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
     useDismiss(menuRef, () => setOpen(false), open);
 
-    useEffect(() => {
-        setAvatarError(false);
-    }, [user?.photoURL]);
-
     if (!user) return null;
 
     const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=random&rounded=true&size=96`;
-    const avatarSrc = avatarError || !user.photoURL ? avatarFallback : user.photoURL;
+    const avatarSrc = !user.photoURL || failedPhotoURL === user.photoURL ? avatarFallback : user.photoURL;
 
-    const handleAvatarError = () => setAvatarError(true);
+    const handleAvatarError = () => setFailedPhotoURL(user.photoURL);
 
     const handleLogout = async () => {
         setOpen(false);

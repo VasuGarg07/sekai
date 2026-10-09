@@ -1,6 +1,5 @@
 import { Eye } from "lucide-react";
-import { useState } from "react";
-import { useDefaultWatchStatus } from "../../hooks/useDefaultWatchStatus";
+import { useUpdatePreferences } from "../../hooks/useUpdatePreferences";
 import { useAppSelector } from "../../store/reduxHooks";
 import type { WatchStatus } from "../../shared/interfaces";
 import { SectionLayout } from "./SectionLayout";
@@ -15,17 +14,16 @@ const WATCH_STATUS_OPTIONS: { value: WatchStatus; label: string }[] = [
 ];
 
 export const DefaultWatchStatus = () => {
-    const { mutate: setStatus } = useDefaultWatchStatus();
-    const [isPending, setIsPending] = useState(false);
+    const { update, isPending } = useUpdatePreferences();
     const currentStatus = useAppSelector(
         (state) => state.preferences.default_watch_status
     );
 
-    const handleChange = (newStatus: WatchStatus) => {
-        if (isPending) return;
-        setIsPending(true);
-        setStatus(newStatus, {
-            onSettled: () => setIsPending(false),
+    const handleChange = (option: { value: WatchStatus; label: string }) => {
+        if (isPending || option.value === currentStatus) return;
+        update({ default_watch_status: option.value }, {
+            success: `Default watch status set to ${option.label}.`,
+            error: "Couldn't save your default watch status. It has been changed back.",
         });
     };
 
@@ -41,7 +39,8 @@ export const DefaultWatchStatus = () => {
                         key={option.value}
                         type="button"
                         disabled={isPending}
-                        onClick={() => handleChange(option.value)}
+                        aria-pressed={currentStatus === option.value}
+                        onClick={() => handleChange(option)}
                         className={`px-4 py-2 text-sm font-medium rounded-md border transition-all
                             ${currentStatus === option.value
                                 ? "bg-accent-500 text-white border-transparent"

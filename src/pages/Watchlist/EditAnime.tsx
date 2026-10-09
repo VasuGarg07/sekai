@@ -73,7 +73,7 @@ export function EditAnime({ anime }: EditAnimeProps) {
                                     {anime.title_english ?? anime.title_romaji}
                                 </p>
                                 <div className="text-xs text-gray-400 flex flex-wrap gap-2">
-                                    {anime.score && (
+                                    {!!anime.score && (
                                         <>
                                             <div className="flex items-center">
                                                 <Star className="w-3 h-3 text-yellow-500 mr-1" />

@@ -1,21 +1,22 @@
 interface LoadingStateProps {
-    text?: string
+    text?: string;
+    size?: "page" | "section";
 }
 
-const LoadingState = ({ text = 'Loading...' }: LoadingStateProps) => {
+const LoadingState = ({ text = 'Loading...', size = "page" }: LoadingStateProps) => {
     return (
-    <div className="flex items-center justify-center min-h-120 w-full max-w-6xl mx-auto p-10">
+        <div
+            role="status"
+            aria-live="polite"
+            className={`flex items-center justify-center w-full px-6 ${size === "page" ? "min-h-[60vh] py-12" : "py-10"}`}
+        >
             <div className="flex flex-col items-center">
                 {/* Dual ring spinner */}
-                <div className="relative w-16 h-16 mb-4">
-                    {/* Outer ring */}
+                <div className="relative w-14 h-14 mb-4">
                     <div className="absolute inset-0 border-4 border-accent-500 border-t-transparent rounded-full animate-spin"></div>
-                    {/* Inner ring */}
                     <div className="absolute inset-2 border-4 border-accent-400 border-b-transparent rounded-full animate-spin-reverse"></div>
                 </div>
-
-                {/* Loading text */}
-                <p className="text-gray-200 font-semibold tracking-wide animate-pulse">
+                <p className="text-sm text-zinc-300 font-medium tracking-wide animate-pulse">
                     {text}
                 </p>
             </div>

@@ -3,6 +3,7 @@ import { useAppSelector } from "../store/reduxHooks";
 import type { AnimeListItem, WatchStatus } from "../shared/interfaces";
 import { saveAnimeToWatchlist } from "../shared/firestore";
 import { toastService } from "../ui/toastService";
+import { updateCachedWatchlistIds } from "./useWatchlistSet";
 
 export function useSaveAnime() {
     const userId = useAppSelector(state => state.auth.user?.uid);
@@ -18,6 +19,7 @@ export function useSaveAnime() {
 
             if (result.success) {
                 toastService.success(`${title} added to watchlist.`);
+                updateCachedWatchlistIds(queryClient, userId, { add: anime.id });
                 queryClient.invalidateQueries({ queryKey: ["watchlist", userId] });
                 return;
             }

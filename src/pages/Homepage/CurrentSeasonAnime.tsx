@@ -6,30 +6,31 @@ import { useAnimeList } from '../../hooks/useAnimeList';
 import { Link } from "react-router";
 
 export default function CurrentSeasonAnime() {
-    const { data, isLoading, error } = useAnimeList('airingAnime', ["UPDATED_AT_DESC"], "RELEASING");
+    const { data, isLoading, error, refetch } = useAnimeList(["UPDATED_AT_DESC"], "RELEASING");
 
     if (isLoading) {
-        return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <LoadingState text='Loading current season anime...' />
-            </div>
-        )
+        return <LoadingState size="section" text='Loading recently released anime...' />;
     }
 
     if (error) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <ErrorState message={error.message} />
-            </div>
-        )
+            <ErrorState
+                size="section"
+                title="Couldn't load recent releases"
+                message={error.message}
+                onRetry={() => refetch()}
+            />
+        );
     }
 
     if (!data || data.items.length === 0) {
         return (
-            <div className="bg-zinc-900 py-8 px-4">
-                <EmptyState message='No anime data available for the current season' />
-            </div>
-        )
+            <EmptyState
+                size="section"
+                title="No recent releases"
+                message="Nothing new has aired recently. Check back soon!"
+            />
+        );
     }
 
     return (
@@ -37,7 +38,7 @@ export default function CurrentSeasonAnime() {
             <div className="flex items-center justify-between mb-4 px-4">
                 <h2 className="text-2xl font-bold text-white">Recently Released</h2>
                 <Link
-                    to='recents'
+                    to='/recents'
                     className="text-accent-100 bg-zinc-600 px-2 py-1 rounded-md text-xs font-medium">
                     View more →
                 </Link>

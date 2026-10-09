@@ -5,13 +5,12 @@ import { ShowcaseItem } from "./ShowcaseItem";
 interface AnimeListProps {
     title: string;
     path: string;
-    queryKey: string;
     sort: string[];
     status?: string;
 }
 
-export function ShowcaseStrip({ title, path, queryKey, sort, status }: AnimeListProps) {
-    const { data, isLoading, error } = useAnimeList(queryKey, sort, status, 1, 5);
+export function ShowcaseStrip({ title, path, sort, status }: AnimeListProps) {
+    const { data, isLoading, error } = useAnimeList(sort, status, 1, 5);
 
     if (isLoading) return (
         <div className="bg-zinc-900 p-4">

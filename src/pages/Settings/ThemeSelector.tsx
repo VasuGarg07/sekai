@@ -1,16 +1,20 @@
 import { Palette } from "lucide-react";
-import { useTheme } from "../../hooks/useTheme";
+import { useUpdatePreferences } from "../../hooks/useUpdatePreferences";
 import { useAppSelector } from "../../store/reduxHooks";
 import { SectionLayout } from "./SectionLayout";
 import { AVAILABLE_THEMES } from "../../shared/constants";
 
 export const ThemeSelector = () => {
-    const { mutate: setTheme, isPending } = useTheme();
+    const { update, isPending } = useUpdatePreferences();
     const app_theme = useAppSelector((state) => state.preferences.app_theme);
 
     const handleThemeChange = (themeName: string) => {
-        if (isPending) return;
-        setTheme(themeName);
+        if (isPending || themeName === app_theme) return;
+        const label = AVAILABLE_THEMES.find(t => t.name === themeName)?.label ?? themeName;
+        update({ app_theme: themeName }, {
+            success: `Theme changed to ${label}.`,
+            error: "Couldn't save your theme. It has been changed back.",
+        });
     };
 
     return (

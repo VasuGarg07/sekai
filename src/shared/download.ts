@@ -1,4 +1,4 @@
-import type { AnimeWatchList } from "../shared/interfaces";
+import type { AnimeWatchList } from "./interfaces";
 import { formatDateEpoch, formatKey } from "./utilities";
 import Papa from 'papaparse';
 
@@ -34,8 +34,9 @@ const formatData = (items: AnimeWatchList[]): FormattedAnimeData[] => {
         watchStatus: formatKey(item.watchStatus),
         season: item.season || "N/A",
         seasonYear: item.seasonYear?.toString() || "N/A",
-        genres: item.genres.length > 0 ? item.genres.join(", ") : "N/A",
-        synopsis: item.synopsis?.replace(/"/g, '""') || "N/A",
+        genres: item.genres?.length ? item.genres.join(", ") : "N/A",
+        // Raw text: each exporter does its own escaping (Papa for CSV, escapeXML for XML)
+        synopsis: item.synopsis || "N/A",
         addedAt: formatDateEpoch(item.addedAt),
         image: item.image || "N/A"
     }));
@@ -50,7 +51,8 @@ const downloadFile = (content: string, filename: string, mimeType: string): void
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    // Revoke after the click has been handled; revoking synchronously can cancel the download in some browsers
+    setTimeout(() => URL.revokeObjectURL(url), 0);
 };
 
 const escapeXML = (str: string | number): string => {
@@ -96,7 +98,7 @@ const toXML = (items: AnimeWatchList[]): void => {
         <duration>${escapeXML(item.duration)}</duration>
         <score>${escapeXML(item.score)}</score>
         <status>${escapeXML(item.status)}</status>
-        <watchStatus>${item.watchStatus}</watchStatus>
+        <watchStatus>${escapeXML(item.watchStatus)}</watchStatus>
         <season>${escapeXML(item.season)}</season>
         <seasonYear>${escapeXML(item.seasonYear)}</seasonYear>
         <genres>${escapeXML(item.genres)}</genres>

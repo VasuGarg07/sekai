@@ -43,7 +43,7 @@ function AnimeTile({ anime }: AnimeTileProps) {
                             hover:underline hover:text-accent-600">
                         {anime.title_english ?? anime.title_romaji}
                     </h3>
-                    {anime.score && (
+                    {!!anime.score && (
                         <div className="flex items-center text-yellow-500 gap-1 shrink-0">
                             <Star className="w-4 h-4" />
                             <span className="font-medium">{anime.score / 10}</span>
@@ -58,7 +58,7 @@ function AnimeTile({ anime }: AnimeTileProps) {
                             <span>•</span>
                         </>
                     )}
-                    {anime.episodes && (
+                    {!!anime.episodes && (
                         <>
                             <span className="font-medium">{anime.episodes} EP</span>
                             <span>•</span>

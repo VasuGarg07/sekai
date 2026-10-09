@@ -3,6 +3,7 @@ import { deleteAnimeFromWatchlist } from "../shared/firestore";
 import type { AnimeListItem } from "../shared/interfaces";
 import { useAppSelector } from "../store/reduxHooks";
 import { toastService } from "../ui/toastService";
+import { updateCachedWatchlistIds } from "./useWatchlistSet";
 
 export function useRemoveAnime() {
     const userId = useAppSelector(state => state.auth.user?.uid);
@@ -17,6 +18,7 @@ export function useRemoveAnime() {
 
             if (result.success) {
                 toastService.success(`${title} removed from watchlist.`);
+                updateCachedWatchlistIds(queryClient, userId, { remove: anime.id });
                 queryClient.invalidateQueries({ queryKey: ["watchlist", userId] });
                 return;
             }

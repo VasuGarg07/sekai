@@ -1,41 +1,32 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import type { AnimeListItem, AnimeSearchResponse } from "../shared/interfaces";
+import { isAdultFilter, MEDIA_LIST_FIELDS } from "../shared/anilistFields";
+import type { AnimeListItem, AnimeMediaPageResponse } from "../shared/interfaces";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
+import { useAdultMode } from "./useUpdatePreferences";
 
 const QUERY = /* GraphQL */ `
-  query ($search: String, $perPage: Int) {
+  query ($search: String, $perPage: Int, $isAdult: Boolean) {
     Page(perPage: $perPage) {
-      media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
-        id
-        title { english romaji }
-        coverImage { large }
-        format
-        duration
-        averageScore
-        startDate { year month day }
-        description(asHtml: false)
-        synonyms
-        status
-        genres
-        episodes
-        season
-        seasonYear
+      media(search: $search, type: ANIME, sort: POPULARITY_DESC, isAdult: $isAdult) {
+        ${MEDIA_LIST_FIELDS}
       }
     }
   }
 `;
 
 export function useAnimeSearch(search: string, enabled = true) {
+  const adultMode = useAdultMode();
+
   return useQuery<AnimeListItem[], Error>({
-    queryKey: ["animeSearch", search],
+    queryKey: ["animeSearch", search, adultMode],
     enabled: enabled && search.trim().length >= 3,
     queryFn: async () => {
-      const data = await apiClient<AnimeSearchResponse>(QUERY, { search, perPage: 5 });
-      const media = data.Page?.media ?? [];
-      return media.map(m => mapMediaToAnimeListItem(m as AnimeListItem));
+      const data = await apiClient<AnimeMediaPageResponse>(QUERY, {
+        search, perPage: 5, isAdult: isAdultFilter(adultMode),
+      });
+      return (data.Page?.media ?? []).map(mapMediaToAnimeListItem);
     },
     staleTime: 5 * 60 * 1000,
-    retry: false,
   });
 }

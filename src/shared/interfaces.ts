@@ -14,6 +14,8 @@ export interface AnimeListItem {
     episodes: number | null;
     season: string | null;
     seasonYear: number | null;
+    /** From AniList; not stored in the watchlist */
+    isAdult?: boolean;
 }
 
 export interface AnimeSpotlight extends AnimeListItem {
@@ -61,7 +63,7 @@ export interface AnimeRelation {
         };
         format: string | null;
         status: string | null;
-        meta: string | null
+        isAdult: boolean | null;
     };
 }
 
@@ -94,9 +96,27 @@ export interface AnimeDetail extends AnimeListItem {
 
 export type WatchStatus = 'watching' | 'on-hold' | 'plan-to-watch' | 'dropped' | 'completed' | 'rewatch';
 
-export interface AnimeWatchList extends AnimeListItem {
+/**
+ * What is stored in Firestore for each watchlist item (users/{uid}/watchlist/{animeId}).
+ * The user's own data (watchStatus, addedAt) plus AniList data that practically never changes
+ * (titles, format) — kept so the list stays readable and has a fallback if AniList is down.
+ * Everything else (score, airing status, episodes, image...) is fetched fresh from AniList.
+ * Older documents may still carry a full AnimeListItem snapshot; it is used only as a fallback.
+ */
+export interface WatchlistEntry {
+    id: number;
+    title_romaji: string | null;
+    title_english: string | null;
+    /** AniList media format (TV, MOVIE, OVA...) — called `type` on AnimeListItem */
+    format: string | null;
     watchStatus: WatchStatus;
     addedAt: number;
+}
+
+/** A watchlist item ready for display: the stored entry merged with fresh AniList data. */
+export interface AnimeWatchList extends AnimeListItem, WatchlistEntry {
+    /** True when AniList data couldn't be loaded and the item shows stored/placeholder data */
+    isStale?: boolean;
 }
 
 // ----------------------------
@@ -110,8 +130,9 @@ export interface SekaiUser {
 
 export interface UserPreferences {
     app_theme: string;
-    default_watch_status: string;
-    lastSyncedAt?: number;
+    default_watch_status: WatchStatus;
+    /** 18+ Mode — when true, adult titles are not filtered out */
+    adult_mode: boolean;
 }
 
 export interface ThemeColor {
@@ -133,26 +154,48 @@ export interface PagedResult {
 
 // Raw GraphQL response wrappers — used to type apiClient<T> calls
 
+/** Media object as returned by AniList. Every field is optional because each query selects a subset. */
+export interface AniListMedia {
+    id: number;
+    title?: { english?: string | null; romaji?: string | null } | null;
+    coverImage?: { large?: string | null; extraLarge?: string | null } | null;
+    bannerImage?: string | null;
+    format?: string | null;
+    duration?: number | null;
+    averageScore?: number | null;
+    startDate?: { year?: number | null; month?: number | null; day?: number | null } | null;
+    description?: string | null;
+    synonyms?: string[] | null;
+    status?: string | null;
+    genres?: string[] | null;
+    episodes?: number | null;
+    season?: string | null;
+    seasonYear?: number | null;
+    isAdult?: boolean | null;
+    countryOfOrigin?: string | null;
+    tags?: AnimeTag[] | null;
+    popularity?: number | null;
+    favourites?: number | null;
+    relations?: { edges?: AnimeRelation[] | null } | null;
+    recommendations?: { edges?: { node?: { mediaRecommendation?: AniListMedia | null } | null }[] | null } | null;
+    trailer?: AnimeTrailer | null;
+    nextAiringEpisode?: { episode: number; airingAt: number } | null;
+}
+
 export interface AnimeListResponse {
     Page: {
         pageInfo: Pagination;
-        media: unknown[];
+        media: AniListMedia[];
     };
 }
 
 export interface AnimeDetailResponse {
-    Media: unknown;
+    Media: AniListMedia | null;
 }
 
-export interface AnimeSpotlightResponse {
+export interface AnimeMediaPageResponse {
     Page: {
-        media: unknown[];
-    };
-}
-
-export interface AnimeSearchResponse {
-    Page: {
-        media: unknown[];
+        media: AniListMedia[];
     };
 }
 

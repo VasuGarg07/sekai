@@ -1,4 +1,4 @@
-import { Navigate } from "react-router";
+import { Navigate, useLocation, type Location } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store/reduxHooks";
 import { loginWithGoogle, loginWithGitHub } from "../../store/slices/authSlice";
 import { Sparkles } from "lucide-react";
@@ -6,8 +6,13 @@ import { Sparkles } from "lucide-react";
 export default function LoginPage() {
     const dispatch = useAppDispatch();
     const { user, loading, error } = useAppSelector((state) => state.auth);
+    const location = useLocation();
 
-    if (user) return <Navigate to="/" replace />;
+    if (user) {
+        // Return to the protected page that sent us here, if any
+        const from = (location.state as { from?: Location } | null)?.from;
+        return <Navigate to={from ? `${from.pathname}${from.search}` : "/"} replace />;
+    }
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-zinc-900 text-white overflow-hidden px-4">

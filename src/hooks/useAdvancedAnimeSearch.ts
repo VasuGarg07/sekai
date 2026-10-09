@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
-import type { AnimeListItem, AnimeListResponse, PagedResult } from "../shared/interfaces";
+import { isAdultFilter, MEDIA_LIST_FIELDS } from "../shared/anilistFields";
+import type { AnimeListResponse, PagedResult } from "../shared/interfaces";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
+import { useAdultMode } from "./useUpdatePreferences";
 
 const QUERY = /* GraphQL */ `
   query (
@@ -16,6 +18,7 @@ const QUERY = /* GraphQL */ `
     $year: Int
     $country: CountryCode
     $sort: [MediaSort]
+    $isAdult: Boolean
   ) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
@@ -36,21 +39,9 @@ const QUERY = /* GraphQL */ `
         seasonYear: $year
         countryOfOrigin: $country
         sort: $sort
+        isAdult: $isAdult
       ) {
-        id
-        title { english romaji }
-        coverImage { large }
-        format
-        duration
-        averageScore
-        startDate { year month day }
-        description(asHtml: false)
-        synonyms
-        status
-        genres
-        episodes
-        season
-        seasonYear
+        ${MEDIA_LIST_FIELDS}
       }
     }
   }
@@ -70,10 +61,8 @@ export interface AdvancedSearchOptions {
   perPage?: number;
 }
 
-export function useAdvancedAnimeSearch(
-  key: string,
-  options: AdvancedSearchOptions,
-) {
+export function useAdvancedAnimeSearch(options: AdvancedSearchOptions) {
+  const adultMode = useAdultMode();
   const {
     search,
     genreIn,
@@ -88,47 +77,34 @@ export function useAdvancedAnimeSearch(
     perPage = 30,
   } = options;
 
+  // Drop empty values so equivalent searches share one cache entry
+  const variables = {
+    ...(search && { search }),
+    ...(genreIn?.length && { genreIn }),
+    ...(genreNotIn?.length && { genreNotIn }),
+    ...(formatIn?.length && { formatIn }),
+    ...(statusIn?.length && { statusIn }),
+    ...(season && { season }),
+    ...(year && { year }),
+    ...(country && { country }),
+    ...(sort.length && { sort }),
+  };
+
   return useQuery<PagedResult, Error>({
-    queryKey: [
-      "advancedAnimeSearch",
-      key,
-      page,
-      {
-        ...(search && { search }),
-        ...(genreIn?.length && { genreIn }),
-        ...(genreNotIn?.length && { genreNotIn }),
-        ...(formatIn?.length && { formatIn }),
-        ...(statusIn?.length && { statusIn }),
-        ...(season && { season }),
-        ...(year && { year }),
-        ...(country && { country }),
-        ...(sort?.length && { sort }),
-      }
-    ],
+    queryKey: ["advancedAnimeSearch", page, perPage, adultMode, variables],
     queryFn: async () => {
       const data = await apiClient<AnimeListResponse>(QUERY, {
+        ...variables,
         page,
         perPage,
-        search,
-        genreIn,
-        genreNotIn,
-        formatIn,
-        statusIn,
-        season,
-        year,
-        country,
-        sort,
+        isAdult: isAdultFilter(adultMode),
       });
 
-      const media = data.Page?.media ?? [];
-      const pageInfo = data.Page?.pageInfo ?? {};
-
       return {
-        items: media.map(m => mapMediaToAnimeListItem(m as AnimeListItem)),
-        pageInfo,
-      } as PagedResult;
+        items: (data.Page?.media ?? []).map(mapMediaToAnimeListItem),
+        pageInfo: data.Page.pageInfo,
+      };
     },
     staleTime: 5 * 60 * 1000,
-    retry: false,
   });
 }

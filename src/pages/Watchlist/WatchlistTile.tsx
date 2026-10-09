@@ -44,7 +44,7 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
                 </h3>
 
                 <div className="text-xs lg:text-sm text-gray-300 flex flex-wrap gap-1">
-                    {anime.score && (
+                    {!!anime.score && (
                         <>
                             <div className="flex items-center gap-1">
                                 <Star className="w-3 h-3 text-yellow-500 fill-yellow-400" />
@@ -59,7 +59,7 @@ export default function WatchlistTile({ anime }: WatchlistTileProps) {
                             <span>•</span>
                         </>
                     )}
-                    {anime.episodes && (
+                    {!!anime.episodes && (
                         <>
                             <span className="font-medium">{anime.episodes} EP</span>
                             <span>•</span>

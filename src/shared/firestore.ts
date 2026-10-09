@@ -1,21 +1,22 @@
 import type { User } from "firebase/auth";
 import {
+    arrayRemove, arrayUnion,
     collection,
-    deleteDoc, doc, getCountFromServer,
+    doc,
     getDoc, getDocs, limit, orderBy,
     query,
     QueryDocumentSnapshot,
-    serverTimestamp, setDoc, startAfter, updateDoc
+    runTransaction,
+    serverTimestamp, setDoc, startAfter, updateDoc, writeBatch
 } from "firebase/firestore";
 import { DEFAULT_PREFERENCES, MAX_USER_DOCUMENTS } from "./constants";
 import { fireStore } from "./firebase";
-import type { AnimeListItem, AnimeWatchList, UserPreferences, WatchStatus } from "./interfaces";
-import { cleanAnimeForWatchlist } from "./utilities";
+import type { AnimeListItem, UserPreferences, WatchlistEntry, WatchStatus } from "./interfaces";
 
 // --- Result types ---
 
 type SaveResult =
-    | { success: true; item: AnimeWatchList }
+    | { success: true; item: WatchlistEntry }
     | { success: false; reason: 'not-logged-in' | 'already-exists' | 'limit-reached' | 'error'; error?: unknown };
 
 type DeleteResult =
@@ -74,7 +75,8 @@ export const upsertPreferences = async (uid: string): Promise<PreferencesResult>
             return { success: true, data: DEFAULT_PREFERENCES };
         }
 
-        return { success: true, data: snapshot.data() as UserPreferences };
+        // Fill in fields added after the doc was created (e.g. adult_mode)
+        return { success: true, data: { ...DEFAULT_PREFERENCES, ...(snapshot.data() as Partial<UserPreferences>) } };
     } catch (error) {
         return { success: false, reason: 'error', error };
     }
@@ -94,21 +96,50 @@ export const updatePreferences = async (
 };
 
 // --- Watchlist ---
+//
+// users/{uid}/watchlist/{animeId}  -> WatchlistEntry (id, titles, format, watchStatus, addedAt)
+// users/{uid}/meta/watchlist       -> { ids: number[] }  every saved anime id, for quick "is it saved?" checks
+//
+// Both are always written together (transaction / batch) so they can't drift apart.
+
+/** Stored document; older ones may still carry a full anime snapshot */
+export type StoredWatchlistDoc = WatchlistEntry & Partial<AnimeListItem>;
+
+const PAGE_SIZE = 24;
+
+const watchlistCollection = (uid: string) => collection(fireStore, "users", uid, "watchlist");
+const watchlistDoc = (uid: string, animeId: number) => doc(fireStore, "users", uid, "watchlist", String(animeId));
+const watchlistIdsDoc = (uid: string) => doc(fireStore, "users", uid, "meta", "watchlist");
+
 export async function fetchUserWatchList(uid: string, lastDoc?: QueryDocumentSnapshot): Promise<{
-    data: AnimeWatchList[];
+    data: StoredWatchlistDoc[];
     lastDoc: QueryDocumentSnapshot | null;
 }> {
-    const ref = collection(fireStore, "users", uid, "watchlist");
+    const ref = watchlistCollection(uid);
     const q = lastDoc
-        ? query(ref, orderBy("addedAt", "desc"), startAfter(lastDoc), limit(24))
-        : query(ref, orderBy("addedAt", "desc"), limit(24));
+        ? query(ref, orderBy("addedAt", "desc"), startAfter(lastDoc), limit(PAGE_SIZE))
+        : query(ref, orderBy("addedAt", "desc"), limit(PAGE_SIZE));
 
     const { docs } = await getDocs(q);
 
     return {
-        data: docs.map(doc => doc.data() as AnimeWatchList),
-        lastDoc: docs.length > 0 ? docs[docs.length - 1] : null,
+        data: docs.map(doc => doc.data() as StoredWatchlistDoc),
+        // A short page means there's nothing after it
+        lastDoc: docs.length === PAGE_SIZE ? docs[docs.length - 1] : null,
     };
+}
+
+/** Every watchlist entry, newest first. Used for exports, where a paginated view isn't enough. */
+export async function fetchEntireWatchList(uid: string): Promise<StoredWatchlistDoc[]> {
+    const { docs } = await getDocs(query(watchlistCollection(uid), orderBy("addedAt", "desc")));
+    return docs.map(doc => doc.data() as StoredWatchlistDoc);
+}
+
+/** Ids of everything in the user's watchlist (one document read). */
+export async function fetchWatchlistIds(uid: string): Promise<number[]> {
+    const snapshot = await getDoc(watchlistIdsDoc(uid));
+    // Missing until the user's first save (or until the migration script has run for older accounts)
+    return snapshot.exists() ? ((snapshot.data().ids as number[] | undefined) ?? []) : [];
 }
 
 export const saveAnimeToWatchlist = async (
@@ -119,63 +150,57 @@ export const saveAnimeToWatchlist = async (
     if (!userId) return { success: false, reason: 'not-logged-in' };
 
     try {
-        const ref = collection(fireStore, "users", userId, "watchlist");
-        const countSnapshot = await getCountFromServer(ref);
+        return await runTransaction(fireStore, async (tx) => {
+            const idsSnapshot = await tx.get(watchlistIdsDoc(userId));
+            const ids: number[] = idsSnapshot.exists() ? (idsSnapshot.data().ids ?? []) : [];
 
-        if (countSnapshot.data().count >= MAX_USER_DOCUMENTS) {
-            return { success: false, reason: 'limit-reached' };
-        }
+            if (ids.includes(anime.id)) return { success: false, reason: 'already-exists' } as const;
+            if (ids.length >= MAX_USER_DOCUMENTS) return { success: false, reason: 'limit-reached' } as const;
 
-        const docId = anime.id.toString();
-        const docRef = doc(fireStore, "users", userId, "watchlist", docId);
-        const snapshot = await getDoc(docRef);
-
-        if (snapshot.exists()) {
-            return { success: false, reason: 'already-exists' };
-        }
-
-        const item: AnimeWatchList = {
-            ...cleanAnimeForWatchlist(anime),
-            watchStatus,
-            addedAt: Date.now(),
-        };
-
-        await setDoc(docRef, item);
-        return { success: true, item };
-
+            const item: WatchlistEntry = {
+                id: anime.id,
+                title_romaji: anime.title_romaji,
+                title_english: anime.title_english,
+                format: anime.type,
+                watchStatus,
+                addedAt: Date.now(),
+            };
+            tx.set(watchlistDoc(userId, anime.id), item);
+            tx.set(watchlistIdsDoc(userId), { ids: arrayUnion(anime.id) }, { merge: true });
+            return { success: true, item } as const;
+        });
     } catch (error) {
         return { success: false, reason: 'error', error };
     }
 };
 
 export const deleteAnimeFromWatchlist = async (
-    anime: AnimeListItem,
+    anime: Pick<AnimeListItem, "id">,
     uid?: string,
 ): Promise<DeleteResult> => {
     if (!uid) return { success: false, reason: 'not-logged-in' };
 
     try {
-        const docId = anime.id.toString();
-        const ref = doc(fireStore, "users", uid, "watchlist", docId);
-        await deleteDoc(ref);
-        return { success: true, id: docId };
+        const batch = writeBatch(fireStore);
+        batch.delete(watchlistDoc(uid, anime.id));
+        batch.set(watchlistIdsDoc(uid), { ids: arrayRemove(anime.id) }, { merge: true });
+        await batch.commit();
+        return { success: true, id: String(anime.id) };
     } catch (error) {
         return { success: false, reason: 'error', error };
     }
 };
 
 export const updateWatchStatus = async (
-    anime: AnimeListItem,
+    anime: Pick<AnimeListItem, "id">,
     newStatus: WatchStatus,
     uid?: string,
 ): Promise<UpdateStatusResult> => {
     if (!uid) return { success: false, reason: 'not-logged-in' };
 
     try {
-        const docId = anime.id.toString();
-        const ref = doc(fireStore, "users", uid, "watchlist", docId);
-        await updateDoc(ref, { watchStatus: newStatus });
-        return { success: true, id: docId, status: newStatus };
+        await updateDoc(watchlistDoc(uid, anime.id), { watchStatus: newStatus });
+        return { success: true, id: String(anime.id), status: newStatus };
     } catch (error) {
         return { success: false, reason: 'error', error };
     }

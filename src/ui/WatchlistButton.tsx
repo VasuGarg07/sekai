@@ -102,7 +102,7 @@ export function WatchlistButton({ anime, className = "" }: WatchlistButtonProps)
                             <div>
                                 <p className="font-medium text-white text-sm line-clamp-2">{title}</p>
                                 <div className="text-xs text-gray-400 flex flex-wrap gap-2 mt-1">
-                                    {anime.score && (
+                                    {!!anime.score && (
                                         <>
                                             <div className="flex items-center">
                                                 <Star className="w-3 h-3 text-yellow-500 mr-1" />

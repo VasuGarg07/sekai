@@ -75,7 +75,7 @@ const SearchBar = ({ className = "" }: Props) => {
             </div>
 
             <div className="absolute left-0 right-0">
-                {query.length > 0 && query.length < 3 && (
+                {q.length > 0 && !shouldFetch && (
                     <div className="mt-1 p-4 text-center text-zinc-400 bg-zinc-800 rounded-lg border border-zinc-700 z-50">
                         Type at least 3 characters to search
                     </div>

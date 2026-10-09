@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { upsertPreferences, updatePreferences } from "../../shared/firestore";
-import type { UserPreferences, WatchStatus } from "../../shared/interfaces";
+import { DEFAULT_PREFERENCES } from "../../shared/constants";
+import { upsertPreferences } from "../../shared/firestore";
+import type { UserPreferences } from "../../shared/interfaces";
 
 interface PreferencesState extends UserPreferences {
     loading: boolean;
@@ -8,8 +9,7 @@ interface PreferencesState extends UserPreferences {
 }
 
 const initialState: PreferencesState = {
-    app_theme: "rose",
-    default_watch_status: "watching",
+    ...DEFAULT_PREFERENCES,
     loading: false,
     error: null,
 };
@@ -23,24 +23,13 @@ export const initPreferences = createAsyncThunk(
     }
 );
 
-export const savePreferences = createAsyncThunk(
-    "preferences/savePreferences",
-    async ({ uid, updates }: { uid: string; updates: Partial<UserPreferences> }, { rejectWithValue }) => {
-        const result = await updatePreferences(uid, updates);
-        if (!result.success) return rejectWithValue("Failed to save preferences");
-        return updates;
-    }
-);
-
 const preferencesSlice = createSlice({
     name: "preferences",
     initialState,
     reducers: {
-        setTheme(state, action: PayloadAction<string>) {
-            state.app_theme = action.payload;
-        },
-        setDefaultWatchStatus(state, action: PayloadAction<WatchStatus>) {
-            state.default_watch_status = action.payload;
+        /** Applies (or rolls back) preference values locally. Persisting is done by the mutation hooks. */
+        applyPreferences(state, action: PayloadAction<Partial<UserPreferences>>) {
+            Object.assign(state, action.payload);
         },
         resetPreferences: () => initialState,
     },
@@ -57,15 +46,9 @@ const preferencesSlice = createSlice({
             .addCase(initPreferences.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
-            })
-            .addCase(savePreferences.fulfilled, (state, action) => {
-                Object.assign(state, action.payload);
-            })
-            .addCase(savePreferences.rejected, (state, action) => {
-                state.error = action.payload as string;
             });
     },
 });
 
-export const { setTheme, setDefaultWatchStatus, resetPreferences } = preferencesSlice.actions;
+export const { applyPreferences, resetPreferences } = preferencesSlice.actions;
 export default preferencesSlice.reducer;

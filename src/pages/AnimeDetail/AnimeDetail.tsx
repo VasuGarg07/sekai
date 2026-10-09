@@ -6,51 +6,82 @@ import ErrorState from "../../ui/ErrorState";
 import LoadingState from "../../ui/LoadingState";
 import { WatchlistButton } from "../../ui/WatchlistButton";
 import { useAnimeDetail } from "../../hooks/useAnimeDetail";
+import { ApiError } from "../../shared/apiClient";
 import { useAnimeNavigation } from "../../hooks/useAnimeNavigation";
 import Fallback from "/default-banner.jpg";
 import { formatDateEpoch } from "../../shared/utilities";
+import { useAdultMode } from "../../hooks/useUpdatePreferences";
+import { useAppSelector } from "../../store/reduxHooks";
+import StatusState from "../../ui/StatusState";
+import { statusActionClass } from "../../ui/statusActionClass";
+
+const trailerUrl = (site: string, id: string) =>
+    site === "dailymotion"
+        ? `https://www.dailymotion.com/video/${id}`
+        : `https://www.youtube.com/watch?v=${id}`;
 
 const AnimeDetail = () => {
     const { id } = useParams<{ id: string }>();
     const animeId = id ? parseInt(id, 10) : NaN;
     const { goToAnime } = useAnimeNavigation();
 
-    const { data, isLoading, error } = useAnimeDetail(animeId);
+    const adultMode = useAdultMode();
+    const isLoggedIn = useAppSelector(state => !!state.auth.user);
+
+    const { data, isLoading, error, refetch } = useAnimeDetail(animeId);
 
     if (isNaN(animeId)) {
         return (
-            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
-                <ErrorState message="Invalid anime ID in URL." />
-            </div>
+            <ErrorState
+                title="That link doesn't look right"
+                message="The anime ID in the address isn't valid."
+                actions={<Link to="/" className={statusActionClass.secondary}>Go home</Link>}
+            />
         );
     }
 
     if (isLoading) {
-        return (
-            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
-                <LoadingState text="Loading anime..." />
-            </div>
-        );
+        return <LoadingState text="Loading anime..." />;
     }
 
     if (error) {
+        const isNotFound = error instanceof ApiError && error.status === 404;
         return (
-            <div className="bg-zinc-900 min-h-80 py-8 px-4 flex justify-center items-center">
-                <ErrorState message={error.message} />
-            </div>
+            <ErrorState
+                title={isNotFound ? "Anime not found" : "Couldn't load this anime"}
+                message={isNotFound ? "This anime doesn't exist on AniList, or it was removed." : error.message}
+                onRetry={isNotFound ? undefined : () => refetch()}
+                actions={<Link to="/" className={statusActionClass.secondary}>Go home</Link>}
+            />
         );
     }
 
     if (!data) {
+        return <EmptyState title="Not available" message="The title you're looking for is not available." />;
+    }
+
+    if (data.isAdult && !adultMode) {
         return (
-            <div className="bg-zinc-900 min-h-full py-8 px-4 flex justify-center items-center">
-                <EmptyState message="The title you're looking for is not available." />
-            </div>
+            <StatusState
+                title="This title is 18+"
+                message={isLoggedIn
+                    ? "Turn on 18+ Mode in Settings to view adult titles."
+                    : "Log in and turn on 18+ Mode in Settings to view adult titles."}
+                actions={
+                    <Link to={isLoggedIn ? "/settings" : "/login"} className={statusActionClass.primary}>
+                        {isLoggedIn ? "Open Settings" : "Log in"}
+                    </Link>
+                }
+            />
         );
     }
 
+    // Hide adult relations/recommendations unless 18+ Mode is on
+    const relations = adultMode ? data.relations : data.relations.filter(r => !r.node.isAdult);
+    const recommendations = adultMode ? data.recommendations : data.recommendations.filter(r => !r.isAdult);
+
     return (
-        <div className="bg-zinc-900 h-full text-white">
+        <div className="h-full text-white">
             {/* Hero Section */}
             <div className="relative w-full aspect-3/1 sm:aspect-4/1 md:aspect-5/1">
                 <img
@@ -95,17 +126,17 @@ const AnimeDetail = () => {
                                 {data.status}
                             </span>
                         )}
-                        {data.seasonYear && (
+                        {!!data.seasonYear && (
                             <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-blue-400 border border-blue-500/30">
                                 {data.season ? `${data.season} ${data.seasonYear}` : data.seasonYear}
                             </span>
                         )}
-                        {data.episodes && (
+                        {!!data.episodes && (
                             <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-purple-400 border border-purple-500/30">
                                 {data.episodes} EP
                             </span>
                         )}
-                        {data.duration && (
+                        {!!data.duration && (
                             <span className="px-3 py-1 bg-zinc-800/70 rounded-full text-xs text-cyan-400 border border-cyan-500/30">
                                 {data.duration}m/ep
                             </span>
@@ -119,17 +150,17 @@ const AnimeDetail = () => {
 
                     {/* Stats */}
                     <div className="flex items-center gap-8 mb-2 text-sm">
-                        {data.score && (
+                        {!!data.score && (
                             <span className="flex items-center gap-2 text-yellow-400 font-medium">
                                 <Star className="w-5 h-5" /> {(data.score / 10).toFixed(1)}
                             </span>
                         )}
-                        {data.popularity && (
+                        {!!data.popularity && (
                             <span className="flex items-center gap-2 text-red-400 font-medium">
                                 <Flame className="w-5 h-5" /> {data.popularity.toLocaleString()}
                             </span>
                         )}
-                        {data.favourites && (
+                        {!!data.favourites && (
                             <span className="flex items-center gap-2 text-pink-400 font-medium">
                                 <Heart className="w-5 h-5" /> {data.favourites.toLocaleString()}
                             </span>
@@ -198,7 +229,7 @@ const AnimeDetail = () => {
                             />
                         ) : (
                             <a
-                                href={`https://${data.trailer.site}.com/watch?v=${data.trailer.id}`}
+                                href={trailerUrl(data.trailer.site, data.trailer.id)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group"
@@ -218,11 +249,11 @@ const AnimeDetail = () => {
             )}
 
             {/* Relations */}
-            {data.relations.length > 0 && (
+            {relations.length > 0 && (
                 <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
                     <h2 className="text-2xl font-semibold mb-6">Relations</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {data.relations.map((rel) => (
+                        {relations.map((rel) => (
                             <button
                                 key={rel.node.id}
                                 type="button"
@@ -270,11 +301,11 @@ const AnimeDetail = () => {
             )}
 
             {/* Recommendations */}
-            {data.recommendations.length > 0 && (
+            {recommendations.length > 0 && (
                 <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
                     <h2 className="text-2xl font-semibold mb-4">Recommendations</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                        {data.recommendations.map((anime) => (
+                        {recommendations.map((anime) => (
                             <AnimeGalleryCard key={anime.id} anime={anime} />
                         ))}
                     </div>

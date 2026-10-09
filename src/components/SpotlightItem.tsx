@@ -57,13 +57,13 @@ const SpotlightItem = ({ anime, index }: SpotlightItemProps) => {
                             <Monitor size={16} />
                             <span>{anime.type}</span>
                         </div>
-                        {anime.duration && (
+                        {!!anime.duration && (
                             <div className="flex items-center gap-1">
                                 <Clock size={16} />
                                 <span>{anime.duration} min</span>
                             </div>
                         )}
-                        {anime.episodes && (
+                        {!!anime.episodes && (
                             <div className="flex items-center gap-1">
                                 <Clapperboard size={16} />
                                 <span>{anime.episodes} ep</span>

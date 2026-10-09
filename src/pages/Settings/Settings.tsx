@@ -2,6 +2,7 @@ import ProfileBanner from "../../components/ProfileBanner";
 import { ExportWatchlist } from "./ExportWatchlist";
 import { DefaultWatchStatus } from "./DefaultWatchStatus";
 import { ThemeSelector } from "./ThemeSelector";
+import { AdultMode } from "./AdultMode";
 
 export default function Settings() {
 
@@ -13,6 +14,7 @@ export default function Settings() {
                 <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8 space-y-10">
                     <ThemeSelector />
                     <DefaultWatchStatus />
+                    <AdultMode />
                     <ExportWatchlist />
                 </div>
             </div>

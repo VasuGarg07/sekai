@@ -1,9 +1,10 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
+import type { QueryDocumentSnapshot } from "firebase/firestore";
 import { useAppSelector } from "../store/reduxHooks";
 import { fetchUserWatchList } from "../shared/firestore";
-import type { QueryDocumentSnapshot } from "firebase/firestore";
-
-// TODO: Hook in syncWatchlist.ts hook
+import { hydrateWatchlist } from "../shared/watchlistHydration";
+import { toastService } from "../ui/toastService";
 
 export function useGetWatchlist() {
     const { user } = useAppSelector(state => state.auth);
@@ -11,14 +12,28 @@ export function useGetWatchlist() {
 
     const query = useInfiniteQuery({
         queryKey: ["watchlist", user?.uid],
-        queryFn: ({ pageParam }: { pageParam?: QueryDocumentSnapshot }) => fetchUserWatchList(user!.uid, pageParam),
+        // Firestore gives the saved entries; AniList fills in up-to-date details for them
+        queryFn: async ({ pageParam }: { pageParam?: QueryDocumentSnapshot }) => {
+            const page = await fetchUserWatchList(user!.uid, pageParam);
+            const { items, refreshFailed } = await hydrateWatchlist(page.data);
+            return { data: items, lastDoc: page.lastDoc, refreshFailed };
+        },
         initialPageParam: undefined,
         getNextPageParam: (lastPage) => lastPage.lastDoc ?? undefined,
         staleTime: 1000 * 60 * 5,
         enabled: !!user?.uid,
     });
 
-    const watchlistItems = query.data?.pages.flatMap(page => page.data) ?? [];
+    const pages = query.data?.pages;
+    const watchlistItems = useMemo(() => pages?.flatMap(page => page.data) ?? [], [pages]);
+
+    const refreshFailed = pages?.some(page => page.refreshFailed) ?? false;
+    useEffect(() => {
+        if (refreshFailed) {
+            toastService.warning("Couldn't load the latest details from AniList. Showing saved info.");
+        }
+    }, [refreshFailed]);
+
     const refresh = () => {
         if (!user?.uid) return;
 

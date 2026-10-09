@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import {
     GithubAuthProvider,
     GoogleAuthProvider,
@@ -11,12 +11,15 @@ import type { SekaiUser } from "../../shared/interfaces";
 
 interface AuthState {
     user: SekaiUser | null;
+    /** True once Firebase has reported the initial auth state (restored session or signed out). */
+    initialized: boolean;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: AuthState = {
     user: null,
+    initialized: false,
     loading: false,
     error: null,
 };
@@ -53,8 +56,9 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setUser(state, action) {
+        setUser(state, action: PayloadAction<SekaiUser | null>) {
             state.user = action.payload;
+            state.initialized = true;
         },
     },
     extraReducers: (builder) => {

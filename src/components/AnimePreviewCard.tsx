@@ -16,7 +16,7 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
             </h3>
 
             <div className="flex items-center gap-2 flex-wrap">
-                {anime.score && (
+                {!!anime.score && (
                     <div className="flex items-center bg-yellow-500/20 px-2 py-1 rounded">
                         <Star className="w-3 h-3 text-yellow-400 mr-1 fill-current" />
                         <span className="text-white font-medium">{(anime.score / 10).toFixed(1)}</span>
@@ -54,12 +54,12 @@ export default function AnimePreviewCard({ anime }: AnimePreviewCardProps) {
                         <span className="text-gray-300">Aired:</span> {anime.startDateText}
                     </div>
                 )}
-                {anime.episodes && (
+                {!!anime.episodes && (
                     <div>
                         <span className="text-gray-300">Episodes:</span> {anime.episodes}
                     </div>
                 )}
-                {anime.duration && (
+                {!!anime.duration && (
                     <div>
                         <span className="text-gray-300">Duration:</span> {anime.duration} min/ep
                     </div>

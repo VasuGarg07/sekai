@@ -40,7 +40,7 @@ export default function LoginPage() {
                     className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-300 transition py-2 rounded-lg font-medium cursor-pointer mb-4 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                     <img
-                        src="https://www.svgrepo.com/show/355037/google.svg"
+                        src="/icons/google.svg"
                         alt="Google"
                         className="h-5 w-5"
                     />
@@ -55,7 +55,7 @@ export default function LoginPage() {
                     className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 transition py-2 rounded-lg font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                     <img
-                        src="https://www.svgrepo.com/show/475654/github-color.svg"
+                        src="/icons/github.svg"
                         alt="GitHub"
                         className="h-5 w-5"
                     />

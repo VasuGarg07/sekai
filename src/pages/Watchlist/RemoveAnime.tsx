@@ -1,9 +1,9 @@
 import { useId, useRef, useState } from "react";
-import { Trash, X, AlertTriangle, Star } from "lucide-react";
+import { Trash, X, AlertTriangle } from "lucide-react";
 import type { AnimeWatchList } from "../../shared/interfaces";
 import { useRemoveAnime } from "../../hooks/useRemoveAnime";
 import { Dialog, type DialogHandle } from "../../ui/Dialog";
-import { formatScore } from "../../shared/utilities";
+import AnimeMeta from "../../components/AnimeMeta";
 
 type RemoveAnimeProps = {
     anime: AnimeWatchList;
@@ -63,26 +63,7 @@ export function RemoveAnime({ anime }: RemoveAnimeProps) {
                                 <p className="font-medium text-white text-sm line-clamp-2">
                                     {anime.title_english ?? anime.title_romaji}
                                 </p>
-                                <div className="text-xs text-gray-400 flex flex-wrap gap-2">
-                                    {!!anime.score && (
-                                        <>
-                                            <div className="flex items-center">
-                                                <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                                <span className="font-medium">{formatScore(anime.score)}</span>
-                                            </div>
-                                            <span>•</span>
-                                        </>
-                                    )}
-                                    {anime.type && (
-                                        <>
-                                            <div className="font-medium">{anime.type}</div>
-                                            <span>•</span>
-                                        </>
-                                    )}
-                                    {anime.status && (
-                                        <div className="font-medium">{anime.status}</div>
-                                    )}
-                                </div>
+                                <AnimeMeta anime={anime} className="text-xs text-gray-400 flex flex-wrap gap-2" starClassName="w-3 h-3 text-yellow-500" />
                             </div>
                         </div>
 

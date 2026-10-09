@@ -41,6 +41,16 @@ export function formatDate(
     }).format(dt);
 }
 
+/**
+ * AniList descriptions contain <br>/<i> tags and HTML entities (&amp;, &quot;, &#039;...).
+ * DOMParser gives plain text with entities decoded; it never runs scripts or loads resources.
+ */
+function toPlainText(html: string): string {
+    const withBreaks = html.replace(/<br\s*\/?>/gi, "\n");
+    const text = new DOMParser().parseFromString(withBreaks, "text/html").body.textContent ?? "";
+    return text.replace(/\n{3,}/g, "\n\n").trim();
+}
+
 export function mapMediaToAnimeListItem(m: AniListMedia): AnimeListItem {
     return {
         id: m.id,
@@ -55,10 +65,7 @@ export function mapMediaToAnimeListItem(m: AniListMedia): AnimeListItem {
             m.startDate?.month ?? null,
             m.startDate?.day ?? null
         ),
-        synopsis:
-            typeof m.description === "string"
-                ? m.description.replace(/<[^>]+>/g, "").trim()
-            : null,
+        synopsis: typeof m.description === "string" ? toPlainText(m.description) : null,
         synonyms: m.synonyms ?? [],
         status: m.status ?? null,
         genres: m.genres ?? [],
@@ -110,6 +117,17 @@ export function formatKey(key: string): string {
 
 /** AniList scores are 0-100; the app always shows them out of 10 with one decimal (84 -> "8.4"). */
 export const formatScore = (score: number) => (score / 10).toFixed(1);
+
+/** e.g. "Sat, Oct 12, 9:30 PM IST" — shown in the viewer's own time zone */
+export const formatAiringTime = (timestamp: number) =>
+    new Date(timestamp).toLocaleString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+    });
 
 export const formatDateEpoch = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString("en-US", {

@@ -23,7 +23,7 @@ const AdvancedSearch = () => {
     // Changes whenever the applied filters change (but not the page), to re-sync the filter form
     const filtersKey = filtersToParams(filters, new URLSearchParams()).toString();
 
-    const { data, isLoading, error, refetch } = useAdvancedAnimeSearch({ ...filters, page });
+    const { data, isLoading, isPlaceholderData, error, refetch } = useAdvancedAnimeSearch({ ...filters, page });
 
     const handleApply = (next: Filters) => {
         setSearchParams(prev => filtersToParams(next, prev));
@@ -51,7 +51,9 @@ const AdvancedSearch = () => {
                     <ToggleButton showTiles={showTiles} setShowTiles={setShowTiles} />
                 </div>
 
-                <AnimeGallery data={data.items} tileView={showTiles} />
+                <div aria-busy={isPlaceholderData} className={`transition-opacity ${isPlaceholderData ? "opacity-50 pointer-events-none" : ""}`}>
+                    <AnimeGallery data={data.items} tileView={showTiles} />
+                </div>
 
                 <Pagination
                     currentPage={data.pageInfo.currentPage}

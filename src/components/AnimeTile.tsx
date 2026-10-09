@@ -6,6 +6,7 @@ import { getSynopsisFallback } from "../shared/constants";
 import type { AnimeListItem } from "../shared/interfaces";
 import { WatchlistButton } from "../ui/WatchlistButton";
 import { formatScore } from "../shared/utilities";
+import AnimeMeta from "./AnimeMeta";
 
 interface AnimeTileProps {
     anime: AnimeListItem;
@@ -49,23 +50,7 @@ function AnimeTile({ anime }: AnimeTileProps) {
                     )}
                 </div>
 
-                <div className="text-sm text-gray-300 flex flex-wrap gap-2">
-                    {anime.type && (
-                        <>
-                            <div className="font-medium">{anime.type}</div>
-                            <span>•</span>
-                        </>
-                    )}
-                    {!!anime.episodes && (
-                        <>
-                            <span className="font-medium">{anime.episodes} EP</span>
-                            <span>•</span>
-                        </>
-                    )}
-                    {anime.status && (
-                        <div className="font-medium">{anime.status}</div>
-                    )}
-                </div>
+                <AnimeMeta anime={anime} className="text-sm text-gray-300 flex flex-wrap gap-2" showScore={false} showEpisodes />
 
                 {anime.genres && anime.genres.length > 0 && (
                     <div className="text-xs flex items-center gap-2 my-1 flex-wrap">

@@ -1,10 +1,9 @@
-import { Star } from "lucide-react";
 import { memo, useEffect, useRef, useState } from "react";
 import AnimePreviewCard from "./AnimePreviewCard";
 import type { AnimeListItem } from "../shared/interfaces";
 import { Link } from "react-router";
 import { animePath } from "../hooks/useAnimeNavigation";
-import { formatScore } from "../shared/utilities";
+import AnimeMeta from "./AnimeMeta";
 
 interface AnimeGalleryCardProps {
     anime: AnimeListItem;
@@ -93,26 +92,7 @@ function AnimeGalleryCard({ anime }: AnimeGalleryCardProps) {
                     </Link>
                 </h3>
 
-                <div className="text-xs text-gray-400 flex flex-wrap gap-2">
-                    {!!anime.score && (
-                        <>
-                            <div className="flex items-center">
-                                <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                                <span className="font-medium">{formatScore(anime.score)}</span>
-                            </div>
-                            <span>•</span>
-                        </>
-                    )}
-                    {anime.type && (
-                        <>
-                            <div className="font-medium">{anime.type}</div>
-                            <span>•</span>
-                        </>
-                    )}
-                    {anime.status && (
-                        <div className="font-medium">{anime.status}</div>
-                    )}
-                </div>
+                <AnimeMeta anime={anime} className="text-xs text-gray-400 flex flex-wrap gap-2" starClassName="w-3 h-3 text-yellow-500" />
             </div>
         </div>
     );

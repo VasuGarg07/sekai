@@ -1,12 +1,12 @@
 import { memo } from "react";
-import { Star } from "lucide-react";
 import { Link } from "react-router";
 import { animePath } from "../../hooks/useAnimeNavigation";
 import { WatchStatusColor } from "../../shared/constants";
 import type { AnimeWatchList } from "../../shared/interfaces";
-import { formatKey, formatScore } from "../../shared/utilities";
+import { formatKey } from "../../shared/utilities";
 import { EditAnime } from "./EditAnime";
 import { RemoveAnime } from "./RemoveAnime";
+import AnimeMeta from "../../components/AnimeMeta";
 
 interface WatchlistGridProps {
     anime: AnimeWatchList;
@@ -32,26 +32,7 @@ function WatchlistGrid({ anime }: WatchlistGridProps) {
                         <h3 className="font-semibold text-white mb-1 line-clamp-1 text-sm leading-tight">
                             {anime.title_english ?? anime.title_romaji}
                         </h3>
-                        <div className="text-xs text-gray-200 flex flex-wrap gap-2">
-                            {!!anime.score && (
-                                <>
-                                    <div className="flex items-center">
-                                        <Star className="w-3 h-3 text-yellow-500 fill-yellow-500 mr-1" />
-                                        <span className="font-medium">{formatScore(anime.score)}</span>
-                                    </div>
-                                    <span>•</span>
-                                </>
-                            )}
-                            {anime.type && (
-                                <>
-                                    <div className="font-medium">{anime.type}</div>
-                                    <span>•</span>
-                                </>
-                            )}
-                            {anime.status && (
-                                <div className="font-medium">{anime.status}</div>
-                            )}
-                        </div>
+                        <AnimeMeta anime={anime} className="text-xs text-gray-200 flex flex-wrap gap-2" starClassName="w-3 h-3 text-yellow-500 fill-yellow-500" />
                     </div>
                 </Link>
             )}

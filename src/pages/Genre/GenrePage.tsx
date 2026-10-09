@@ -46,7 +46,7 @@ function GenreResults({ genre }: { genre: string }) {
     const sortParam = searchParams.get("sort");
     const sort = SORTS.find(s => s.key === sortParam)?.key ?? SORTS[0].key;
 
-    const { data, isLoading, error, refetch } = useAdvancedAnimeSearch({
+    const { data, isLoading, isPlaceholderData, error, refetch } = useAdvancedAnimeSearch({
         genreIn: [genre],
         sort: [sort],
         page,
@@ -77,6 +77,7 @@ function GenreResults({ genre }: { genre: string }) {
                 title={<>{genre} <span className="text-zinc-400 font-medium">Anime</span></>}
                 data={data}
                 isLoading={isLoading}
+                isUpdating={isPlaceholderData}
                 error={error}
                 onRetry={() => refetch()}
                 onPageChange={setPage}

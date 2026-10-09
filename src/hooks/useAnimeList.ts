@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import apiClient from "../shared/apiClient";
 import { isAdultFilter, MEDIA_LIST_FIELDS } from "../shared/anilistFields";
 import { mapMediaToAnimeListItem } from "../shared/utilities";
@@ -47,5 +47,6 @@ export function useAnimeList(
       };
     },
     staleTime: 60 * 60 * 1000,
+    placeholderData: keepPreviousData,
   });
 }

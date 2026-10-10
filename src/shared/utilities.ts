@@ -8,8 +8,14 @@ export function serializeUser(user: User): SekaiUser {
         email: user.email,
         displayName: user.displayName,
         photoURL: user.photoURL,
+        emailVerified: user.emailVerified,
+        providers: user.providerData.map(p => p.providerId),
     };
 }
+
+/** Name to show for a user: their display name, else the part of their email before the @. */
+export const userDisplayName = (user: SekaiUser) =>
+    user.displayName || user.email?.split("@")[0] || "User";
 
 export function getCurrentSeasonYear() {
     const now = new Date();

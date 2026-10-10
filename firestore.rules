@@ -1,0 +1,100 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function watchStatuses() {
+      return ['watching', 'on-hold', 'plan-to-watch', 'dropped', 'completed', 'rewatch'];
+    }
+
+    function isNullableString(data, key, maxLength) {
+      return !data.keys().hasAny([key])
+        || data[key] == null
+        || (data[key] is string && data[key].size() <= maxLength);
+    }
+
+    // Max watchlist size — keep in sync with MAX_USER_DOCUMENTS in src/shared/constants.ts
+    function maxWatchlistSize() {
+      return 2000;
+    }
+
+    function watchlistIdsPath(userId) {
+      return /databases/$(database)/documents/users/$(userId)/meta/watchlist;
+    }
+
+    // ---------- profiles/{uid}: written once at first login ----------
+
+    match /profiles/{userId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.keys().hasOnly(['uid', 'email', 'displayName', 'photoURL', 'createdAt'])
+        && request.resource.data.uid == userId;
+    }
+
+    // ---------- preferences/{uid} ----------
+
+    function validPreferences(data) {
+      // lastSyncedAt: left over from an old sync feature; allowed so existing docs can still be updated
+      return data.keys().hasOnly(['app_theme', 'default_watch_status', 'adult_mode', 'lastSyncedAt'])
+        && (!data.keys().hasAny(['app_theme']) || (data.app_theme is string && data.app_theme.size() <= 20))
+        && (!data.keys().hasAny(['default_watch_status']) || data.default_watch_status in watchStatuses())
+        && (!data.keys().hasAny(['adult_mode']) || data.adult_mode is bool);
+    }
+
+    match /preferences/{userId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId) && validPreferences(request.resource.data);
+    }
+
+    // ---------- users/{uid}/... ----------
+
+    match /users/{userId} {
+      // The parent doc itself isn't used by the app
+      allow read: if isOwner(userId);
+
+      // users/{uid}/watchlist/{animeId}: { id, title_romaji, title_english, format, watchStatus, addedAt }
+      match /watchlist/{animeId} {
+        allow read: if isOwner(userId);
+
+        // New entry: exact v2 shape, and its id must be in the id index after this write
+        // (the app writes both in one transaction), with the index under the size limit.
+        allow create: if isOwner(userId)
+          && request.resource.data.keys().hasOnly(['id', 'title_romaji', 'title_english', 'format', 'watchStatus', 'addedAt'])
+          && request.resource.data.keys().hasAll(['id', 'watchStatus', 'addedAt'])
+          && request.resource.data.id is int
+          && request.resource.data.id == int(animeId)
+          && request.resource.data.watchStatus in watchStatuses()
+          && request.resource.data.addedAt is int
+          && isNullableString(request.resource.data, 'title_romaji', 500)
+          && isNullableString(request.resource.data, 'title_english', 500)
+          && isNullableString(request.resource.data, 'format', 20)
+          && int(animeId) in getAfter(watchlistIdsPath(userId)).data.ids
+          && getAfter(watchlistIdsPath(userId)).data.ids.size() <= maxWatchlistSize();
+
+        // Only the watch status can change (also works for older, larger documents)
+        allow update: if isOwner(userId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['watchStatus'])
+          && request.resource.data.watchStatus in watchStatuses();
+
+        // Removing an entry must also remove it from the id index (same batch)
+        allow delete: if isOwner(userId)
+          && !(int(animeId) in getAfter(watchlistIdsPath(userId)).data.ids);
+      }
+
+      // users/{uid}/meta/watchlist: { ids: number[] } — every saved anime id
+      match /meta/watchlist {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.keys().hasOnly(['ids', 'migratedAt'])
+          && request.resource.data.ids is list
+          && request.resource.data.ids.size() <= maxWatchlistSize();
+      }
+    }
+  }
+}

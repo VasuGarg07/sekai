@@ -25,9 +25,8 @@ dist-ssr
 
 # Custom
 api-docs.json
-.firebaserc
-firebase.json
-firestore.rules
-firestore.indexes.json
-*firebase
 .env
+
+# Firebase deploy cache
+.firebase/
+firebase.json

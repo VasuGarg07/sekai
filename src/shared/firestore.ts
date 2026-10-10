@@ -37,21 +37,32 @@ type VoidResult =
 
 // --- Profile ---
 
+/**
+ * Creates the profile on first login, and afterwards updates the name/email/photo when they change
+ * (e.g. an email sign-up sets its name just after the account is created).
+ */
 export const registerProfile = async (user?: User): Promise<VoidResult> => {
     if (!user) return { success: true }; // no-op, not an error
 
     try {
         const ref = doc(fireStore, "profiles", user.uid);
         const snapshot = await getDoc(ref);
-        if (snapshot.exists()) return { success: true };
-
-        await setDoc(ref, {
-            uid: user.uid,
+        const current = {
             email: user.email,
             displayName: user.displayName,
             photoURL: user.photoURL,
-            createdAt: serverTimestamp(),
-        });
+        };
+
+        if (!snapshot.exists()) {
+            await setDoc(ref, { uid: user.uid, ...current, createdAt: serverTimestamp() });
+            return { success: true };
+        }
+
+        const stored = snapshot.data();
+        const changed = Object.fromEntries(
+            Object.entries(current).filter(([key, value]) => stored[key] !== value)
+        );
+        if (Object.keys(changed).length > 0) await updateDoc(ref, changed);
 
         return { success: true };
     } catch (error) {

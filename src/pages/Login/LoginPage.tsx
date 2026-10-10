@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Navigate, useLocation, type Location } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store/reduxHooks";
 import { loginWithGoogle, loginWithGitHub } from "../../store/slices/authSlice";
 import { Sparkles } from "lucide-react";
+import EmailForm, { type EmailMode } from "./EmailForm";
 
 export default function LoginPage() {
     const dispatch = useAppDispatch();
     const { user, loading, error } = useAppSelector((state) => state.auth);
     const location = useLocation();
+    const [mode, setMode] = useState<EmailMode>("signin");
 
     if (user) {
         // Return to the protected page that sent us here, if any
@@ -32,37 +35,49 @@ export default function LoginPage() {
                     <h1 className="text-2xl font-bold">Sekai</h1>
                 </div>
 
-                {/* Google Login */}
-                <button
-                    type="button"
-                    onClick={() => dispatch(loginWithGoogle())}
-                    disabled={loading}
-                    className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-300 transition py-2 rounded-lg font-medium cursor-pointer mb-4 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                    <img
-                        src="/icons/google.svg"
-                        alt="Google"
-                        className="h-5 w-5"
-                    />
-                    Continue with Google
-                </button>
+                {mode !== "reset" && (
+                    <>
+                        {/* Google Login */}
+                        <button
+                            type="button"
+                            onClick={() => dispatch(loginWithGoogle())}
+                            disabled={loading}
+                            className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-300 transition py-2 rounded-lg font-medium cursor-pointer mb-4 disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                            <img
+                                src="/icons/google.svg"
+                                alt="Google"
+                                className="h-5 w-5"
+                            />
+                            Continue with Google
+                        </button>
 
-                {/* GitHub Login */}
-                <button
-                    type="button"
-                    onClick={() => dispatch(loginWithGitHub())}
-                    disabled={loading}
-                    className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 transition py-2 rounded-lg font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                    <img
-                        src="/icons/github.svg"
-                        alt="GitHub"
-                        className="h-5 w-5"
-                    />
-                    Continue with GitHub
-                </button>
+                        {/* GitHub Login */}
+                        <button
+                            type="button"
+                            onClick={() => dispatch(loginWithGitHub())}
+                            disabled={loading}
+                            className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 transition py-2 rounded-lg font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                            <img
+                                src="/icons/github.svg"
+                                alt="GitHub"
+                                className="h-5 w-5"
+                            />
+                            Continue with GitHub
+                        </button>
 
-                {error && (
+                        <div className="flex items-center gap-3 my-6" aria-hidden="true">
+                            <span className="h-px flex-1 bg-zinc-700" />
+                            <span className="text-xs text-zinc-500 uppercase">or</span>
+                            <span className="h-px flex-1 bg-zinc-700" />
+                        </div>
+                    </>
+                )}
+
+                <EmailForm mode={mode} onModeChange={setMode} />
+
+                {error && mode !== "reset" && (
                     <p className="mt-4 text-sm text-accent-400 text-center">{error}</p>
                 )}
 

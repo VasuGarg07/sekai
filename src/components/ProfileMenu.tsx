@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { logout } from "../store/slices/authSlice";
 import { toastService } from "../ui/toastService";
+import { userDisplayName } from "../shared/utilities";
 
 const ProfileMenu = ({ className = "" }) => {
     const dispatch = useAppDispatch();
@@ -20,7 +21,8 @@ const ProfileMenu = ({ className = "" }) => {
 
     if (!user) return null;
 
-    const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=random&rounded=true&size=96`;
+    const name = userDisplayName(user);
+    const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&rounded=true&size=96`;
     const avatarSrc = !user.photoURL || failedPhotoURL === user.photoURL ? avatarFallback : user.photoURL;
 
     const handleAvatarError = () => setFailedPhotoURL(user.photoURL);
@@ -69,7 +71,7 @@ const ProfileMenu = ({ className = "" }) => {
                         />
                         <div className="flex flex-col min-w-0">
                             <p className="text-sm font-medium text-white truncate">
-                                {user.displayName || "User"}
+                                {name}
                             </p>
                             <p className="text-xs text-zinc-400 truncate">{user.email}</p>
                         </div>

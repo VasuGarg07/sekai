@@ -1,9 +1,11 @@
 import { useAppSelector } from "../store/reduxHooks";
-import ProfileBannerImg from "/profile-2.jpg";
+import { userDisplayName } from "../shared/utilities";
+import ProfileBannerImg from "/profile.jpg";
 import UserIcon from "/usericon.jpg";
 
 const ProfileBanner = () => {
     const { user } = useAppSelector((state) => state.auth);
+    const name = user ? userDisplayName(user) : "Anonymous";
     return (
         <div className="relative w-full h-75">
             {/* Background Banner Image */}
@@ -22,7 +24,7 @@ const ProfileBanner = () => {
                 <div className="hidden sm:flex shrink-0 mr-4 sm:mr-6 lg:mr-8">
                     <img
                         src={user?.photoURL || UserIcon}
-                        alt={user?.displayName ?? "Anonymous"}
+                        alt={name}
                         className="h-32 w-32 rounded-full ring-4 ring-white shadow-2xl"
                     />
                 </div>
@@ -30,7 +32,7 @@ const ProfileBanner = () => {
                 {/* Right side - Content */}
                 <div className="text-white">
                     <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight text-shadow-lg">
-                        Welcome! {user?.displayName ?? "Anonymous"}
+                        Welcome! {name}
                     </h1>
                 </div>
             </div>

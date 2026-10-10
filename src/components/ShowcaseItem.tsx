@@ -25,7 +25,7 @@ export function ShowcaseItem({ anime }: ShowcaseItemProps) {
             <div className="flex flex-col grow">
                 <Link
                     to={animePath(anime.id)}
-                    className="text-white text-sm font-semibold hover:text-accent-400 transition mb-1 line-clamp-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
+                    className="font-display text-white text-sm font-semibold hover:text-accent-400 transition mb-1 line-clamp-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
                 >
                     {anime.title_english ?? anime.title_romaji}
                 </Link>

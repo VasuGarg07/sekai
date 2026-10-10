@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Fraunces', ui-serif, Georgia, serif;
+
     --color-accent-50: var(--color-rose-50);
     --color-accent-100: var(--color-rose-100);
     --color-accent-200: var(--color-rose-200);

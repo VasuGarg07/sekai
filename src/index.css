@@ -1,9 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..800&family=Inter:opsz,wght@14..32,400..800&display=swap');
 @import "./styles/theme.css";
 
 html {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-sans);
   color-scheme: dark;
+}
+
+/* Headings and anime titles use the display serif; everything else uses Inter */
+@layer base {
+  h1, h2, h3 {
+    font-family: var(--font-display);
+  }
 }
 
 /* Dark base so nothing flashes white while lazy pages and images load */

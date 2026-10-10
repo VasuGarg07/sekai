@@ -24,7 +24,7 @@ const Header = () => {
                         alt="Sekai Logo"
                         className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
                     />
-                    <span className="text-lg sm:text-xl font-bold text-white">
+                    <span className="font-display text-lg sm:text-xl font-bold text-white">
                         Sekai
                     </span>
                 </Link>
